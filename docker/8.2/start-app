@@ -1,0 +1,9 @@
+#!/bin/bash
+
+php artisan clear-compiled -n
+php artisan optimize -n
+php artisan route:cache -n
+php artisan view:cache -n
+php artisan event:cache -n
+
+exec "$@"
