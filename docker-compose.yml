@@ -6,6 +6,7 @@ services:
             target: develop
             args:
                 WWWGROUP: '${WWWGROUP}'
+                WWWUSER: '${WWWUSER}'
         image: sail-8.2/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
@@ -14,12 +15,9 @@ services:
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            RUNNING_ON_LINUX: '${SAIL_RUNNING_ON_LINUX:-0}'
         volumes:
-            - '.:/var/www/html'
+            - .:/var/www/html
         networks:
             - sail
         depends_on:
