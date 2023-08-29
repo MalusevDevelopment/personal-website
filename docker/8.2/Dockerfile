@@ -53,8 +53,11 @@ RUN apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+COPY . /var/www/html
+
 COPY horizon.conf /etc/supervisor/conf.d/horizon.conf
 COPY website.conf /etc/supervisor/conf.d/website.conf
+COPY scheduler.conf /etc/supervisor/conf.d/scheduler.conf
 COPY php.ini /etc/php/8.2/cli/conf.d/99-sail.ini
 
 ENTRYPOINT ["start-container"]
@@ -78,6 +81,7 @@ RUN apt-get install -y python2 dnsutils librsvg2-bin fswatch php8.2-dev php8.2-x
 
 COPY horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
 COPY website.dev.conf /etc/supervisor/conf.d/website.conf
+COPY scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
 COPY php.dev.ini /etc/php/8.2/cli/conf.d/99-sail.ini
 
 USER sail

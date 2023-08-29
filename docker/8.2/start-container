@@ -5,6 +5,14 @@ if [ ! -z "$WWWUSER" ]; then
     usermod -u $WWWUSER sail
 fi
 
+if [ "$APP_ENV" == "production" ]; then
+    php artisan clear-compiled -n
+    php artisan optimize -n
+    php artisan route:cache -n
+    php artisan view:cache -n
+    php artisan event:cache -n
+fi
+
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
 else

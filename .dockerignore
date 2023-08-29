@@ -1,0 +1,10 @@
+.editorconfig
+.phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+pint.json
+phpunit.xml
+tests/
+.devcontainer/
+setup.sh
+.github/
