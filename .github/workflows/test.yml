@@ -1,0 +1,69 @@
+name: 'Run Tests'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+      - master
+      - refactor # TODO: Remove after merge to master
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    container:
+      image: malusevd99/website:dev
+    services:
+      pgsql:
+        image: 'postgres:15-alpine'
+        env:
+          PGPASSWORD: 'secret'
+          POSTGRES_DB: 'testing'
+          POSTGRES_USER: 'dusan_malusev'
+          POSTGRES_PASSWORD: 'password'
+      redis:
+        image: 'redis:alpine'
+      meilisearch:
+        image: 'getmeili/meilisearch:latest'
+      mailpit:
+        image: 'axllent/mailpit:latest'
+      soketi:
+        image: 'quay.io/soketi/soketi:latest-16-alpine'
+        env:
+          SOKETI_DEBUG: '1'
+          SOKETI_METRICS_SERVER_PORT: '9601'
+          SOKETI_DB_REDIS_HOST: 'redis'
+          SOKETI_DB_REDIS_DB: '6'
+          SOKETI_DEFAULT_APP_ID: 'app-id'
+          SOKETI_DEFAULT_APP_KEY: 'app-key'
+          SOKETI_DEFAULT_APP_SECRET: 'app-secret'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Composer install
+        run: |
+          cp .env.example .env
+          composer install --prefer-dist --no-interaction --no-progress
+          php artisan key:generate
+      - name: Run unit tests
+        env:
+          XDEBUG_MODE: 'coverage'
+        run: composer test:coverage:ci
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: tests
+          name: website-v2
+          fail_ci_if_error: true
+          verbose: false
+      # - uses: 8398a7/action-slack@v3
+      #   if: always()
+      #   with:
+      #     status: ${{ job.status }}
+      #     fields: repo,message,commit,author,eventName,ref,workflow,took,pullRequest
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

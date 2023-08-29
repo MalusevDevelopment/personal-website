@@ -63,6 +63,8 @@
         }
     },
     "scripts": {
+        "test": "@php artisan test --parallel --recreate-databases --coverage",
+        "test:coverage:ci": "@php artisan test --parallel --recreate-databases --coverage --coverage-clover=coverage.xml",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
