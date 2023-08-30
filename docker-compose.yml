@@ -27,10 +27,9 @@ services:
             - meilisearch
             - mailpit
             - selenium
-            - memcached
             - soketi
     pgsql:
-        image: 'postgres:15'
+        image: 'postgres:15-alpine'
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
@@ -120,33 +119,32 @@ services:
             - '/dev/shm:/dev/shm'
         networks:
             - dusan_malusev
-    memcached:
-        image: 'memcached:alpine'
-        ports:
-            - '${FORWARD_MEMCACHED_PORT:-11211}:11211'
-        networks:
-            - dusan_malusev
     soketi:
         image: 'quay.io/soketi/soketi:latest-16-alpine'
         environment:
             SOKETI_DEBUG: '${SOKETI_DEBUG:-1}'
             SOKETI_METRICS_SERVER_PORT: '9601'
-            SOKETI_DEFAULT_APP_ID: '${PUSHER_APP_ID}'
-            SOKETI_DEFAULT_APP_KEY: '${PUSHER_APP_KEY}'
-            SOKETI_DEFAULT_APP_SECRET: '${PUSHER_APP_SECRET}'
+            SOKETI_APP_MANAGER_DRIVER: 'postgres'
+            SOKETI_APP_MANAGER_CACHE_ENABLED: true
+            SOKETI_APP_MANAGER_CACHE_TTL: 3600
             SOKETI_DB_REDIS_HOST: ${REDIS_HOST:-redis}
             SOKETI_DB_REDIS_PORT: ${REDIS_PORT:-6379}
             SOKETI_DB_REDIS_DB: ${REDIS_SOCKETI_DB:-3}
-            SOKETI_DB_REDIS_PASSWORD: ${REDIS_PASSWORD-null}
+            SOKETI_DB_REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
             SOKETI_DB_POSTGRES_HOST: ${DB_HOST:-pgsql}
             SOKETI_DB_POSTGRES_PORT: ${DB_PORT:-5432}
             SOKETI_DB_POSTGRES_USERNAME: ${DB_USERNAME:-dusan_malusev}
             SOKETI_DB_POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
             SOKETI_DB_POSTGRES_DATABASE: ${DB_DATABASE:-dusan_malusev}
-            SOKETI_APP_MANAGER_POSTGRES_TABLE: 'socket_apps'
+            SOKETI_APP_MANAGER_POSTGRES_TABLE: 'socketi_apps'
             SOKETI_APP_MANAGER_POSTGRES_VERSION: '15'
-            SOKETI_METRICS_ENABLED: '1'
-            SOKETI_CACHE_DRIVER: 'redis'
+            SOKETI_DB_POOLING_ENABLED: true
+            SOKETI_DB_POOLING_MIN: 1
+            SOKETI_DB_POOLING_MAX: 100
+            SOKETI_METRICS_ENABLED: 1
+            SOKETI_CACHE_DRIVER: 'memory'
+            SOKETI_QUEUE_DRIVER: 'redis'
+            SOKETI_QUEUE_REDIS_CONCURRENCY: 10
         ports:
             - '${PUSHER_PORT:-6001}:6001'
             - '${PUSHER_METRICS_PORT:-9601}:9601'
