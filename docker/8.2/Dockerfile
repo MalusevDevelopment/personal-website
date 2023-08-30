@@ -122,4 +122,6 @@ COPY php.dev.ini /etc/php/8.2/cli/conf.d/99-sail.ini
 
 USER sail
 
+EXPOSE 5173
+
 ENTRYPOINT ["start-container"]
