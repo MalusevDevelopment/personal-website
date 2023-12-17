@@ -35,16 +35,9 @@ jobs:
           pull: true
           platforms: linux/amd64
           target: base
-          tags: malusevd99/website:base
+          tags: ghcr.io/dmalusev/website:base
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-      # - uses: 8398a7/action-slack@v3
-      #   if: always()
-      #   with:
-      #     status: ${{ job.status }}
-      #     fields: repo,message,commit,author,eventName,ref,workflow,took,pullRequest
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   build-docker-dev-image:
     runs-on: ubuntu-latest
     steps:
@@ -76,14 +69,7 @@ jobs:
           push: true
           pull: true
           platforms: linux/amd64
-          target: development
-          tags: malusevd99/website:dev
+          target: develop
+          tags: ghcr.io/dmalusev/website:dev
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-      # - uses: 8398a7/action-slack@v3
-      #   if: always()
-      #   with:
-      #     status: ${{ job.status }}
-      #     fields: repo,message,commit,author,eventName,ref,workflow,took,pullRequest
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

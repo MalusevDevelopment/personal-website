@@ -6,17 +6,15 @@ on:
     branches:
       - develop
       - master
-      - refactor # TODO: Remove after merge to master
   pull_request:
     branches:
       - develop
       - master
-
 jobs:
   testing:
     runs-on: ubuntu-latest
     container:
-      image: malusevd99/website:dev
+      image: ghcr.io/dmalusev/website:dev
     services:
       pgsql:
         image: 'postgres:15-alpine'
@@ -42,7 +40,7 @@ jobs:
           SOKETI_DEFAULT_APP_KEY: 'app-key'
           SOKETI_DEFAULT_APP_SECRET: 'app-secret'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Composer install
         run: |
           cp .env.example .env
@@ -57,13 +55,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           flags: tests
-          name: website-v2
+          name: website
           fail_ci_if_error: true
           verbose: false
-      # - uses: 8398a7/action-slack@v3
-      #   if: always()
-      #   with:
-      #     status: ${{ job.status }}
-      #     fields: repo,message,commit,author,eventName,ref,workflow,took,pullRequest
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as base
+FROM debian:bookworm-slim AS base
 
 LABEL maintainer="Dusan Malusev"
 
@@ -12,26 +12,28 @@ ENV TZ=UTC
 ENV MAKEFLAGS=-j8
 ENV RUNNING_ON_LINUX="0"
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y gnupg curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev \
-    && curl -sS 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c' | gpg --dearmor | tee /etc/apt/keyrings/ppa_ondrej_php.gpg > /dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu jammy main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
+    && apt-get install -y gnupg curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev apt-transport-https software-properties-common lsb-release \
+    && curl -sSL https://packages.sury.org/php/README.txt | bash -x \
     && apt-get update \
-    && apt-get install -y php8.2-cli \
-    php8.2-pgsql php8.2-sqlite3 php8.2-imagick \
-    php8.2-curl php8.2-mbstring \
-    php8.2-zip php8.2-bcmath php8.2-ffi php8.2-sockets \
-    php8.2-intl php8.2-readline \
-    php8.2-msgpack php8.2-igbinary php8.2-redis php8.2-apcu php8.2-swoole \
-    php8.2-ds php8.2-decimal php8.2-uuid php8.2-zstd \
-    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+    && apt-get install -y \
+        php8.3-cli php8.3-pgsql php8.3-sqlite3 php8.3-imagick \
+        php8.3-curl php8.3-mbstring \
+        php8.3-zip php8.3-bcmath php8.3-ffi php8.3-sockets \
+        php8.3-intl php8.3-readline \
+        php8.3-msgpack php8.3-igbinary php8.3-redis php8.3-apcu php8.3-swoole php8.3-uuid php8.3-zstd \
+    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
+    && apt-get -y purge apache2 \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.2
-RUN groupadd --force -g $WWWGROUP sail
-RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u $WWWUSER sail
+RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.3
+RUN groupadd --force -g "$WWWGROUP" sail
+RUN useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail
 RUN mkdir -p /var/www/html \
     && chown -R sail:sail /var/www/html \
     && chmod g+s /var/www/html \
@@ -47,7 +49,7 @@ EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
 
-FROM node:20-alpine as frontend
+FROM node:20-alpine AS frontend
 
 WORKDIR /var/www/html
 
@@ -55,7 +57,7 @@ COPY --chown=root:root . .
 
 RUN npm install && npm run build
 
-FROM malusevd99/website:base as production
+FROM ghcr.io/dmalusev/website:base AS production
 
 ENV APP_ENV=production
 ENV APP_DEBUG=false
@@ -93,24 +95,24 @@ RUN apt-get purge gcc make autotools g++ -y \
 COPY horizon.conf /etc/supervisor/conf.d/horizon.conf
 COPY website.conf /etc/supervisor/conf.d/website.conf
 COPY scheduler.conf /etc/supervisor/conf.d/scheduler.conf
-COPY php.ini /etc/php/8.2/cli/conf.d/99-sail.ini
+COPY php.ini /etc/php/8.3/cli/conf.d/99-sail.ini
 
 ENTRYPOINT ["start-container"]
 
-FROM base as develop
+FROM base AS develop
 
 ARG NODE_VERSION=20
 ARG POSTGRES_VERSION=15
 
-RUN apt-get install -y gosu python2 dnsutils librsvg2-bin fswatch \
-    php8.2-dev php8.2-xml php8.2-ast php8.2-pcov php8.2-xdebug php8.2-xhprof \
-    && curl -sLS https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm \
-    && curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /etc/apt/keyrings/pgdg.gpg >/dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/pgdg.gpg] http://apt.postgresql.org/pub/repos/apt jammy-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && apt-get update \
-    && apt-get install -y postgresql-client-$POSTGRES_VERSION \
+RUN apt-get update \
+    && curl -sLS "https://deb.nodesource.com/setup_$NODE_VERSION.x" | bash - \
+    && apt-get install -y gosu dnsutils librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
+    php8.3-dev php8.3-xml php8.3-ast php8.3-pcov php8.3-xhprof nodejs \
+    && npm install -g npm
+
+RUN pecl install xdebug
+
+RUN apt-get -y purge apache2 \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -118,7 +120,7 @@ RUN apt-get install -y gosu python2 dnsutils librsvg2-bin fswatch \
 COPY horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
 COPY website.dev.conf /etc/supervisor/conf.d/website.conf
 COPY scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
-COPY php.dev.ini /etc/php/8.2/cli/conf.d/99-sail.ini
+COPY php.dev.ini /etc/php/8.3/cli/conf.d/99-sail.ini
 
 USER sail
 

@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC2236
 if [ ! -z "$WWWUSER" ]; then
-    usermod -u $WWWUSER sail
+    usermod -u "$WWWUSER" sail
 fi
 
 if [ "$APP_ENV" == "production" ]; then
@@ -14,7 +14,7 @@ if [ "$APP_ENV" == "production" ]; then
 fi
 
 if [ $# -gt 0 ]; then
-    exec gosu $WWWUSER "$@"
+    exec gosu "$WWWUSER" "$@"
 else
     exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 fi
