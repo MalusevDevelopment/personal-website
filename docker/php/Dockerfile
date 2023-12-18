@@ -15,17 +15,21 @@ ENV RUNNING_ON_LINUX="0"
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y gnupg curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev apt-transport-https software-properties-common lsb-release \
-    && curl -sSL https://packages.sury.org/php/README.txt | bash -x \
-    && apt-get update \
+    && apt-get install -y gnupg curl ca-certificates libpq-dev zip unzip git supervisor libvips libcap2-bin libpng-dev apt-transport-https software-properties-common lsb-release \
+    && curl -sSL https://packages.sury.org/php/README.txt | bash -x
+
+RUN  apt-get update \
     && apt-get install -y \
-        php8.3-cli php8.3-pgsql php8.3-sqlite3 php8.3-imagick \
-        php8.3-curl php8.3-mbstring \
+        php8.3-cli php8.3-pgsql php8.3-imagick \
+        php8.3-curl php8.3-mbstring  php8.3-gmp  php8.3-vips \
         php8.3-zip php8.3-bcmath php8.3-ffi php8.3-sockets \
         php8.3-intl php8.3-readline \
-        php8.3-msgpack php8.3-igbinary php8.3-redis php8.3-apcu php8.3-swoole php8.3-uuid php8.3-zstd \
-    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
-    && apt-get -y purge apache2 \
+        php8.3-msgpack php8.3-igbinary php8.3-redis php8.3-xml php8.3-apcu php8.3-uuid php8.3-zstd php8.3-dev \
+    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+
+RUN pecl install --configureoptions 'enable-sockets="on" enable-openssl="on" enable-swoole-curl="on" enable-cares="on" enable-brotli="on" enable-swoole-pgsql="on" enable-mysqlnd="no" with-swoole-odbc="no" with-swoole-oracle="no" enable-swoole-sqlite="no"' swoole
+
+RUN apt-get -y purge apache2 php8.3-dev php8.3-mysql libpq-dev \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -42,6 +46,7 @@ RUN mkdir -p /var/www/html \
 
 COPY start-container /usr/local/bin/start-container
 COPY supervisord.conf /etc/supervisor/supervisord.conf
+COPY swoole.ini /etc/php/8.3/cli/conf.d/25-swoole.ini
 
 RUN chmod +x /usr/local/bin/start-container
 
@@ -57,7 +62,7 @@ COPY --chown=root:root . .
 
 RUN npm install && npm run build
 
-FROM ghcr.io/dmalusev/website-v2:base AS production
+FROM ghcr.io/dmalusev/website:base AS production
 
 ENV APP_ENV=production
 ENV APP_DEBUG=false
@@ -100,7 +105,7 @@ COPY php.ini /etc/php/8.3/cli/conf.d/99-sail.ini
 ENTRYPOINT ["start-container"]
 
 
-FROM ghcr.io/dmalusev/website-v2:base AS develop-github
+FROM ghcr.io/dmalusev/website:base AS develop-github
 
 ARG NODE_VERSION=20
 ARG POSTGRES_VERSION=15
@@ -110,7 +115,7 @@ RUN apt-get update \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
     && apt-get install -y gosu dnsutils librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
-    php8.3-dev php8.3-xml php8.3-ast php8.3-pcov php8.3-xhprof nodejs npm
+    php8.3-dev php8.3-ast nodejs npm
 RUN pecl install xdebug
 
 RUN apt-get -y purge apache2 \
@@ -143,7 +148,8 @@ RUN apt-get update \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
     && apt-get install -y gosu dnsutils librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
-    php8.3-dev php8.3-xml php8.3-ast php8.3-pcov php8.3-xhprof nodejs npm
+    php8.3-dev php8.3-ast nodejs npm
+
 RUN pecl install xdebug
 
 RUN apt-get -y purge apache2 \
