@@ -1,0 +1,29 @@
+name: "Docker Images"
+
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version_tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Get Tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: olegtarasov/get-tag@v2.1.2
+        id: version_tag
+        with:
+          tagRegex: "v(.*)"
+  production:
+    needs: ["tag"]
+    uses: "./.github/workflows/docker.yml"
+    with:
+      docker_target: production
+      version: ${{ needs.tag.outputs.version }}
+    secrets:
+      CR_PAT: ${{ secrets.CR_PAT }}

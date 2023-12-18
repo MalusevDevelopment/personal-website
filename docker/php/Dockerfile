@@ -57,7 +57,7 @@ COPY --chown=root:root . .
 
 RUN npm install && npm run build
 
-FROM ghcr.io/dmalusev/website:base AS production
+FROM ghcr.io/dmalusev/website-v2:base AS production
 
 ENV APP_ENV=production
 ENV APP_DEBUG=false
@@ -99,17 +99,18 @@ COPY php.ini /etc/php/8.3/cli/conf.d/99-sail.ini
 
 ENTRYPOINT ["start-container"]
 
-FROM base AS develop
+
+FROM ghcr.io/dmalusev/website-v2:base AS develop-github
 
 ARG NODE_VERSION=20
 ARG POSTGRES_VERSION=15
 
 RUN apt-get update \
-    && curl -sLS "https://deb.nodesource.com/setup_$NODE_VERSION.x" | bash - \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
     && apt-get install -y gosu dnsutils librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
-    php8.3-dev php8.3-xml php8.3-ast php8.3-pcov php8.3-xhprof nodejs \
-    && npm install -g npm
-
+    php8.3-dev php8.3-xml php8.3-ast php8.3-pcov php8.3-xhprof nodejs npm
 RUN pecl install xdebug
 
 RUN apt-get -y purge apache2 \
@@ -120,7 +121,43 @@ RUN apt-get -y purge apache2 \
 COPY horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
 COPY website.dev.conf /etc/supervisor/conf.d/website.conf
 COPY scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
-COPY php.dev.ini /etc/php/8.3/cli/conf.d/99-sail.ini
+COPY php.dev.ini /etc/php/8.3/cli/conf.d/98-sail.ini
+COPY xdebug.ini /etc/php/8.3/cli/conf.d/99-xdebug.ini
+
+RUN mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug
+
+USER sail
+
+EXPOSE 5173
+
+ENTRYPOINT ["start-container"]
+
+
+FROM base AS develop
+
+ARG NODE_VERSION=20
+ARG POSTGRES_VERSION=15
+
+RUN apt-get update \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt-get install -y gosu dnsutils librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
+    php8.3-dev php8.3-xml php8.3-ast php8.3-pcov php8.3-xhprof nodejs npm
+RUN pecl install xdebug
+
+RUN apt-get -y purge apache2 \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
+COPY website.dev.conf /etc/supervisor/conf.d/website.conf
+COPY scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
+COPY php.dev.ini /etc/php/8.3/cli/conf.d/98-sail.ini
+COPY xdebug.ini /etc/php/8.3/cli/conf.d/99-xdebug.ini
+
+RUN mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug
 
 USER sail
 

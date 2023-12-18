@@ -1,23 +1,42 @@
-name: 'Docker Production Image'
+name: "Build Docker Image"
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
+    inputs:
+      version:
+        default: ""
+        required: true
+        type: string
+      docker_target:
+        default: production
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        default: ""
+        required: true
+        type: string
+      docker_target:
+        default: production
+        required: true
+        type: string
+    secrets:
+      CR_PAT:
+        required: true
 jobs:
-  build-docker-image:
+  production:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Get Tag
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: olegtarasov/get-tag@v2.1.2
-        id: version_tag
-        with:
-          tagRegex: "v(.*)"
+      # - name: Get Tag
+      #   if: startsWith(github.ref, 'refs/tags/v')
+      #   uses: olegtarasov/get-tag@v2.1.2
+      #   id: version_tag
+      #   with:
+      #     tagRegex: "v(.*)"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -43,7 +62,7 @@ jobs:
           push: true
           pull: true
           platforms: linux/amd64
-          target: production
-          tags: ghcr.io/dmalusev/website:${{ steps.version_tag.outputs.tag }}
+          target: ${{ inputs.docker_target }}
+          tags: ghcr.io/dmalusev/website:${{ inputs.version }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max

@@ -162,6 +162,7 @@ services:
             - dusan_malusev
 networks:
     dusan_malusev:
+        name: dusan_malusev
         driver: bridge
 volumes:
     dusan_malusev-pgsql:
