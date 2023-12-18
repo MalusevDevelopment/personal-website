@@ -1,4 +1,4 @@
-name: "Docker Images"
+name: "Base And Development Docker Images"
 
 on:
   workflow_dispatch:
