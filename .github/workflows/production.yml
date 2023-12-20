@@ -25,5 +25,6 @@ jobs:
     with:
       docker_target: production
       version: ${{ needs.tag.outputs.version }}
+      production: true
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}

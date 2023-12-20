@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Eloquent;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,6 +18,7 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
+use Override;
 
 /**
  * App\Models\User
@@ -33,7 +36,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  *
  * @mixin Eloquent
  */
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -70,4 +73,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'updated_at' => 'immutable_datetime',
         'password' => 'hashed',
     ];
+
+    #[Override] public function canAccessPanel(Panel $panel): bool
+    {
+        // TODO: Better Check
+        return str_ends_with($this->email, '@dusanmalusev.dev');
+    }
 }

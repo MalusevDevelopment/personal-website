@@ -68,7 +68,8 @@
         "test:coverage:ci": "@php artisan test --parallel --recreate-databases --coverage --coverage-clover=coverage.xml",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
@@ -92,7 +93,10 @@
         },
         "preload": {
             "exclude": {
-                "laragear/meta": ["src/Cache/*", "resources/views"],
+                "laragear/meta": [
+                    "src/Cache/*",
+                    "resources/views"
+                ],
                 "charlesdp/builder": true
             }
         }
