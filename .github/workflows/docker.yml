@@ -74,3 +74,6 @@ jobs:
           platforms: linux/amd64
           target: ${{ inputs.docker_target }}
           tags: ghcr.io/dmalusev/website:${{ inputs.version }}
+          build-args: |
+            WWWGROUP=1000
+            WWWUSER=1000

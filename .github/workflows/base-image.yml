@@ -10,6 +10,7 @@ jobs:
       version: "base"
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
+
   develop:
     uses: "./.github/workflows/docker.yml"
     needs: ["base"]
