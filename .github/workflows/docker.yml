@@ -29,7 +29,7 @@ on:
       CR_PAT:
         required: true
 jobs:
-  production:
+  :
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

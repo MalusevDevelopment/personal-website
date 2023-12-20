@@ -44,9 +44,9 @@ RUN mkdir -p /var/www/html \
     && mkdir -p /home/sail/logs \
     && chown -R sail:sail /home/sail/logs
 
-COPY start-container /usr/local/bin/start-container
-COPY supervisord.conf /etc/supervisor/supervisord.conf
-COPY swoole.ini /etc/php/8.3/cli/conf.d/25-swoole.ini
+COPY ./docker/php/start-container /usr/local/bin/start-container
+COPY ./docker/php/supervisord.conf /etc/supervisor/supervisord.conf
+COPY ./docker/php/swoole.ini /etc/php/8.3/cli/conf.d/25-swoole.ini
 
 RUN chmod +x /usr/local/bin/start-container
 
@@ -97,10 +97,10 @@ RUN apt-get purge gcc make autotools g++ -y \
     && chmod -R 755 storage/framework/session
 
 
-COPY horizon.conf /etc/supervisor/conf.d/horizon.conf
-COPY website.conf /etc/supervisor/conf.d/website.conf
-COPY scheduler.conf /etc/supervisor/conf.d/scheduler.conf
-COPY php.ini /etc/php/8.3/cli/conf.d/99-sail.ini
+COPY ./docker/php/horizon.conf /etc/supervisor/conf.d/horizon.conf
+COPY ./docker/php/website.conf /etc/supervisor/conf.d/website.conf
+COPY ./docker/php/scheduler.conf /etc/supervisor/conf.d/scheduler.conf
+COPY ./docker/php/php.ini /etc/php/8.3/cli/conf.d/99-sail.ini
 
 ENTRYPOINT ["start-container"]
 
@@ -123,11 +123,11 @@ RUN apt-get -y purge apache2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
-COPY website.dev.conf /etc/supervisor/conf.d/website.conf
-COPY scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
-COPY php.dev.ini /etc/php/8.3/cli/conf.d/98-sail.ini
-COPY xdebug.ini /etc/php/8.3/cli/conf.d/99-xdebug.ini
+COPY ./docker/php/horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
+COPY ./docker/php/website.dev.conf /etc/supervisor/conf.d/website.conf
+COPY ./docker/php/scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
+COPY ./docker/php/php.dev.ini /etc/php/8.3/cli/conf.d/98-sail.ini
+COPY ./docker/php/xdebug.ini /etc/php/8.3/cli/conf.d/99-xdebug.ini
 
 RUN mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug
 
@@ -157,11 +157,11 @@ RUN apt-get -y purge apache2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
-COPY website.dev.conf /etc/supervisor/conf.d/website.conf
-COPY scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
-COPY php.dev.ini /etc/php/8.3/cli/conf.d/98-sail.ini
-COPY xdebug.ini /etc/php/8.3/cli/conf.d/99-xdebug.ini
+COPY ./docker/php/horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
+COPY ./docker/php/website.dev.conf /etc/supervisor/conf.d/website.conf
+COPY ./docker/php/scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
+COPY ./docker/php/php.dev.ini /etc/php/8.3/cli/conf.d/98-sail.ini
+COPY ./docker/php/xdebug.ini /etc/php/8.3/cli/conf.d/99-xdebug.ini
 
 RUN mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug
 

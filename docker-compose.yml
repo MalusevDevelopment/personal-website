@@ -1,8 +1,8 @@
 services:
     laravel.test:
         build:
-            context: ./docker/php
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: docker/php/Dockerfile
             target: develop
             args:
                 WWWGROUP: '${WWWGROUP}'
