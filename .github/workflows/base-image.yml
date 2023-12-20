@@ -7,7 +7,8 @@ jobs:
     uses: "./.github/workflows/docker.yml"
     with:
       docker_target: base
-      version: "base"
+      version: base
+      production: false
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
 
@@ -15,7 +16,8 @@ jobs:
     uses: "./.github/workflows/docker.yml"
     needs: ["base"]
     with:
-      docker_target: base
-      version: develop-github
+      docker_target: develop-docker
+      version: dev
+      production: false
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}

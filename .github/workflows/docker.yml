@@ -10,7 +10,7 @@ on:
       production:
         default: false
         required: false
-        type: bool
+        type: boolean
       docker_target:
         default: production
         required: true
@@ -25,6 +25,10 @@ on:
         default: production
         required: true
         type: string
+      production:
+        default: false
+        required: false
+        type: boolean
     secrets:
       CR_PAT:
         required: true
