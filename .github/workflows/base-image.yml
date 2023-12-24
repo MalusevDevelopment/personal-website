@@ -2,6 +2,8 @@ name: "Base And Development Docker Images"
 
 on:
   workflow_dispatch:
+    paths:
+      - "docker/**"
 jobs:
   base:
     uses: "./.github/workflows/docker.yml"

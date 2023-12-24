@@ -3,6 +3,6 @@
 declare(strict_types=1);
 
 return [
-    'script' => env('UMAMI_SCRIPT', 'http://localhost:3000/script.js'),
+    'script' => env('UMAMI_SCRIPT'),
     'id' => env('UMAMI_ID'),
 ];

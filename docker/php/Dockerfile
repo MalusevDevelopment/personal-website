@@ -45,6 +45,7 @@ RUN mkdir -p /var/www/html \
     && chown -R sail:sail /home/sail/logs
 
 COPY ./docker/php/start-container /usr/local/bin/start-container
+COPY ./docker/php/sqs-worker.conf /etc/supervisor/conf.d/sqs-worker.conf
 COPY ./docker/php/supervisord.conf /etc/supervisor/supervisord.conf
 COPY ./docker/php/swoole.ini /etc/php/8.3/cli/conf.d/25-swoole.ini
 

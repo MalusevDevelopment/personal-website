@@ -47,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->breadcrumbs()
             ->collapsibleNavigationGroups()
+            ->databaseNotifications()
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

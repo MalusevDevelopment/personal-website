@@ -31,12 +31,12 @@ services:
     pgsql:
         image: 'postgres:15-alpine'
         ports:
-            - '${FORWARD_DB_PORT:-5432}:5432'
+            - '5432:5432'
         environment:
             PGPASSWORD: '${DB_PASSWORD:-secret}'
-            POSTGRES_DB: '${DB_DATABASE}'
-            POSTGRES_USER: '${DB_USERNAME}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE:-dusan_malusev}'
+            POSTGRES_USER: '${DB_USERNAME:-dusan_malusev}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-dusan_malusev}'
         volumes:
             - 'dusan_malusev-pgsql:/var/lib/postgresql/data'
             - './docker/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
@@ -121,6 +121,9 @@ services:
             - dusan_malusev
     soketi:
         image: 'quay.io/soketi/soketi:latest-16-alpine'
+        depends_on:
+            - pgsql
+            - redis
         environment:
             SOKETI_DEBUG: '${SOKETI_DEBUG:-1}'
             SOKETI_METRICS_SERVER_PORT: '9601'
@@ -129,12 +132,16 @@ services:
             SOKETI_APP_MANAGER_CACHE_TTL: 3600
             SOKETI_DB_REDIS_HOST: ${REDIS_HOST:-redis}
             SOKETI_DB_REDIS_PORT: ${REDIS_PORT:-6379}
-            SOKETI_DB_REDIS_DB: ${REDIS_SOCKETI_DB:-3}
-            SOKETI_DB_REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
+            SOKETI_DB_REDIS_DB: ${REDIS_SOKETI_DB:-3}
             SOKETI_DB_POSTGRES_HOST: ${DB_HOST:-pgsql}
             SOKETI_DB_POSTGRES_PORT: ${DB_PORT:-5432}
+            SOKETI_CACHE_DRIVER: 'redis'
+            SOKETI_QUEUE_DRIVER: 'redis'
+            SOKETI_RATE_LIMITER_DRIVER: 'redis'
+            SOKETI_RATE_LIMITER_REDIS_CLUSTER_MODE: false
+            CACHE_REDIS_CLUSTER_MODE: false
             SOKETI_DB_POSTGRES_USERNAME: ${DB_USERNAME:-dusan_malusev}
-            SOKETI_DB_POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+            SOKETI_DB_POSTGRES_PASSWORD: ${DB_PASSWORD:-dusan_malusev}
             SOKETI_DB_POSTGRES_DATABASE: ${DB_DATABASE:-dusan_malusev}
             SOKETI_APP_MANAGER_POSTGRES_TABLE: 'socketi_apps'
             SOKETI_APP_MANAGER_POSTGRES_VERSION: '15'
@@ -142,11 +149,11 @@ services:
             SOKETI_DB_POOLING_MIN: 1
             SOKETI_DB_POOLING_MAX: 100
             SOKETI_METRICS_ENABLED: 1
-            SOKETI_CACHE_DRIVER: 'memory'
-            SOKETI_QUEUE_DRIVER: 'redis'
             SOKETI_QUEUE_REDIS_CONCURRENCY: 10
         networks:
             - dusan_malusev
+        ports:
+            - 6001:6001
     umami:
         image: ghcr.io/umami-software/umami:postgresql-latest
         ports:

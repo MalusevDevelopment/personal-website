@@ -7,6 +7,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use ReflectionException;
 
 class Kernel extends ConsoleKernel
 {
@@ -18,11 +19,14 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('telescope:prune')->daily();
+        $schedule->command('queue:monitor', ['--max' => 100])->everyTenSeconds();
+        $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
+        $schedule->command('queue:prune-batches --hours=48 --cancelled=72')->daily();
     }
 
     /**
      * Register the commands for the application.
-     * @throws BindingResolutionException
+     * @throws BindingResolutionException|ReflectionException
      */
     protected function commands(): void
     {
