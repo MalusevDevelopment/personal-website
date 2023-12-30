@@ -67,6 +67,8 @@ ENTRYPOINT ["start-container"]
 
 FROM node:20-alpine AS frontend
 
+ENV NODE_ENV=production
+
 WORKDIR /var/www/html
 
 COPY --chown=root:root . .

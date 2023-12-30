@@ -1,18 +1,21 @@
-import {defineConfig, loadEnv} from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import manifestSRI from 'vite-plugin-manifest-sri';
-import laravel, {refreshPaths} from 'laravel-vite-plugin';
+import laravel, { refreshPaths } from 'laravel-vite-plugin';
 
 import fs from 'node:fs';
 
-export default ({mode}) => {
-  process.env = {...process.env, ...loadEnv(mode, process.cwd())};
+export default ({ mode }) => {
+  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
   return defineConfig({
     server: {
-      cors: true, https: {
+      cors: true,
+      https: process.env.NODE_ENV !== 'production' ? {
         key: fs.readFileSync('./storage/keys/ssl.key'),
         cert: fs.readFileSync('./storage/keys/ssl.cert'),
-      }, host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local', hmr: {
+      } : false,
+      host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',
+      hmr: {
         host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',
       },
     }, plugins: [
