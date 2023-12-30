@@ -75,6 +75,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           target: ${{ inputs.docker_target }}
           tags: ghcr.io/dmalusev/website:${{ inputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             BASE=${{ inputs.base }}
       - name: Build and push API
@@ -87,6 +89,8 @@ jobs:
           pull: true
           platforms: linux/amd64
           target: ${{ inputs.docker_target }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ghcr.io/dmalusev/website:${{ inputs.version }}
           build-args: |
             WWWGROUP=1000
