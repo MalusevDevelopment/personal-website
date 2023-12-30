@@ -67,13 +67,11 @@ ENTRYPOINT ["start-container"]
 
 FROM node:20-alpine AS frontend
 
-ENV NODE_ENV=production
-
 WORKDIR /var/www/html
 
 COPY --chown=root:root . .
 
-RUN npm install && npm run build
+RUN npm install && NODE_ENV=production npm run build
 
 FROM ${BASE} AS production
 
