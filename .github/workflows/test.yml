@@ -29,6 +29,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/dmalusev/website:dev
+      credentials:
+        password: ${{ secrets.CR_PAT }}
+        username: ${{ github.actor }}
     services:
       pgsql:
         image: "postgres:15-alpine"

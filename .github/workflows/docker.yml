@@ -15,6 +15,10 @@ on:
         default: production
         required: true
         type: string
+      base:
+        default: base
+        required: true
+        type: string
   workflow_call:
     inputs:
       version:
@@ -29,6 +33,10 @@ on:
         default: false
         required: false
         type: boolean
+      base:
+        default: base
+        required: true
+        type: string
     secrets:
       CR_PAT:
         required: true
@@ -67,6 +75,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           target: ${{ inputs.docker_target }}
           tags: ghcr.io/dmalusev/website:${{ inputs.version }}
+          build-args: |
+            BASE=${{ inputs.base }}
       - name: Build and push API
         if: ${{ !inputs.production }}
         uses: docker/build-push-action@v5
@@ -81,3 +91,4 @@ jobs:
           build-args: |
             WWWGROUP=1000
             WWWUSER=1000
+            BASE=${{ inputs.base }}

@@ -89,7 +89,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_')),
             'serializer' => Redis::SERIALIZER_IGBINARY,
             'compression' => Redis::COMPRESSION_ZSTD,
         ],
@@ -123,7 +123,7 @@ return [
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_QUEUE_DB', 4),
+            'database' => env('REDIS_QUEUE_DB', 3),
         ],
 
         'locks' => [
@@ -131,7 +131,7 @@ return [
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_QUEUE_DB', 5),
+            'database' => env('REDIS_QUEUE_DB', 4),
         ],
     ],
 

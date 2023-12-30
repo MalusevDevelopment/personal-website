@@ -7,10 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff"/>
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e293b"/>
-    {{--    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>--}}
-    {{--    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>--}}
-    {{--    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>--}}
-    {{--    <link rel="manifest" href="{{ asset('site.webmanifest') }}"/>--}}
     <meta property="og:title" content="Dusan Malusev"/>
     <meta property="og:description" content="Dusan's Website"/>
     <meta property="og:type" content="website"/>
@@ -56,12 +52,14 @@
         }
     </style>
 
-    @livewireStyles
+    @if(($useLivewire ?? false))
+        @livewireStyles
+    @endif
     @vite('resources/css/app.css')
 </head>
 
 <body
-    class="antialiased flex flex-col h-screen px-6 m-auto text-lg leading-7 max-w-7xl bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32">
+        class="antialiased flex flex-col h-screen px-6 m-auto text-lg leading-7 max-w-7xl bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32">
 <div class="relative flex flex-col grow">
     @include('components.header')
     {{ $slot }}
@@ -69,9 +67,20 @@
     @include('components.search')
 </div>
 
-@livewireScriptConfig
-<script defer src="{{ config('umami.script') }}" data-website-id="{{ config('umami.id') }}"></script>
-@vite('resources/js/app.js')
+<script defer
+        src="{{ config('umami.script') }}"
+        data-cache="true"
+        data-domains="{{ config('app.domain') }}"
+        data-website-id="{{ config('umami.id') }}"
+        data-auto-track="false"
+></script>
+
+@if(($useLivewire ?? false))
+    @livewireScriptConfig
+    @vite('resources/js/with-livewire.js')
+@else
+    @vite('resources/js/app.js')
+@endif
 
 </body>
 </html>

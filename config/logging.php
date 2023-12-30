@@ -34,8 +34,8 @@ return [
     */
 
     'deprecations' => [
-        'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
-        'trace' => false,
+        'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'single'),
+        'trace' => true,
     ],
 
     /*
@@ -62,14 +62,14 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => env('SINGLE_LOG_PATH', storage_path('logs/laravel.log')),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => env('DAILY_LOG_PATH', storage_path('logs/laravel.log')),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
             'replace_placeholders' => true,
@@ -126,7 +126,9 @@ return [
         ],
 
         'emergency' => [
-            'path' => storage_path('logs/emergency.log'),
+            'driver' => 'single',
+            'path' => env('EMERGENCY_LOG_PATH', storage_path('logs/emergency.log')),
+            'level' => 'emergency',
         ],
     ],
 

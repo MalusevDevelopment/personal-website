@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.37.3.
+ * Generated for Laravel 10.39.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -10570,6 +10570,18 @@
                         return $instance->getRedis();
         }
                     /**
+         * Get the maximum number of attempts for an object-based queue handler.
+         *
+         * @param mixed $job
+         * @return mixed 
+         * @static 
+         */ 
+        public static function getJobTries($job)
+        {            //Method inherited from \Illuminate\Queue\Queue         
+                        /** @var \Laravel\Horizon\RedisQueue $instance */
+                        return $instance->getJobTries($job);
+        }
+                    /**
          * Get the backoff for an object-based queue handler.
          *
          * @param mixed $job
@@ -19552,6 +19564,15 @@
         public static function formatExceptionForClient($e, $debug = false)
         {
                         return \Laravel\Octane\Octane::formatExceptionForClient($e, $debug);
+        }
+                    /**
+         * Write an error message to STDERR or to the SAPI logger if not in CLI mode.
+         *
+         * @static 
+         */ 
+        public static function writeError($message)
+        {
+                        return \Laravel\Octane\Octane::writeError($message);
         }
                     /**
          * Concurrently resolve the given callbacks via background tasks, returning the results.

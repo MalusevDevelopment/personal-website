@@ -36,9 +36,11 @@ use Override;
  *
  * @mixin Eloquent
  */
-class User extends Authenticatable implements MustVerifyEmail, FilamentUser
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -74,7 +76,8 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'password' => 'hashed',
     ];
 
-    #[Override] public function canAccessPanel(Panel $panel): bool
+    #[Override]
+    public function canAccessPanel(Panel $panel): bool
     {
         // TODO: Better Check
         return str_ends_with($this->email, '@dusanmalusev.dev');

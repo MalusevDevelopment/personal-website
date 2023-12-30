@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 use Laravel\Octane\Contracts\OperationTerminated;
 use Laravel\Octane\Events\RequestHandled;
 use Laravel\Octane\Events\RequestReceived;
@@ -50,7 +51,7 @@ return [
     |
     */
 
-    'https' => env('OCTANE_HTTPS', false),
+    'https' => true, //env('OCTANE_HTTPS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -219,4 +220,23 @@ return [
 
     'max_execution_time' => 30,
 
+    'swoole' => [
+        'ssl' => false,
+        'options' => [
+            'hook_flags' => SWOOLE_HOOK_ALL,
+            'task_enable_coroutine' => false,
+            'enable_coroutine' => true,
+            'enable_unsafe_event' => true,
+            'open_http2_protocol' => false,
+            'tcp_fastopen' => true,
+            'user' => 'sail',
+            'group' => 'sail',
+            //            'ssl_cert_file' => storage_path('keys/ssl.cert'),
+            //            'ssl_key_file' => storage_path('keys/ssl.key'),
+            //            'ssl_dhparam' => storage_path('keys/dhparam.conf'),
+            //            'ssl_protocols' => SWOOLE_SSL_TLSv1_3,
+            //            'ssl_allow_self_signed' => env('APP_ENV', 'production') === 'local',
+            //            'ssl_prefer_server_ciphers' => true,
+        ],
+    ],
 ];

@@ -50,7 +50,7 @@ return [
     |
     */
 
-    'debug' => (bool)env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -63,7 +63,8 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://www.dusanmalusev.dev'),
+    'domain' => env('APP_DOMAIN', 'www.dusanmalusev.dev'),
 
     'asset_url' => env('ASSET_URL'),
 

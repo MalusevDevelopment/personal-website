@@ -23,9 +23,4 @@ class PolicesController extends Controller
     {
         return view('terms');
     }
-
-    public function resume(): BinaryFileResponse
-    {
-        return response()->file('');
-    }
 }

@@ -2,24 +2,28 @@ name: "Base And Development Docker Images"
 
 on:
   workflow_dispatch:
+  push:
+    branches: master
     paths:
-      - "docker/**"
+      - "docker/php/**"
+      - "docker/supervisord/**"
 jobs:
   base:
     uses: "./.github/workflows/docker.yml"
     with:
       docker_target: base
       version: base
+      base: 'ghcr.io/dmalusev/website:base'
       production: false
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
-
   develop:
     uses: "./.github/workflows/docker.yml"
     needs: ["base"]
     with:
-      docker_target: develop-docker
+      docker_target: develop
       version: dev
       production: false
+      base: 'ghcr.io/dmalusev/website:base'
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}

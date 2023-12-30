@@ -1,4 +1,18 @@
 services:
+    nginx:
+        image: nginx:1.23-alpine
+        restart: unless-stopped
+        ports:
+            - '80:80'
+            - '443:443'
+        volumes:
+            - '.:/var/www/html'
+            - './docker/nginx:/etc/nginx'
+            - './storage/keys:/etc/keys'
+        networks:
+            - dusan_malusev
+        depends_on:
+            - laravel.test
     laravel.test:
         build:
             context: .
@@ -11,8 +25,8 @@ services:
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
-            - '${APP_PORT:-80}:8080'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '8080:8080'
+            - '5173:5173'
         environment:
             WWWUSER: '${WWWUSER}'
             APP_ENV: '${APP_ENV}'
@@ -167,6 +181,12 @@ services:
         restart: unless-stopped
         networks:
             - dusan_malusev
+    dozzle:
+        image: amir20/dozzle:latest
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        ports:
+            - 8000:8080
 networks:
     dusan_malusev:
         name: dusan_malusev
