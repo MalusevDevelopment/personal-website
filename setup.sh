@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 docker run --rm \
-    -u "$(id -u):$(id -g)" \
-    -v "$(pwd):/var/www/html" \
-    -w /var/www/html \
-    -e COMPOSER_ALLOW_SUPERUSER=1 \
-    laravelsail/php82-composer:latest \
-    composer update --ignore-platform-reqs
+  -u "$(id -u):$(id -g)" \
+  -v "$(pwd):/var/www/html" \
+  -w /var/www/html \
+  -e COMPOSER_ALLOW_SUPERUSER=1 \
+  laravelsail/php83-composer:latest \
+  composer update --ignore-platform-reqs
 
 cp .env.example .env
 

@@ -65,14 +65,13 @@ EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
 
-FROM laravelsail/php82-composer:latest AS vendor
+FROM laravelsail/php83-composer:latest AS vendor
 
 WORKDIR /app
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-COPY ./composer.json ./composer.json
-COPY ./composer.lock ./composer.lock
+COPY . .
 
 RUN composer install \
     --no-dev \
