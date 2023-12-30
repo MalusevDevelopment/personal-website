@@ -65,7 +65,8 @@ EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
 
-FROM laravelsail/php83-composer:latest AS vendor
+# FROM laravelsail/php83-composer:latest AS vendor
+FROM ${BASE} AS vendor
 
 WORKDIR /app
 
@@ -94,11 +95,14 @@ RUN npm install && NODE_ENV=production npm run build
 
 FROM ${BASE} AS production
 
+WORKDIR /var/www/html
+
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 
-COPY --chown=root:root . /var/www/html
-COPY --from=frontend --chown=root:root /app/public/build /var/www/html/public/build
+COPY --chown=root:root . .
+COPY --from=frontend --chown=root:root /app/public/build ./public/build
+COPY --from=vendor --chown=root:root /app/vendor ./vendor
 
 RUN apt-get purge -y \
     gcc make autotools build-essential g++ gnupg \
