@@ -24,8 +24,7 @@ jobs:
     uses: "./.github/workflows/docker.yml"
     with:
       docker_target: production
+      platforms: linux/arm64
       version: ${{ needs.tag.outputs.version }}
-      production: true
-      base: 'ghcr.io/dmalusev/website:base'
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}

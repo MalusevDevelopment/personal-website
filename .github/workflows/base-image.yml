@@ -13,8 +13,7 @@ jobs:
     with:
       docker_target: base
       version: base
-      base: 'ghcr.io/dmalusev/website:base'
-      production: false
+      platforms: linux/amd64,linux/arm64
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
   develop:
@@ -23,7 +22,6 @@ jobs:
     with:
       docker_target: develop
       version: dev
-      production: false
-      base: 'ghcr.io/dmalusev/website:base'
+      platforms: linux/amd64
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
