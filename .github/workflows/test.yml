@@ -36,10 +36,10 @@ jobs:
       pgsql:
         image: "postgres:15-alpine"
         env:
-          PGPASSWORD: "secret"
+          PGPASSWORD: "dusan_malusev"
           POSTGRES_DB: "testing"
           POSTGRES_USER: "dusan_malusev"
-          POSTGRES_PASSWORD: "password"
+          POSTGRES_PASSWORD: "dusan_malusev"
       redis:
         image: "redis:alpine"
       meilisearch:
@@ -58,6 +58,8 @@ jobs:
           SOKETI_DEFAULT_APP_SECRET: "app-secret"
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Composer install
         run: |
           cp .env.example .env

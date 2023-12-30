@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
       - name: Get Tag
         if: startsWith(github.ref, 'refs/tags/v')
         uses: olegtarasov/get-tag@v2.1.2
