@@ -65,21 +65,12 @@ EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
 
-FROM node:20-alpine AS frontend
+FROM ${BASE} AS vendor
 
-WORKDIR /var/www/html
+WORKDIR /app
 
-COPY --chown=root:root . .
-
-RUN npm install && NODE_ENV=production npm run build
-
-FROM ${BASE} AS production
-
-ENV APP_ENV=production
-ENV APP_DEBUG=false
-
-COPY --chown=root:root . /var/www/html
-COPY --from=frontend --chown=root:root /var/www/html/public/build /var/www/html/public/build
+COPY ./composer.json ./composer.json
+COPY ./composer.lock ./composer.lock
 
 RUN composer install \
     --no-dev \
@@ -90,7 +81,26 @@ RUN composer install \
     --prefer-dist \
     --apcu-autoloader
 
-RUN apt-get purge gcc make autotools g++ -y \
+FROM node:20-alpine AS frontend
+
+WORKDIR /app
+
+COPY --chown=root:root . .
+COPY --chown=root:root --from=vendor /app/vendor ./vendor
+
+RUN npm install && NODE_ENV=production npm run build
+
+FROM ${BASE} AS production
+
+ENV APP_ENV=production
+ENV APP_DEBUG=false
+
+COPY --chown=root:root . /var/www/html
+COPY --from=frontend --chown=root:root /app/public/build /var/www/html/public/build
+
+RUN apt-get purge -y \
+    gcc make autotools build-essential g++ gnupg \
+    git zip unzip apt-transport-https software-properties-common lsb-release \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
