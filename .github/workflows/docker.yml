@@ -50,7 +50,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.CR_PAT }}
       - name: Build and push API
-        if: ${{ !inputs.production }}
         uses: docker/build-push-action@v5
         with:
           file: docker/php/Dockerfile
