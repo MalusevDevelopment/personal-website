@@ -21,7 +21,7 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
                 WWWUSER: '${WWWUSER}'
-        image: ghcr.io/dmalusev/website:dev
+        image: ghcr.io/dmalusev/website:latest
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
