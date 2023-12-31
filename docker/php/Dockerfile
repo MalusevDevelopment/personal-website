@@ -41,7 +41,6 @@ RUN cd /tmp \
     && ./configure \
     --enable-openssl \
     --enable-brotli \
-    --enable-swoole-curl \
     --enable-cares \
     --enable-swoole \
     --enable-sockets \
