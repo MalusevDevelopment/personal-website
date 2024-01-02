@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -99,7 +99,7 @@ return [
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_DB', 0),
+            'database' => env('REDIS_DEFAULT_DB', 0),
         ],
 
         'cache' => [
@@ -123,7 +123,7 @@ return [
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_QUEUE_DB', 3),
+            'database' => env('REDIS_HORIZON_DB', 3),
         ],
 
         'locks' => [
@@ -131,7 +131,15 @@ return [
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_QUEUE_DB', 4),
+            'database' => env('REDIS_LOCKS_DB', 4),
+        ],
+
+        'sessions' => [
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'username' => env('REDIS_USERNAME'),
+            'password' => env('REDIS_PASSWORD'),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => env('REDIS_SESSIONS_DB', 5),
         ],
     ],
 
