@@ -23,12 +23,14 @@ on:
 
 env:
   XDEBUG_MODE: "coverage"
+  GITHUB_WORKSPACE: /var/www/html
 
 jobs:
   testing:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/dmalusev/website:dev
+      options: --user root
       credentials:
         password: ${{ secrets.CR_PAT }}
         username: ${{ github.actor }}
