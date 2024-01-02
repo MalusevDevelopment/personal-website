@@ -67,6 +67,10 @@ jobs:
           cp .env.example .env
           composer install --prefer-dist --no-interaction --no-progress
           php artisan key:generate
+      - name:
+        run: |
+            npm install
+            npm run build
       - name: Run unit tests
         run: composer test:coverage:ci
       - uses: codecov/codecov-action@v3
