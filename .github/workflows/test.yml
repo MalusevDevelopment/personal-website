@@ -23,6 +23,7 @@ on:
 
 env:
   XDEBUG_MODE: "coverage"
+  GITHUB_WORKSPACE: /var/www/html
 
 jobs:
   testing:
