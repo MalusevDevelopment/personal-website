@@ -74,7 +74,7 @@ return [
     |
     */
 
-    'connection' => env('SESSION_CONNECTION', 'sessions'),
+    'connection' => env('SESSION_CONNECTION'),
 
     /*
     |--------------------------------------------------------------------------
@@ -130,7 +130,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_') . '_session'
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
     ),
 
     /*
@@ -170,7 +170,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', ((bool)env('APP_DEBUG')) === true),
+    'secure' => env('SESSION_SECURE_COOKIE', ((bool) env('APP_DEBUG')) === true),
 
     /*
     |--------------------------------------------------------------------------

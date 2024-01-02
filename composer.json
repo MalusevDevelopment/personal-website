@@ -70,15 +70,15 @@
         "test:coverage:ci": "@php artisan test --parallel --recreate-databases --coverage --coverage-clover=coverage.xml",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi",
-            "@php artisan filament:upgrade"
+            "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
             "@php artisan ide-helper:generate -n",
             "@php artisan ide-helper:meta -n",
-            "@php artisan ide-helper:models -n"
+            "@php artisan ide-helper:models -n",
+            "@php artisan filament:upgrade"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -89,9 +89,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-                "barryvdh/laravel-ide-helper"
-            ]
+            "dont-discover": []
         },
         "preload": {
             "exclude": {
