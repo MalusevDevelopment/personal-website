@@ -2,6 +2,9 @@ name: "Run Tests"
 
 on:
   workflow_dispatch:
+  schedule:
+    # Build base and development images on 1 and 15 day every month
+    - cron: '0 0 1,15 * *'
   push:
     branches:
       - master
