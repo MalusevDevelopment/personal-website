@@ -8,11 +8,11 @@ export default defineConfig({
     environment: 'jsdom',
   },
 
-  root: path.resolve(__dirname, './resources/js/tests'),
+  root: path.resolve(__dirname, 'resources/js/tests'),
 
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './resources/js'),
+      '@': path.resolve(__dirname, 'resources/js'),
     },
   },
 });

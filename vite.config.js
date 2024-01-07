@@ -22,13 +22,14 @@ export default ({mode}) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './resources/js'),
+        '@': path.resolve(__dirname, 'resources/js'),
       },
     },
     plugins: [
       laravel({
         input: [
           'resources/css/app.css',
+          'resources/css/website.css',
           'resources/js/app.js',
           'resources/js/with-livewire.js',
           'resources/js/pusher.js',
