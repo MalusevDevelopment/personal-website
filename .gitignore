@@ -20,3 +20,4 @@ yarn-error.log
 /.vscode
 coverage.xml
 storage/pint.cache
+coverage/
