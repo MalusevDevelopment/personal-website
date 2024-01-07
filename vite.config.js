@@ -1,11 +1,11 @@
-import { defineConfig, loadEnv } from 'vite';
+import {defineConfig, loadEnv} from 'vite';
 import manifestSRI from 'vite-plugin-manifest-sri';
-import laravel, { refreshPaths } from 'laravel-vite-plugin';
+import laravel, {refreshPaths} from 'laravel-vite-plugin';
 
 import fs from 'node:fs';
 
-export default ({ mode }) => {
-  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+export default ({mode}) => {
+  process.env = {...process.env, ...loadEnv(mode, process.cwd())};
 
   return defineConfig({
     server: {
@@ -18,14 +18,15 @@ export default ({ mode }) => {
       hmr: {
         host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',
       },
-    }, plugins: [
+    },
+    plugins: [
       laravel({
         input: [
           'resources/css/app.css',
           'resources/js/app.js',
           'resources/js/with-livewire.js',
           'resources/js/pusher.js',
-        ], // transformOnServe: (code, devServerUrl) => code.replaceAll('/@imagetools', devServerUrl+'/@imagetools'),
+        ],
         refresh: [
           ...refreshPaths,
           'app/Filament/**',
@@ -33,7 +34,10 @@ export default ({ mode }) => {
           'app/Livewire/**',
           'app/Infolists/Components/**',
           'app/Providers/Filament/**',
-          'app/Tables/Columns/**'],
-      }), manifestSRI()],
+          'app/Tables/Columns/**',
+        ],
+      }),
+      manifestSRI(),
+    ],
   });
 }

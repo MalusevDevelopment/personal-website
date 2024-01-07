@@ -6,7 +6,7 @@
             </p>
             <p class="text-xs text-neutral-500 dark:text-neutral-400">
                 Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
-                              href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Laravel</a> &amp;
+                              href="https://www.laravel.com/" target="_blank" rel="noopener noreferrer">Laravel</a> &amp;
                 <a
                     class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
                     href="https://github.com/jpanther/congo" target="_blank" rel="noopener noreferrer">

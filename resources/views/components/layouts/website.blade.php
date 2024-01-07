@@ -55,7 +55,7 @@
     @if(($useLivewire ?? false))
         @livewireStyles
     @endif
-    @vite('resources/css/app.css')
+    @vite('resources/css/website.css')
 </head>
 
 <body

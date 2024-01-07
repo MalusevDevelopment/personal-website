@@ -24,7 +24,7 @@ chmod 644 storage/keys/ssl.cert
 chmod 640 storage/keys/ssl.key
 chmod 640 storage/keys/dhparam.conf
 
-./vendor/bin/sail up -d || exit 1
+./vendor/bin/sail up -d --build || exit 1
 
 sleep 5
 

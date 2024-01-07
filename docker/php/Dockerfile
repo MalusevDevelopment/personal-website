@@ -157,8 +157,12 @@ RUN apt-get update \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
     && apt-get install -y librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
     php8.3-dev php8.3-ast nodejs npm git build-essential
+
 RUN pecl install xdebug
 
+RUN mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
+
+COPY ./docker/supervisord/supervisord.dev.conf /etc/supervisor/supervisord.conf
 COPY ./docker/supervisord/horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
 COPY ./docker/supervisord/website.dev.conf /etc/supervisor/conf.d/website.conf
 COPY ./docker/supervisord/scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
