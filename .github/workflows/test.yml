@@ -99,7 +99,9 @@ jobs:
           key: ${{ runner.os }}-pint-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-pint-
       - name: Run unit tests
-        run: composer test:coverage:ci
+        run: |
+            composer test:coverage:ci
+            npm test
       - name: Run Pint
         run: ./vendor/bin/pint
       - uses: codecov/codecov-action@v3

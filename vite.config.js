@@ -3,6 +3,7 @@ import manifestSRI from 'vite-plugin-manifest-sri';
 import laravel, {refreshPaths} from 'laravel-vite-plugin';
 
 import fs from 'node:fs';
+import path from 'path';
 
 export default ({mode}) => {
   process.env = {...process.env, ...loadEnv(mode, process.cwd())};
@@ -17,6 +18,11 @@ export default ({mode}) => {
       host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',
       hmr: {
         host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',
+      },
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './resources/js'),
       },
     },
     plugins: [
