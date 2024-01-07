@@ -4,7 +4,6 @@
             <header class="mb-3 flex flex-col items-center">
                 <img
                         class="mb-2 h-36 w-36 rounded-full"
-                        loading="lazy"
                         width="36"
                         height="36"
                         decoding="async"
