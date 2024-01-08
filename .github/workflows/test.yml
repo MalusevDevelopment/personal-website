@@ -115,6 +115,8 @@ jobs:
             composer test:coverage:ci
             npm ci
             npm run test
+        env:
+          LARAVEL_BYPASS_ENV_CHECK: 1
       - name: Run Pint
         run: ./vendor/bin/pint
       - uses: codecov/codecov-action@v3
