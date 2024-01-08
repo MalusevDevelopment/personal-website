@@ -73,6 +73,7 @@
         data-domains="{{ config('app.domain') }}"
         data-website-id="{{ config('umami.id') }}"
         data-auto-track="false"
+        nonce="{{ Vite::cspNonce() }}"
 ></script>
 
 @if(($useLivewire ?? false))
