@@ -18,9 +18,12 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('telescope:prune')->daily();
-        $schedule->command('queue:monitor', ['--max' => 100])->everyTenSeconds();
-        $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
-        $schedule->command('queue:prune-batches --hours=48 --cancelled=72')->daily();
+        $schedule->command('queue:monitor', [
+            '--max' => 100,
+            implode(',', config('horizon.defaults.supervisor-1.queue')),
+        ])->everyTenSeconds();
+        $schedule->command('queue:prune-batches')->daily();
+        $schedule->command('queue:prune-failed')->daily();
     }
 
     /**
@@ -30,7 +33,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
