@@ -113,7 +113,8 @@ jobs:
       - name: Run unit tests
         run: |
             composer test:coverage:ci
-            npm test
+            npm ci
+            npm run test
       - name: Run Pint
         run: ./vendor/bin/pint
       - uses: codecov/codecov-action@v3

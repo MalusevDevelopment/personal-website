@@ -4,11 +4,19 @@ import laravel, {refreshPaths} from 'laravel-vite-plugin';
 
 import fs from 'node:fs';
 import path from 'path';
+import GithubActionsReporter from 'vitest-github-actions-reporter';
 
 export default ({mode}) => {
   process.env = {...process.env, ...loadEnv(mode, process.cwd())};
 
   return defineConfig({
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      reporters: process.env.GITHUB_ACTIONS
+          ? ['default', new GithubActionsReporter()]
+          : 'default',
+    },
     server: {
       cors: true,
       https: process.env.NODE_ENV !== 'production' ? {
