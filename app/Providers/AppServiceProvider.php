@@ -17,10 +17,5 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        if ($this->app->runningUnitTests()) {
-            ParallelTesting::setUpTestDatabase(static function (string $database) {
-                Artisan::call("db:seed --database=$database");
-            });
-        }
     }
 }

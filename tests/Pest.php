@@ -14,7 +14,7 @@
 use Spatie\Permission\PermissionRegistrar;
 
 uses(
-    Tests\TestCase::class,
+    Tests\FeatureTestCase::class,
 )->in('Feature');
 
 
@@ -32,9 +32,4 @@ uses(
 function permissions(): PermissionRegistrar
 {
     return app(PermissionRegistrar::class);
-}
-
-function forgetPermissions(): void
-{
-    app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 }

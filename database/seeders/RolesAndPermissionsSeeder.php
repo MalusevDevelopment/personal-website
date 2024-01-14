@@ -23,13 +23,10 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run(): void
     {
         $this->registrar->forgetCachedPermissions();
-
         $owner = Role::create(['name' => Roles::OWNER, 'guard_name' => self::DEFAULT_GUARD]);
-
         Permission::create(['name' => Permissions::VIEW_HORIZON, 'guard_name' => self::DEFAULT_GUARD]);
         Permission::create(['name' => Permissions::VIEW_TELESCOPE, 'guard_name' => self::DEFAULT_GUARD]);
         Permission::create(['name' => Permissions::VIEW_ADMIN_DASHBOARD, 'guard_name' => self::DEFAULT_GUARD]);
-
         $owner->givePermissionTo(Permission::all());
     }
 }
