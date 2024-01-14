@@ -1,0 +1,145 @@
+{
+    "files.eol": "\n",
+    "files.watcherExclude": {
+        "**/vendor/**": true,
+        "**/node_modules/**": true
+    },
+    "emmet.includeLanguages": {
+        "edge": "html",
+        "aspnetcorerazor": "html",
+        "php": "html",
+        "vue": "html"
+    },
+    "[nginx]": {
+        "editor.defaultFormatter": "ahmadalli.vscode-nginx-conf"
+    },
+    "explorer.autoRevealExclude": {
+        "**/vendor": true,
+        "**/node_modules": true
+    },
+
+    "php.suggest.basic": false,
+    "php.validate.enable": true,
+    "php.validate.run": "onType",
+
+    "composerIntelephense.packagistCache": 1200,
+
+    "intelephense.stubs": [
+        "redis",
+        "bcmath",
+        "bz2",
+        "calendar",
+        "Core",
+        "ctype",
+        "curl",
+        "date",
+        "exif",
+        "fileinfo",
+        "filter",
+        "gd",
+        "FFI",
+        "apcu",
+        "gettext",
+        "igbinary",
+        "memcached",
+        "sodium",
+        "yaml",
+        "hash",
+        "iconv",
+        "intl",
+        "json",
+        "mbstring",
+        "openssl",
+        "pcntl",
+        "pcre",
+        "PDO",
+        "pdo_pgsql",
+        "pdo_sqlite",
+        "pgsql",
+        "posix",
+        "readline",
+        "Reflection",
+        "regex",
+        "session",
+        "sockets",
+        "SPL",
+        "sqlite3",
+        "standard",
+        "superglobals",
+        "tokenizer",
+        "wddx",
+        "swoole",
+        "Zend OPcache",
+        "zip",
+        "zlib"
+    ],
+
+    "intelephense.trace.server": "off",
+    "intelephense.telemetry.enabled": false,
+    "intelephense.format.enable": true,
+
+    "intelephense.compatibility.correctForArrayAccessArrayAndTraversableArrayUnionTypes": true,
+    "intelephense.compatibility.correctForBaseClassStaticUnionTypes": true,
+
+    "intelephense.completion.insertUseDeclaration": true,
+    "intelephense.completion.fullyQualifyGlobalConstantsAndFunctions": true,
+    "intelephense.completion.triggerParameterHints": true,
+    "intelephense.completion.maxItems": 20,
+
+    "intelephense.environment.documentRoot": "public",
+    "intelephense.environment.phpVersion": "8.3.0",
+    "intelephense.environment.shortOpenTag": false,
+    "intelephense.environment.includePaths": ["vendor/swoole/ide-helper"],
+    "intelephense.maxMemory": 256,
+    "intelephense.format.braces": "psr12",
+    "intelephense.files.exclude": [
+        "**/.git/**",
+        "**/.DS_Store/**",
+        "**/node_modules/**",
+        "**/storage",
+        "**/storage/**"
+    ],
+
+    "intelephense.rename.namespaceMode": "all",
+
+    "intelephense.phpdoc.returnVoid": true,
+    "intelephense.phpdoc.useFullyQualifiedNames": true,
+
+    "intelephense.diagnostics.enable": true,
+    "intelephense.diagnostics.run": "onType",
+    "intelephense.diagnostics.deprecated": true,
+    "intelephense.diagnostics.embeddedLanguages": true,
+    "intelephense.diagnostics.languageConstraints": true,
+    "intelephense.diagnostics.typeErrors": true,
+    "intelephense.diagnostics.implementationErrors": true,
+    "intelephense.diagnostics.undefinedClassConstants": true,
+    "intelephense.diagnostics.unusedSymbols": false,
+    "intelephense.diagnostics.argumentCount": true,
+    "intelephense.diagnostics.duplicateSymbols": true,
+    "intelephense.diagnostics.undefinedConstants": true,
+    "intelephense.diagnostics.undefinedFunctions": true,
+    "intelephense.diagnostics.undefinedMethods": true,
+    "intelephense.diagnostics.undefinedProperties": true,
+    "intelephense.diagnostics.undefinedSymbols": true,
+    "intelephense.diagnostics.undefinedTypes": true,
+    "intelephense.diagnostics.undefinedVariables": true,
+    "intelephense.diagnostics.unexpectedTokens": true,
+
+    "tailwindCSS.classAttributes": ["class"],
+    "tailwindCSS.includeLanguages": {
+        "vue": "html",
+        "plaintext": "html",
+        "php": "html",
+        "blade": "html"
+    },
+    "tailwindCSS.codeActions": true,
+    "tailwindCSS.colorDecorators": true,
+    "tailwindCSS.lint.cssConflict": "error",
+    "tailwindCSS.lint.invalidApply": "error",
+    "tailwindCSS.lint.invalidConfigPath": "error",
+    "tailwindCSS.lint.invalidScreen": "error",
+    "tailwindCSS.lint.invalidTailwindDirective": "error",
+    "tailwindCSS.lint.invalidVariant": "error",
+    "tailwindCSS.lint.recommendedVariantOrder": "error",
+    "tailwindCSS.emmetCompletions": true
+}

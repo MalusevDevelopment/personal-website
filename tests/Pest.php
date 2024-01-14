@@ -11,24 +11,12 @@
 |
 */
 
+use Spatie\Permission\PermissionRegistrar;
+
 uses(
     Tests\TestCase::class,
 )->in('Feature');
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +29,12 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function permissions(): PermissionRegistrar
 {
-    // ..
+    return app(PermissionRegistrar::class);
+}
+
+function forgetPermissions(): void
+{
+    app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 }

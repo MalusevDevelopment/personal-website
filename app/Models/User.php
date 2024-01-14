@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Helpers\Permissions;
 use Database\Factories\UserFactory;
 use Eloquent;
 use Filament\Models\Contracts\FilamentUser;
@@ -19,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 use Override;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * App\Models\User
@@ -39,6 +41,7 @@ use Override;
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     use HasApiTokens;
+    use HasRoles;
     use HasFactory;
     use Notifiable;
 
@@ -79,7 +82,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     #[Override]
     public function canAccessPanel(Panel $panel): bool
     {
-        // TODO: Better Check
-        return str_ends_with($this->email, '@dusanmalusev.dev');
+        return match($panel->getId()) {
+            'admin' => $this->hasVerifiedEmail() && $this->can(Permissions::VIEW_ADMIN_DASHBOARD),
+            default => false,
+        };
     }
 }

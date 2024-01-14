@@ -7,6 +7,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\ParallelTesting;
+use Laravel\Prompts\Prompt;
 
 class AppServiceProvider extends ServiceProvider
 {

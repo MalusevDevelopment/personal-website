@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Helpers\Permissions;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
@@ -17,18 +18,8 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         Telescope::night();
         Telescope::filter(static fn(IncomingEntry $entry) => true);
-        Telescope::filterBatch(function (Collection $entries) {
-            if ($this->app->environment('local')) {
-                return true;
-            }
-
-            return $entries->contains(function (IncomingEntry $entry) {
-                return $entry->isReportableException() ||
-                    $entry->isFailedJob() ||
-                    $entry->isScheduledTask() ||
-                    $entry->isSlowQuery() ||
-                    $entry->hasMonitoredTag();
-            });
+        Telescope::filterBatch(static function (Collection $entries) {
+            return true;
         });
 
 //        Telescope::avatar(static function (string $id, string $email) {
@@ -56,7 +47,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewTelescope', static function (User $user) {
-            return $user->email === config('app.owner.email');
+            return $user->can(Permissions::VIEW_TELESCOPE);
         });
     }
 }

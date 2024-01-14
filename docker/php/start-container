@@ -11,6 +11,7 @@ if [ "$APP_ENV" == "production" ]; then
     php artisan route:cache -n
     php artisan view:cache -n
     php artisan event:cache -n
+    php artisan permission:cache-reset -n
 fi
 
 if [ $# -gt 0 ]; then

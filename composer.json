@@ -25,6 +25,7 @@
         "laravel/framework": "^v10.37",
         "laravel/horizon": "^v5.21",
         "laravel/octane": "^2.1",
+        "laravel/prompts": "^0.1.14",
         "laravel/sanctum": "^3.2",
         "laravel/scout": "^10.2",
         "laravel/telescope": "^4.16",
@@ -32,6 +33,7 @@
         "livewire/livewire": "^3.1",
         "meilisearch/meilisearch-php": "^v1.5.0",
         "pusher/pusher-php-server": "^7.2",
+        "spatie/laravel-permission": "^6.3",
         "symfony/cache": "^v7.0",
         "tpetry/laravel-postgresql-enhanced": "^0.33"
     },
