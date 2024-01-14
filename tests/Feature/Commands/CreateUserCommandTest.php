@@ -6,11 +6,12 @@ use App\Helpers\Roles;
 use App\Models\User;
 
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Foundation\Testing\Concerns\InteractsWithConsole;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
 use function Pest\Laravel\{artisan, assertDatabaseHas, seed};
 
-uses(LazilyRefreshDatabase::class);
+uses(LazilyRefreshDatabase::class, InteractsWithConsole::class);
 
 beforeEach(function () {
     seed(RolesAndPermissionsSeeder::class);
