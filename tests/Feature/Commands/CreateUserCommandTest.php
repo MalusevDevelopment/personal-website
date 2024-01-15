@@ -40,11 +40,11 @@ it('creates user with prompts', function () {
     expect(User::findOrFail(2)->roles()->first()->name)->toBe(Roles::OWNER);
 });
 
-//it('failed with email already exists', function () {
-//    $user = User::factory()->create();
-//
-//    artisan('app:create-user', ['name' => "Dusan Malusev", 'email' => $user->email, 'role' => Roles::OWNER])
-//        ->expectsOutput('Check you input: The email has already been taken.')
-//        ->expectsQuestion('What will be user\'s password?', 'really-Complicated-password-$678')
-//        ->assertFailed();
-//});
+it('failed with email already exists', function () {
+    $user = User::factory()->create();
+
+    artisan('app:create-user', ['name' => "Dusan Malusev", 'email' => $user->email, 'role' => Roles::OWNER])
+        ->expectsOutput('Check you input: The email has already been taken.')
+        ->expectsQuestion('What will be user\'s password?', 'really-Complicated-password-$678')
+        ->assertFailed();
+});

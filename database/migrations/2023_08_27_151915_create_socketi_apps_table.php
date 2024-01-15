@@ -46,7 +46,7 @@ return new class extends Migration {
             $table->jsonb('webhooks')->nullable(false);
             $table->boolean('enable_user_authentication')->nullable(false);
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 };

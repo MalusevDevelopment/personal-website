@@ -16,6 +16,9 @@ return new class extends Migration {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestampTz('created_at')->nullable();
+
+            $table->index('email', 'fast_password_reset_tokens_email_lookup_index')
+                ->algorithm('hash');
         });
     }
 };

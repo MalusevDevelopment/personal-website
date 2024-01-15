@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\AutomaticDateFormatWithMilliseconds;
+use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\RefreshDataOnSave;
+
+class {{ class }} extends Model
+{
+    use HasFactory;
+    use RefreshDataOnSave;
+    use AutomaticDateFormatWithMilliseconds;
+}

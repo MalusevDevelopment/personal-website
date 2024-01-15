@@ -21,6 +21,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 use Override;
 use Spatie\Permission\Traits\HasRoles;
+use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\AutomaticDateFormatWithMilliseconds;
+use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\RefreshDataOnSave;
 
 /**
  * App\Models\User
@@ -44,6 +46,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     use HasRoles;
     use HasFactory;
     use Notifiable;
+
+    use RefreshDataOnSave;
+    use AutomaticDateFormatWithMilliseconds;
 
     /**
      * The attributes that are mass assignable.
@@ -82,7 +87,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     #[Override]
     public function canAccessPanel(Panel $panel): bool
     {
-        return match($panel->getId()) {
+        return match ($panel->getId()) {
             'admin' => $this->hasVerifiedEmail() && $this->can(Permissions::VIEW_ADMIN_DASHBOARD),
             default => false,
         };

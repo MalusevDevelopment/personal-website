@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace {{ namespace }};
 
 use Filament\Forms;
@@ -32,8 +34,6 @@ class {{ class }} extends Component implements HasForms
     public function submit(): void
     {
         $data = $this->form->getState();
-
-        //
     }
 
     public function render(): View
