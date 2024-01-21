@@ -1,9 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
         <loc>https://www.dusanmalusev.dev/</loc>
-        <lastmod>2024-12-25T20:00:00+01:00</lastmod>
+        <lastmod>2024-01-21T15:14:34+01:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://www.dusanmalusev.dev/images/me.jpeg</image:loc>
+            <image:caption>Me</image:caption>
+            <image:title>Dusan Malusev</image:title>
+        </image:image>
     </url>
 </urlset>

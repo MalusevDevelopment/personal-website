@@ -24,12 +24,27 @@ namespace App\Models{
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
  * @mixin Eloquent
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property \Carbon\CarbonImmutable|null $email_verified_at
+ * @property string|null $remember_token
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions, $without = false)
  * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User withoutPermission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|User withoutRole($roles, $guard = null)
  */

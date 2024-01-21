@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between">
         <div>
             <p class="text-sm text-neutral-500 dark:text-neutral-400">
-                &copy; Copyright 2023
+                &copy; Copyright {{ now()->year }}
             </p>
             <p class="text-xs text-neutral-500 dark:text-neutral-400">
                 Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
