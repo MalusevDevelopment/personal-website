@@ -14,8 +14,21 @@ if (config('app.env', 'production') === 'production') {
 }
 
 Route::middleware($middleware)->group(function () {
-    Route::get('/', [IndexController::class, 'index']);
-    Route::get('/privacy-policy', [PolicesController::class, 'privacy']);
-    Route::get('/cookie-policy', [PolicesController::class, 'cookie']);
-    Route::get('/terms-of-service', [PolicesController::class, 'terms']);
+    Route::get('/', [IndexController::class, 'index'])
+        ->name('index');
+    Route::get('/privacy-policy', [PolicesController::class, 'privacy'])
+        ->name('privacy-policy');
+    Route::get('/cookie-policy', [PolicesController::class, 'cookie'])
+        ->name('cookie-policy');
+    Route::get('/terms-of-service', [PolicesController::class, 'terms'])
+        ->name('terms-of-service');
+
+    Route::get('/blog', [IndexController::class, 'blog'])
+        ->name('blog');
+    Route::get('/projects', [IndexController::class, 'projects'])
+        ->name('projects');
+    Route::get('/contact', [IndexController::class, 'contact'])
+        ->name('contact');
+    Route::get('/about', [IndexController::class, 'about'])
+        ->name('about');
 });

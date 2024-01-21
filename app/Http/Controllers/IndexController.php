@@ -10,4 +10,25 @@ class IndexController extends Controller
     {
         return view('pages.index');
     }
+
+    public function blog()
+    {
+        return 'Blog';
+    }
+
+    public function projects()
+    {
+        return 'Projects';
+    }
+
+    public function contact()
+    {
+        return 'Contact';
+    }
+
+    public function about()
+    {
+        return 'About';
+    }
+
 }

@@ -1,0 +1,27 @@
+/* Code Copy */
+.highlight-wrapper {
+    @apply block;
+}
+
+.highlight {
+    @apply relative z-0;
+}
+
+.highlight:hover > .copy-button {
+    @apply visible;
+}
+
+.copy-button {
+    @apply invisible absolute right-0 top-0 z-10 w-20 cursor-pointer whitespace-nowrap rounded-bl-md rounded-tr-md bg-neutral-200 py-1 font-mono text-sm text-neutral-700 opacity-90 dark:bg-neutral-600 dark:text-neutral-200;
+}
+
+.copy-button:hover,
+.copy-button:focus,
+.copy-button:active,
+.copy-button:active:hover {
+    @apply bg-primary-100 dark:bg-primary-600;
+}
+
+.copy-textarea {
+    @apply absolute -z-10 opacity-5;
+}

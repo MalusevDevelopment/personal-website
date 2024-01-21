@@ -53,12 +53,13 @@
         @livewireStyles
     @endif
     @vite('resources/css/website.css')
+
+    @yield('css')
 </head>
 
-<body
-        class="antialiased flex flex-col h-screen px-6 m-auto text-lg leading-7 max-w-7xl bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32">
+<body class="body">
 <div class="relative flex flex-col grow">
-    @include('components.header')
+    <x-header/>
     {{ $slot }}
     @include('components.footer')
     @include('components.search')

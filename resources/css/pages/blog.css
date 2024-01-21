@@ -1,0 +1,22 @@
+@import '../parts/highlight.css';
+@import '../parts/chroma.css';
+
+@config "../../../tailwind.website.config.js";
+
+
+.toc ul,
+.toc li {
+    @apply list-none px-0 leading-snug;
+}
+
+.toc ul ul {
+    @apply ps-4;
+}
+
+.toc a {
+    @apply font-normal text-neutral-700 dark:text-neutral-400;
+}
+
+.toc ul > li {
+    @apply rtl:mr-0;
+}

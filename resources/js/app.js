@@ -22,9 +22,11 @@ window.matchMedia('(prefers-color-scheme: dark)').
     });
 
 async function loaded() {
-  const data = await getPayload(getIdent(document.cookie), window.navigator);
 
-  umami.track(props => ({...props, data}));
+  if ('umami' in window) {
+    const data = await getPayload(getIdent(document.cookie), window.navigator);
+    umami.track(props => ({...props, data}));
+  }
 
   const switcher = document.getElementById('appearance-switcher');
   const profileLinks = document.querySelectorAll('.profile-link');

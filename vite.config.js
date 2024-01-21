@@ -38,6 +38,8 @@ export default ({mode}) => {
         input: [
           'resources/css/app.css',
           'resources/css/website.css',
+          'resources/css/pages/blog.css',
+          'resources/css/pages/home.css',
           'resources/js/app.js',
           'resources/js/with-livewire.js',
           'resources/js/pusher.js',

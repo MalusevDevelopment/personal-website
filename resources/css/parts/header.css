@@ -1,0 +1,72 @@
+.header {
+    @apply py-6;
+    @apply font-semibold;
+    @apply text-neutral-900;
+    @apply dark:text-neutral;
+    @apply print:hidden;
+    @apply sm:py-10;
+}
+
+.nav {
+    @apply flex;
+    @apply items-start;
+    @apply justify-between;
+    @apply sm:items-center;
+}
+
+.nav .home {
+    @apply z-40;
+    @apply flex;
+    @apply flex-row;
+    @apply items-center;
+}
+
+.nav .home > a {
+    @apply decoration-primary-500;
+    @apply hover:underline;
+    @apply hover:decoration-2;
+    @apply hover:underline-offset-2;
+}
+
+.nav > ul {
+    @apply flex-row;
+    @apply hidden;
+    @apply list-none;
+    @apply text-end;
+    @apply sm:flex;
+}
+
+.sm\:menu {
+    @apply fixed;
+    @apply inset-0;
+    @apply z-30;
+    @apply invisible;
+    @apply w-full;
+    @apply h-full;
+    @apply m-auto;
+    @apply overflow-auto;
+    @apply transition-opacity;
+    @apply opacity-0;
+    @apply cursor-default;
+    @apply bg-neutral-100/50;
+    @apply backdrop-blur-sm;
+    @apply dark:bg-neutral-900/50;
+}
+
+.sm\:menu > ul {
+    @apply flex;
+    @apply flex-col;
+    @apply w-full;
+    @apply px-6;
+    @apply py-6;
+    @apply mx-auto;
+    @apply overflow-visible;
+    @apply list-none;
+    @apply max-w-7xl;
+    @apply text-end;
+    @apply sm:px-14;
+    @apply sm:py-10;
+    @apply sm:pt-10;
+    @apply md:px-24;
+    @apply lg:px-32;
+}

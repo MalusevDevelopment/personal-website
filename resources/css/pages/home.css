@@ -1,0 +1,16 @@
+@config "../../../tailwind.website.config.js";
+
+@layer {
+    .will-change {
+        will-change: transform;
+    }
+}
+
+.profile-link {
+    @apply px-1;
+    @apply transition-transform;
+    @apply hover:scale-125;
+    @apply hover:text-primary-700;
+    @apply dark:hover:text-primary-400;
+    @apply will-change;
+}
