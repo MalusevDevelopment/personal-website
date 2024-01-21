@@ -36,14 +36,6 @@ services:
             - .:/var/www/html
         networks:
             - dusan_malusev
-        depends_on:
-            - pgsql
-            - redis
-            - minio
-            - meilisearch
-            - mailpit
-            - selenium
-            - soketi
     pgsql:
         image: 'postgres:15-alpine'
         ports:
@@ -84,57 +76,57 @@ services:
                 - ping
             retries: 3
             timeout: 5s
-    minio:
-        image: 'minio/minio:latest'
-        ports:
-            - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
-        environment:
-            MINIO_ROOT_USER: dusan_malusev
-            MINIO_ROOT_PASSWORD: password
-        volumes:
-            - 'dusan_malusev-minio:/data/minio'
-        networks:
-            - dusan_malusev
-        command: 'minio server /data/minio --console-address ":8900"'
-        healthcheck:
-            test:
-                - CMD
-                - curl
-                - '-f'
-                - 'http://localhost:9000/minio/health/live'
-            retries: 3
-            timeout: 5s
-    meilisearch:
-        image: 'getmeili/meilisearch:latest'
-        ports:
-            - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
-        volumes:
-            - 'dusan_malusev-meilisearch:/meili_data'
-        networks:
-            - dusan_malusev
-        healthcheck:
-            test:
-                - CMD
-                - wget
-                - '--no-verbose'
-                - '--spider'
-                - 'http://localhost:7700/health'
-            retries: 3
-            timeout: 5s
-    mailpit:
-        image: 'axllent/mailpit:latest'
-        ports:
-            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-        networks:
-            - dusan_malusev
-    selenium:
-        image: selenium/standalone-chrome
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        volumes:
-            - '/dev/shm:/dev/shm'
-        networks:
-            - dusan_malusev
+#     minio:
+#         image: 'minio/minio:latest'
+#         ports:
+#             - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
+#         environment:
+#             MINIO_ROOT_USER: dusan_malusev
+#             MINIO_ROOT_PASSWORD: password
+#         volumes:
+#             - 'dusan_malusev-minio:/data/minio'
+#         networks:
+#             - dusan_malusev
+#         command: 'minio server /data/minio --console-address ":8900"'
+#         healthcheck:
+#             test:
+#                 - CMD
+#                 - curl
+#                 - '-f'
+#                 - 'http://localhost:9000/minio/health/live'
+#             retries: 3
+#             timeout: 5s
+#     meilisearch:
+#         image: 'getmeili/meilisearch:latest'
+#         ports:
+#             - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
+#         volumes:
+#             - 'dusan_malusev-meilisearch:/meili_data'
+#         networks:
+#             - dusan_malusev
+#         healthcheck:
+#             test:
+#                 - CMD
+#                 - wget
+#                 - '--no-verbose'
+#                 - '--spider'
+#                 - 'http://localhost:7700/health'
+#             retries: 3
+#             timeout: 5s
+#     mailpit:
+#         image: 'axllent/mailpit:latest'
+#         ports:
+#             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+#         networks:
+#             - dusan_malusev
+#     selenium:
+#         image: selenium/standalone-chrome
+#         extra_hosts:
+#             - 'host.docker.internal:host-gateway'
+#         volumes:
+#             - '/dev/shm:/dev/shm'
+#         networks:
+#             - dusan_malusev
     soketi:
         image: 'quay.io/soketi/soketi:latest-16-alpine'
         depends_on:
@@ -170,19 +162,19 @@ services:
             - dusan_malusev
         ports:
             - 6001:6001
-    umami:
-        image: ghcr.io/umami-software/umami:postgresql-latest
-        ports:
-          - "3000:3000"
-        environment:
-          DATABASE_URL: 'postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/umami'
-          DATABASE_TYPE: postgresql
-          APP_SECRET: '${UMAMI_APP_SECRET}'
-        depends_on:
-          - pgsql
-        restart: unless-stopped
-        networks:
-            - dusan_malusev
+#     umami:
+#         image: ghcr.io/umami-software/umami:postgresql-latest
+#         ports:
+#           - "3000:3000"
+#         environment:
+#           DATABASE_URL: 'postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/umami'
+#           DATABASE_TYPE: postgresql
+#           APP_SECRET: '${UMAMI_APP_SECRET}'
+#         depends_on:
+#           - pgsql
+#         restart: unless-stopped
+#         networks:
+#             - dusan_malusev
     dozzle:
         image: amir20/dozzle:latest
         volumes:

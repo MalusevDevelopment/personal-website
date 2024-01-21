@@ -18,8 +18,7 @@
                 </h2>
                 <div class="mt-1 text-2xl">
                     <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500">
-                        <a class="profile-link px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
-                           style="will-change:transform;" href="mailto:dusan@dusanmalusev.dev" target="_blank"
+                        <a class="profile-link" href="mailto:dusan@dusanmalusev.dev" target="_blank"
                            data-type="email"
                            aria-label="Email" rel="me noopener noreferrer"><span
                                     class="relative inline-block align-text-bottom px-1 icon"><svg
@@ -29,8 +28,7 @@
                             </svg>
                         </span>
                         </a>
-                        <a class="profile-link px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
-                           style="will-change:transform;" href="https://dev.to/malusev998" target="_blank"
+                        <a class="profile-link" href="https://dev.to/malusev998" target="_blank"
                            data-type="dev.to"
                            aria-label="Dev" rel="me noopener noreferrer">
                         <span
@@ -41,8 +39,7 @@
                             </svg>
                         </span>
                         </a>
-                        <a class="profile-link px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
-                           style="will-change:transform;" href="https://github.com/dmalusev" target="_blank"
+                        <a class="profile-link" href="https://github.com/dmalusev" target="_blank"
                            data-type="github"
                            aria-label="Github" rel="me noopener noreferrer">
                         <span class="relative inline-block align-text-bottom px-1 icon">
@@ -62,8 +59,8 @@
                                                                                                    d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
                         </span>
                         </a>
-                        <a class="profile-link px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
-                           style="will-change:transform;" href="https://www.reddit.com/user/Back_Professional"
+                        <a class="profile-link px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400 will-change"
+                           href="https://www.reddit.com/user/Back_Professional"
                            data-type="reddit"
                            target="_blank"
                            aria-label="Reddit" rel="me noopener noreferrer">
@@ -75,8 +72,7 @@
                             </svg>
                         </span>
                         </a>
-                        <a class="profile-link px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
-                           style="will-change:transform;" href="https://stackoverflow.com/users/8411483/dusan-malusev"
+                        <a class="profile-link" href="https://stackoverflow.com/users/8411483/dusan-malusev"
                            data-type="stackoverflow"
                            target="_blank" aria-label="Stack-Overflow" rel="me noopener noreferrer">
                         <span
@@ -87,8 +83,7 @@
                             </svg>
                         </span>
                         </a>
-                        <a class="profile-link px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
-                           style="will-change:transform;" href="{{ asset('resume.pdf') }}" data-type="resume"
+                        <a class="profile-link" href="{{ asset('resume.pdf') }}" data-type="resume"
                            target="_blank" aria-label="Resume" rel="me noopener noreferrer">
                         <span
                                 class="relative inline-block align-text-bottom px-1 icon">
@@ -117,11 +112,11 @@
                     present. Join me in shaping the digital landscape, and let's build something remarkable together!
                 </p>
 
-
             </section>
             <section class="prose-lg dark:prose-invert mt-5">
                 <p>
-                    If you find value in my work and would like to support ongoing projects, consider becoming a sponsor.
+                    If you find value in my work and would like to support ongoing projects, consider becoming a
+                    sponsor.
                 </p>
 
                 <div class="w-full">

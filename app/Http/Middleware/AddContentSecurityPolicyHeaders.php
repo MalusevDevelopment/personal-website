@@ -10,10 +10,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
 use Symfony\Component\HttpFoundation\Response;
 
-class AddContentSecurityPolicyHeaders
+readonly class AddContentSecurityPolicyHeaders
 {
-    public function __construct(private readonly Repository $config)
+    private string $domain;
+    private string $umamiDomain;
+
+    public function __construct(private Repository $config)
     {
+        $this->domain = $this->config->get('app.domain');
+        $this->umamiDomain = parse_url($this->config->get('umami.script'), PHP_URL_HOST);
     }
 
     /**
@@ -30,15 +35,53 @@ class AddContentSecurityPolicyHeaders
         ]);
     }
 
+    protected function baseDomain(): string
+    {
+        return "base-uri $this->domain";
+    }
+
+    protected function frameAncestors(): string
+    {
+        return "frame-ancestors 'self' https://github.com";
+    }
+
+    protected function scriptSrc(): string
+    {
+        $nonce = Vite::cspNonce();
+
+        return "script-src 'nonce-$nonce' 'sha256-abS8bXelr2wTMtWfwv4Q2SgF9jc3EmpFalJLyucKH4o=' https://$this->domain https://$this->umamiDomain";
+    }
+
+    protected function imgSrc(): string
+    {
+        return "img-src https://$this->domain";
+    }
+
+    protected function objectSrc(): string
+    {
+        return "object-src 'none'";
+    }
+
+    protected function fontSrc(): string
+    {
+        return "font-src 'unsafe-inline'";
+    }
+
+    protected function childSrc(): string
+    {
+        return "child-src 'none'";
+    }
 
     private function value(): string
     {
-        $nonce = Vite::cspNonce();
-        $domain = $this->config->get('app.domain');
-        $umamiDomain = parse_url($this->config->get('umami.script'), PHP_URL_HOST);
-
-        return <<<CONTENT
-        script-src 'nonce-$nonce' 'sha256-abS8bXelr2wTMtWfwv4Q2SgF9jc3EmpFalJLyucKH4o=' https://$umamiDomain https://$domain; object-src 'none'; base-uri $domain; img-src https://$domain; child-src 'none'; font-src 'unsafe-inline';
-        CONTENT;
+        return implode('; ', [
+            $this->baseDomain(),
+            $this->scriptSrc(),
+            $this->imgSrc(),
+            $this->objectSrc(),
+            $this->fontSrc(),
+            $this->childSrc(),
+            $this->frameAncestors(),
+        ]);
     }
 }
