@@ -87,7 +87,7 @@ readonly class AddContentSecurityPolicyHeaders
             $this->objectSrc(),
             $this->fontSrc(),
             $this->childSrc(),
-            $this->fontSrc(),
+            $this->frameSrc(),
             $this->frameAncestors(),
         ]);
     }
