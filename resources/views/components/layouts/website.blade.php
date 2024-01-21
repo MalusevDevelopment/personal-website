@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description"
-          content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions. My journey involves honing skills through diverse projects, all crafted within the confines of my remote workspace."/>
+          content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff"/>
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e293b"/>
     <meta property="og:title" content="Dusan Malusev"/>
@@ -47,7 +47,7 @@
     <link href="https://www.reddit.com/user/Back_Professional" rel="me"/>
     <link href="https://stackoverflow.com/users/8411483/dusan-malusev" rel="me"/>
 
-    <title>{{ config('app.name') }}</title>
+    <title>Home Page - {{ config('app.name') }}</title>
 
     @if(($useLivewire ?? false))
         @livewireStyles
