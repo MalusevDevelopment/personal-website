@@ -40,6 +40,12 @@ readonly class AddContentSecurityPolicyHeaders
         return "base-uri $this->domain";
     }
 
+    protected function frameSrc(): string
+    {
+        return "frame-src 'self' https://github.com";
+    }
+
+
     protected function frameAncestors(): string
     {
         return "frame-ancestors 'self' https://github.com";
@@ -81,6 +87,7 @@ readonly class AddContentSecurityPolicyHeaders
             $this->objectSrc(),
             $this->fontSrc(),
             $this->childSrc(),
+            $this->fontSrc(),
             $this->frameAncestors(),
         ]);
     }

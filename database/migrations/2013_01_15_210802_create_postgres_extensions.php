@@ -16,7 +16,6 @@ return new class extends Migration {
         Schema::createExtensionIfNotExists('btree_gin');
         Schema::createExtensionIfNotExists('btree_gist');
         Schema::createExtensionIfNotExists('intarray');
-        Schema::createExtensionIfNotExists('bloom');
-//        Schema::createExtensionIfNotExists('vector');
+//        Schema::createExtensionIfNotExists('bloom');
     }
 };
