@@ -1,45 +1,33 @@
 import {fetchIdent, getIdent} from './helpers.js';
 import {getPayload} from './data.js';
+import {search} from './search.js';
 
 fetchIdent(localStorage, document);
 
-const userPreference = localStorage.getItem('appearance') ?? 'dark';
-
-if (window.matchMedia('(prefers-color-scheme: light)').matches ||
-    userPreference === 'light') {
-  document.documentElement.classList.add('light');
-}
-
-window.matchMedia('(prefers-color-scheme: dark)').
-    addEventListener('change', (event) => {
-      if (event.matches) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-
-      localStorage.setItem('appearance', event.matches ? 'dark' : 'light');
-    });
+document.addEventListener('DOMContentLoaded', loaded);
 
 async function loaded() {
-
   if ('umami' in window) {
     const data = await getPayload(getIdent(document.cookie), window.navigator);
     umami.track(props => ({...props, data}));
   }
 
-  const switcher = document.getElementById('appearance-switcher');
-  const profileLinks = document.querySelectorAll('.profile-link');
-  switcher.addEventListener('click', () => {
-    const dark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('appearance', dark ? 'dark' : 'light');
-  });
+  search();
 
-  profileLinks.forEach(el => el.addEventListener('click', () => {
-    umami.track('profile-link', {
-      type: el.dataset.type, data,
-    });
-  }));
+  document.querySelectorAll('.profile-link').
+      forEach(el => el.addEventListener('click', () => {
+        try {
+          umami.track('profile-link', {
+            type: el.dataset.type, data,
+          });
+        } catch (e) {
+          if ('umami' in window) {
+            console.error(e);
+          } else {
+            // Report
+            console.error('umami not defined');
+          }
+        }
+      }));
 }
 
-window.addEventListener('DOMContentLoaded', loaded);

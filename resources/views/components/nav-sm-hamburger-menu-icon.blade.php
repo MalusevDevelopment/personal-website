@@ -1,4 +1,4 @@
-<div class="cursor-pointer hover:text-primary-600 dark:hover:text-primary-400">
+<div class="cursor-pointer hover:text-primary-400">
     <span class="relative inline-block align-text-bottom px-1 icon">
         <svg xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 448 512"><path

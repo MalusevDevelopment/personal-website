@@ -60,7 +60,11 @@
 <body class="body">
 <div class="relative flex flex-col grow">
     <x-header/>
-    {{ $slot }}
+    <div class="relative flex flex-col grow">
+        <main class="grow">
+            {{ $slot }}
+        </main>
+    </div>
     @include('components.footer')
     @include('components.search')
 </div>

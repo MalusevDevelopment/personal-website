@@ -1,6 +1,6 @@
 <li class="mb-1 group sm:mb-0 sm:me-7 sm:last:me-0">
-    <button id="search-button-2" title="Search (/)">
-        <span class="transition-colors group-dark:hover:text-primary-400 group-hover:text-primary-600">
+    <button class="search-button" title="Search (/)">
+        <span class="transition-colors group-hover:text-primary-400">
             <span class="relative inline-block align-text-bottom px-1 icon">
               <svg aria-hidden="true"
                    focusable="false"
