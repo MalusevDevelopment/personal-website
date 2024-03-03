@@ -1,6 +1,33 @@
 ARG BASE="base"
 
-FROM debian:bookworm-slim AS base
+FROM php:8.3-zts AS php
+
+ARG FRANKENPHP_VERSION="1.1.0"
+ARG GO_VERSION="1.22.0"
+
+RUN apt-get update && apt-get install -y curl libpq-dev libpq5 uuid-dev libuuid1 \
+    && docker-php-ext-install pgsql pdo_pgsql pcntl sockets opcache \
+    && docker-php-ext-enable pgsql pdo_pgsql pcntl sockets opcache
+
+RUN curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+
+RUN pecl install igbinary msgpack redis uuid zstd apcu
+
+ENV LD_LIBRARY_PATH="/lib/x86_64-linux-gnu/:/usr/local/lib/:/usr/lib:/lib:/lib64"
+
+RUN apt-get install -y wget libbrotli1 libbrotli-dev libncurses5 pkg-config \
+    libreadline-dev libreadline8 libxml2 libsqlite3-0 libargon2-1 libonig5 libz3-4 \
+    && wget -c https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz \
+    && wget -c https://github.com/dunglas/frankenphp/archive/refs/tags/v$FRANKENPHP_VERSION.tar.gz \
+    && ls -la \
+    && tar -xzf v$FRANKENPHP_VERSION.tar.gz \
+    && cd frankenphp-$FRANKENPHP_VERSION/caddy/frankenphp \
+    && CGO_CFLAGS=$(php-config --includes) CGO_LDFLAGS="$(php-config --ldflags) $(php-config --libs)" \
+    PATH="$PATH:/usr/local/go/bin" go build -o /usr/local/bin/frankenphp \
+    && rm -rf /usr/local/go /tmp/* /var/tmp/* /var/lib/apt/lists/* /var/cache/apt/* /var/cache/debconf/* /var/cache/debconf/*-old
+
+FROM php AS base
 
 LABEL maintainer="Dusan Malusev"
 
@@ -17,39 +44,7 @@ ENV RUNNING_ON_LINUX="0"
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y gnupg curl ca-certificates \
-    libpq-dev zip unzip git supervisor libvips libcurl4-gnutls-dev libcurl4 \
-    libpng-dev libpng16-16 apt-transport-https software-properties-common lsb-release \
-    libc-ares-dev libc-ares2 gosu dnsutils \
-    && curl -sSL https://packages.sury.org/php/README.txt | bash -x
-
-RUN  apt-get update \
-    && apt-get install -y \
-    php8.3-cli php8.3-pgsql php8.3-imagick \
-    php8.3-curl php8.3-mbstring  php8.3-gmp  php8.3-vips \
-    php8.3-zip php8.3-bcmath php8.3-ffi php8.3-sockets \
-    php8.3-intl php8.3-readline \
-    php8.3-msgpack php8.3-igbinary php8.3-redis php8.3-xml php8.3-apcu php8.3-uuid php8.3-zstd php8.3-dev \
-    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-
-RUN cd /tmp \
-    && apt-get install wget -y \
-    && wget https://github.com/swoole/swoole-src/archive/refs/tags/v5.1.1.zip \
-    && unzip v5.1.1 \
-    && cd swoole-src-5.1.1 \
-    && phpize \
-    && ./configure \
-    --enable-openssl \
-    --enable-brotli \
-    --enable-cares \
-    --enable-swoole \
-    --enable-sockets \
-    --enable-swoole-coro-time \
-    --enable-swoole-pgsql \
-    --enable-thread-context \
-    --enable-http2 \
-    && make \
-    && make install
+    && apt-get install -y gnupg curl ca-certificates supervisor gosu dnsutils libvips
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.3
 RUN groupadd --force -g "$WWWGROUP" sail
