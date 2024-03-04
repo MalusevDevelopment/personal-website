@@ -40,7 +40,7 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/CodeLieutenant/website:dev
+      image: ghcr.io/codelieutenant/website:dev
       options: --user root
       credentials:
         password: ${{ secrets.CR_PAT }}

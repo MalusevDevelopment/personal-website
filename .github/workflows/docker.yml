@@ -60,8 +60,8 @@ jobs:
           target: ${{ inputs.docker_target }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ghcr.io/CodeLieutenant/website:${{ inputs.version }}
+          tags: ghcr.io/codelieutenant/website:${{ inputs.version }}
           build-args: |
             WWWGROUP=1000
             WWWUSER=1000
-            BASE=ghcr.io/CodeLieutenant/website:base
+            BASE=ghcr.io/codelieutenant/website:base
