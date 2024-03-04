@@ -3384,8 +3384,6 @@ namespace Illuminate\Support\Facades {
             /**
      * 
      *
-     * @method static \Illuminate\Contracts\Cache\Lock lock(string $name, int $seconds = 0, string|null $owner = null)
-     * @method static \Illuminate\Contracts\Cache\Lock restoreLock(string $name, string $owner)
      * @see \Illuminate\Cache\CacheManager
      * @mixin \Illuminate\Cache\Repository
      */        class Cache {
@@ -3974,14 +3972,101 @@ namespace Illuminate\Support\Facades {
                         return $instance->macroCall($method, $parameters);
         }
                     /**
+         * Get a lock instance.
+         *
+         * @param string $name
+         * @param int $seconds
+         * @param string|null $owner
+         * @return \Illuminate\Contracts\Cache\Lock 
+         * @static 
+         */        public static function lock($name, $seconds = 0, $owner = null)
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->lock($name, $seconds, $owner);
+        }
+                    /**
+         * Restore a lock instance using the owner identifier.
+         *
+         * @param string $name
+         * @param string $owner
+         * @return \Illuminate\Contracts\Cache\Lock 
+         * @static 
+         */        public static function restoreLock($name, $owner)
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->restoreLock($name, $owner);
+        }
+                    /**
          * Remove all items from the cache.
          *
          * @return bool 
          * @static 
          */        public static function flush()
         {
-                        /** @var \Illuminate\Cache\ApcStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->flush();
+        }
+                    /**
+         * Remove all expired tag set entries.
+         *
+         * @return void 
+         * @static 
+         */        public static function flushStaleTags()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        $instance->flushStaleTags();
+        }
+                    /**
+         * Get the Redis connection instance.
+         *
+         * @return \Illuminate\Redis\Connections\Connection 
+         * @static 
+         */        public static function connection()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->connection();
+        }
+                    /**
+         * Get the Redis connection instance that should be used to manage locks.
+         *
+         * @return \Illuminate\Redis\Connections\Connection 
+         * @static 
+         */        public static function lockConnection()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->lockConnection();
+        }
+                    /**
+         * Specify the name of the connection that should be used to store data.
+         *
+         * @param string $connection
+         * @return void 
+         * @static 
+         */        public static function setConnection($connection)
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        $instance->setConnection($connection);
+        }
+                    /**
+         * Specify the name of the connection that should be used to manage locks.
+         *
+         * @param string $connection
+         * @return \Illuminate\Cache\RedisStore 
+         * @static 
+         */        public static function setLockConnection($connection)
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->setLockConnection($connection);
+        }
+                    /**
+         * Get the Redis database instance.
+         *
+         * @return \Illuminate\Contracts\Redis\Factory 
+         * @static 
+         */        public static function getRedis()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->getRedis();
         }
                     /**
          * Get the cache key prefix.
@@ -3990,8 +4075,19 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getPrefix()
         {
-                        /** @var \Illuminate\Cache\ApcStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->getPrefix();
+        }
+                    /**
+         * Set the cache key prefix.
+         *
+         * @param string $prefix
+         * @return void 
+         * @static 
+         */        public static function setPrefix($prefix)
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        $instance->setPrefix($prefix);
         }
             }
             /**
@@ -4366,85 +4462,82 @@ namespace Illuminate\Support\Facades {
      * @see \Illuminate\Encryption\Encrypter
      */        class Crypt {
                     /**
-         * Determine if the given key and cipher combination is valid.
+         * 
          *
-         * @param string $key
-         * @param string $cipher
-         * @return bool 
-         * @static 
-         */        public static function supported($key, $cipher)
-        {
-                        return \Illuminate\Encryption\Encrypter::supported($key, $cipher);
-        }
-                    /**
-         * Create a new encryption key for the given cipher.
-         *
-         * @param string $cipher
-         * @return string 
-         * @static 
-         */        public static function generateKey($cipher)
-        {
-                        return \Illuminate\Encryption\Encrypter::generateKey($cipher);
-        }
-                    /**
-         * Encrypt the given value.
-         *
-         * @param mixed $value
-         * @param bool $serialize
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\EncryptException
          * @static 
          */        public static function encrypt($value, $serialize = true)
         {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
                         return $instance->encrypt($value, $serialize);
         }
                     /**
-         * Encrypt a string without serialization.
+         * 
          *
-         * @param string $value
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\EncryptException
-         * @static 
-         */        public static function encryptString($value)
-        {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->encryptString($value);
-        }
-                    /**
-         * Decrypt the given value.
-         *
-         * @param string $payload
-         * @param bool $unserialize
-         * @return mixed 
-         * @throws \Illuminate\Contracts\Encryption\DecryptException
          * @static 
          */        public static function decrypt($payload, $unserialize = true)
         {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
                         return $instance->decrypt($payload, $unserialize);
         }
                     /**
-         * Decrypt the given string without unserialization.
+         * 
          *
-         * @param string $payload
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\DecryptException
          * @static 
-         */        public static function decryptString($payload)
+         */        public static function generateKey($cipher)
         {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->decryptString($payload);
+                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::generateKey($cipher);
         }
                     /**
-         * Get the encryption key that the encrypter is currently using.
+         * 
          *
-         * @return string 
+         * @static 
+         */        public static function nonceSize()
+        {
+                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::nonceSize();
+        }
+                    /**
+         * 
+         *
          * @static 
          */        public static function getKey()
         {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
                         return $instance->getKey();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function supported($key, $cipher)
+        {
+                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::supported($key, $cipher);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function encryptString($value)
+        {
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        return $instance->encryptString($value);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function decryptString($payload)
+        {
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        return $instance->decryptString($payload);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function generateNonce($previous = null)
+        {
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        return $instance->generateNonce($previous);
         }
             }
             /**
@@ -17578,7 +17671,7 @@ namespace Barryvdh\Debugbar\Facades {
          * Returns a JavascriptRenderer for this instance
          *
          * @param string $baseUrl
-         * @param string $basePathng
+         * @param string $basePath
          * @return \Barryvdh\Debugbar\JavascriptRenderer 
          * @static 
          */        public static function getJavascriptRenderer($baseUrl = null, $basePath = null)

@@ -16,7 +16,6 @@
     "ext-json": "*",
     "ext-redis": "*",
     "ext-sodium": "*",
-    "ext-swoole": "*",
     "aws/aws-sdk-php": "^3.294",
     "codelieutenant/laravel-crypto": "^v1.0.0-beta1",
     "doctrine/dbal": "^3.7",

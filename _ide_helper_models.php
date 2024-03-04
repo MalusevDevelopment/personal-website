@@ -13,7 +13,7 @@
 
 namespace App\Models{
 /**
- * App\Models\Contact
+ * 
  *
  * @property int $id
  * @property string $name

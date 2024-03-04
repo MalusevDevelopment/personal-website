@@ -1,31 +1,26 @@
 <?php
-
 declare(strict_types=1);
 
-use Laravel\Octane\Octane;
-use Laravel\Octane\Events\TaskReceived;
-use Laravel\Octane\Events\TickReceived;
+use Laravel\Octane\Contracts\OperationTerminated;
 use Laravel\Octane\Events\RequestHandled;
-use Laravel\Octane\Events\TaskTerminated;
-use Laravel\Octane\Events\TickTerminated;
-use Laravel\Octane\Events\WorkerStarting;
-use Laravel\Octane\Events\WorkerStopping;
 use Laravel\Octane\Events\RequestReceived;
 use Laravel\Octane\Events\RequestTerminated;
-use Laravel\Octane\Listeners\CollectGarbage;
-use Laravel\Octane\Listeners\ReportException;
+use Laravel\Octane\Events\TaskReceived;
+use Laravel\Octane\Events\TaskTerminated;
+use Laravel\Octane\Events\TickReceived;
+use Laravel\Octane\Events\TickTerminated;
 use Laravel\Octane\Events\WorkerErrorOccurred;
-use Laravel\Octane\Listeners\FlushUploadedFiles;
-use Laravel\Octane\Contracts\OperationTerminated;
-use Laravel\Octane\Listeners\StopWorkerIfNecessary;
+use Laravel\Octane\Events\WorkerStarting;
+use Laravel\Octane\Events\WorkerStopping;
 use Laravel\Octane\Listeners\DisconnectFromDatabases;
 use Laravel\Octane\Listeners\EnsureUploadedFilesAreValid;
 use Laravel\Octane\Listeners\EnsureUploadedFilesCanBeMoved;
+use Laravel\Octane\Listeners\FlushOnce;
 use Laravel\Octane\Listeners\FlushTemporaryContainerInstances;
-
-if (!defined('SWOOLE_HOOK_ALL')) {
-    define('SWOOLE_HOOK_ALL', 2147481599);
-}
+use Laravel\Octane\Listeners\FlushUploadedFiles;
+use Laravel\Octane\Listeners\ReportException;
+use Laravel\Octane\Listeners\StopWorkerIfNecessary;
+use Laravel\Octane\Octane;
 
 return [
 
@@ -38,11 +33,11 @@ return [
     | when starting, restarting, or stopping your server via the CLI. You
     | are free to change this to the supported server of your choosing.
     |
-    | Supported: "roadrunner", "swoole"
+    | Supported: "roadrunner", "swoole", "frankenphp"
     |
     */
 
-    'server' => env('OCTANE_SERVER', 'swoole'),
+    'server' => env('OCTANE_SERVER', 'roadrunner'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +50,7 @@ return [
     |
     */
 
-    'https' => true, //env('OCTANE_HTTPS', false),
+    'https' => env('OCTANE_HTTPS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -85,7 +80,7 @@ return [
         ],
 
         RequestTerminated::class => [
-            // FlushUploadedFiles::class,
+             FlushUploadedFiles::class,
         ],
 
         TaskReceived::class => [
@@ -107,9 +102,9 @@ return [
         ],
 
         OperationTerminated::class => [
+            FlushOnce::class,
             FlushTemporaryContainerInstances::class,
             DisconnectFromDatabases::class,
-            CollectGarbage::class,
         ],
 
         WorkerErrorOccurred::class => [
@@ -143,7 +138,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Octane Cache Table
+    | Octane Swoole Tables
+    |--------------------------------------------------------------------------
+    |
+    | While using Swoole, you may define additional tables as required by the
+    | application. These tables can be used to store data that needs to be
+    | quickly accessed by other workers on the particular Swoole server.
+    |
+    */
+
+    'tables' => [
+        'example:1000' => [
+            'name' => 'string:1000',
+            'votes' => 'int',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Octane Swoole Cache Table
     |--------------------------------------------------------------------------
     |
     | While using Swoole, you may leverage the Octane cache, which is powered
@@ -155,24 +168,6 @@ return [
     'cache' => [
         'rows' => 1000,
         'bytes' => 10000,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Octane Swoole Tables
-    |--------------------------------------------------------------------------
-    |
-    | While using Swoole, you may define additional tables as required by the
-    | application. These tables can be used to store data that needs to be
-    | quickly accessed by other workers on the particular Swoole server.
-    |
-    */
-
-    'tables' => [
-        //        'example:1000' => [
-        //            'name' => 'string:1000',
-        //            'votes' => 'int',
-        //        ],
     ],
 
     /*
@@ -209,7 +204,7 @@ return [
     |
     */
 
-    'garbage' => env('OCTANE_GARBAGE_THRESHOLD', 250),
+    'garbage' => 50,
 
     /*
     |--------------------------------------------------------------------------
@@ -222,17 +217,6 @@ return [
     |
     */
 
-    'max_execution_time' => (int)env('OCTANE_MAX_EXECUTION_TIME', 30),
+    'max_execution_time' => 30,
 
-    'swoole' => [
-        'ssl' => false,
-        'options' => [
-            'hook_flags' => SWOOLE_HOOK_ALL,
-            'task_enable_coroutine' => false,
-            'enable_coroutine' => true,
-            'enable_unsafe_event' => true,
-            'open_http2_protocol' => false,
-            'tcp_fastopen' => true,
-        ],
-    ],
 ];
