@@ -88,18 +88,6 @@ jobs:
           cp .env.example .env
           composer install -q --no-ansi --prefer-dist --no-interaction --no-progress
           php artisan key:generate
-          mkdir -p storage/keys
-          openssl dhparam -out storage/keys/dhparam.conf 2048
-          openssl req -x509 -nodes \
-            -newkey rsa:4096 -keyout storage/keys/ssl.key \
-            -out storage/keys/ssl.cert -sha256 \
-            -days 365 \
-            -subj "/C=CA/ST=QC/O=Artisan, Inc./CN=dusanmalusev.local" \
-            -addext "subjectAltName=DNS:dusanmalusev.local"
-
-          chmod 644 storage/keys/ssl.cert
-          chmod 640 storage/keys/ssl.key
-          chmod 640 storage/keys/dhparam.conf
       - name: Install Node Modules
         run: |
           npm install

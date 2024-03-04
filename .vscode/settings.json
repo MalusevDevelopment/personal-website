@@ -23,7 +23,6 @@
     "php.validate.run": "onType",
 
     "composerIntelephense.packagistCache": 1200,
-
     "intelephense.stubs": [
         "redis",
         "bcmath",
@@ -73,19 +72,15 @@
         "zip",
         "zlib"
     ],
-
     "intelephense.trace.server": "off",
     "intelephense.telemetry.enabled": false,
     "intelephense.format.enable": true,
-
     "intelephense.compatibility.correctForArrayAccessArrayAndTraversableArrayUnionTypes": true,
     "intelephense.compatibility.correctForBaseClassStaticUnionTypes": true,
-
     "intelephense.completion.insertUseDeclaration": true,
     "intelephense.completion.fullyQualifyGlobalConstantsAndFunctions": true,
     "intelephense.completion.triggerParameterHints": true,
     "intelephense.completion.maxItems": 20,
-
     "intelephense.environment.documentRoot": "public",
     "intelephense.environment.phpVersion": "8.3.0",
     "intelephense.environment.shortOpenTag": false,
@@ -99,12 +94,9 @@
         "**/storage",
         "**/storage/**"
     ],
-
     "intelephense.rename.namespaceMode": "all",
-
     "intelephense.phpdoc.returnVoid": true,
     "intelephense.phpdoc.useFullyQualifiedNames": true,
-
     "intelephense.diagnostics.enable": true,
     "intelephense.diagnostics.run": "onType",
     "intelephense.diagnostics.deprecated": true,
