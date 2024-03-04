@@ -19,10 +19,7 @@ export default ({mode}) => {
     },
     server: {
       cors: true,
-      https: process.env.NODE_ENV !== 'production' ? {
-        key: fs.readFileSync('./storage/keys/ssl.key'),
-        cert: fs.readFileSync('./storage/keys/ssl.cert'),
-      } : false,
+      https: false,
       host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',
       hmr: {
         host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',

@@ -27,6 +27,7 @@ services:
         ports:
             - '8080:8080'
             - '5173:5173'
+            - '2019:2019'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
