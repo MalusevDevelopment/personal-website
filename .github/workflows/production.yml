@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+
 jobs:
   tag:
     runs-on: ubuntu-latest

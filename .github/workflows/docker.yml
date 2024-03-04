@@ -3,6 +3,10 @@ name: "Build Docker Image"
 on:
   workflow_dispatch:
     inputs:
+      image:
+        default: ghcr.io/CodeLieutenant/website
+        type: string
+        required: true
       version:
         default: ""
         required: true
@@ -33,7 +37,7 @@ on:
       CR_PAT:
         required: true
 jobs:
-  buildx:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -60,8 +64,8 @@ jobs:
           target: ${{ inputs.docker_target }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ghcr.io/dmalusev/website:${{ inputs.version }}
+          tags: ${{ inputs.image }}:${{ inputs.version }}
           build-args: |
             WWWGROUP=1000
             WWWUSER=1000
-            BASE=ghcr.io/dmalusev/website:base
+            BASE=${{ inputs.image }}:base

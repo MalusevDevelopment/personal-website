@@ -35,6 +35,8 @@ services:
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal idekey=PHPSTORM}'
         volumes:
             - .:/var/www/html
+            - caddy_data:/data
+            - caddy_config:/config
         networks:
             - dusan_malusev
     pgsql:
@@ -195,3 +197,7 @@ volumes:
         driver: local
     dusan_malusev-meilisearch:
         driver: local
+    caddy_data:
+      driver: local
+    caddy_config:
+      driver: local
