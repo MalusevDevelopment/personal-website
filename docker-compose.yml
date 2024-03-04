@@ -1,18 +1,4 @@
 services:
-    nginx:
-        image: nginx:1.23-alpine
-        restart: unless-stopped
-        ports:
-            - '80:80'
-            - '443:443'
-        volumes:
-            - '.:/var/www/html'
-            - './docker/nginx:/etc/nginx'
-            - './storage/keys:/etc/keys'
-        networks:
-            - dusan_malusev
-        depends_on:
-            - laravel.test
     laravel.test:
         build:
             context: .
@@ -21,11 +7,13 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
                 WWWUSER: '${WWWUSER}'
-        image: ghcr.io/dmalusev/website:latest
+        image: ghcr.io/dmalusev/website:dev
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
-            - '8080:8080'
+            - '80:80'
+            - '443:443'
+            - '443:443/udp'
             - '5173:5173'
             - '2019:2019'
         environment:
@@ -79,26 +67,27 @@ services:
                 - ping
             retries: 3
             timeout: 5s
-#     minio:
-#         image: 'minio/minio:latest'
-#         ports:
-#             - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
-#         environment:
-#             MINIO_ROOT_USER: dusan_malusev
-#             MINIO_ROOT_PASSWORD: password
-#         volumes:
-#             - 'dusan_malusev-minio:/data/minio'
-#         networks:
-#             - dusan_malusev
-#         command: 'minio server /data/minio --console-address ":8900"'
-#         healthcheck:
-#             test:
-#                 - CMD
-#                 - curl
-#                 - '-f'
-#                 - 'http://localhost:9000/minio/health/live'
-#             retries: 3
-#             timeout: 5s
+    minio:
+        image: 'minio/minio:latest'
+        ports:
+            - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
+            - '${FORWARD_MINIO_PORT:-9000}:9000'
+        environment:
+            MINIO_ROOT_USER: dusan_malusev
+            MINIO_ROOT_PASSWORD: password
+        volumes:
+            - 'dusan_malusev-minio:/data/minio'
+        networks:
+            - dusan_malusev
+        command: 'minio server /data/minio --console-address ":8900"'
+        healthcheck:
+            test:
+                - CMD
+                - curl
+                - '-f'
+                - 'http://localhost:9000/minio/health/live'
+            retries: 3
+            timeout: 5s
 #     meilisearch:
 #         image: 'getmeili/meilisearch:latest'
 #         ports:
@@ -116,12 +105,12 @@ services:
 #                 - 'http://localhost:7700/health'
 #             retries: 3
 #             timeout: 5s
-#     mailpit:
-#         image: 'axllent/mailpit:latest'
-#         ports:
-#             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-#         networks:
-#             - dusan_malusev
+    mailpit:
+        image: 'axllent/mailpit:latest'
+        ports:
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8026}:8025'
+        networks:
+            - dusan_malusev
 #     selenium:
 #         image: selenium/standalone-chrome
 #         extra_hosts:

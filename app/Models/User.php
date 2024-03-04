@@ -8,6 +8,7 @@ use App\Helpers\Permissions;
 use Database\Factories\UserFactory;
 use Eloquent;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +18,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
+use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 use Override;
@@ -40,15 +43,15 @@ use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\RefreshDataOnSave;
  *
  * @mixin Eloquent
  */
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
-    use HasApiTokens;
-    use HasRoles;
-    use HasFactory;
-    use Notifiable;
-
-    use RefreshDataOnSave;
     use AutomaticDateFormatWithMilliseconds;
+    use HasApiTokens;
+    use HasFactory;
+    use HasRoles;
+    use Notifiable;
+    use RefreshDataOnSave;
+    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -60,6 +63,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'email',
         'password',
         'email_verified_at',
+        'avatar_url',
     ];
 
     /**
@@ -91,5 +95,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'admin' => $this->hasVerifiedEmail() && $this->can(Permissions::VIEW_ADMIN_DASHBOARD),
             default => false,
         };
+    }
+
+    #[Override]
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url ? Storage::drive('profile-photos')->url($this->avatar_url) : null;
     }
 }
