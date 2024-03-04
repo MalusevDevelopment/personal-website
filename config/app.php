@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Facade;
-use Illuminate\Support\ServiceProvider;
+use CodeLieutenant\LaravelCrypto\Encryption\Encryption;
 use CodeLieutenant\LaravelCrypto\ServiceProvider as LaravelCryptoServiceProvider;
 use Illuminate\Encryption\EncryptionServiceProvider as LaravelEncryptionServiceProvider;
-
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
 
 return [
 
@@ -53,7 +53,7 @@ return [
     |
     */
 
-    'debug' => (bool)env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -136,7 +136,8 @@ return [
 
     'key' => env('APP_KEY'),
 
-    'cipher' => 'AES-256-CBC',
+    // TODO: Replace with XChaCha20Poly1305 -> better for ARM processors
+    'cipher' => Encryption::SodiumAES256GCM->value,
 
     /*
     |--------------------------------------------------------------------------

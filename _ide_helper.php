@@ -4366,85 +4366,82 @@ namespace Illuminate\Support\Facades {
      * @see \Illuminate\Encryption\Encrypter
      */        class Crypt {
                     /**
-         * Determine if the given key and cipher combination is valid.
+         * 
          *
-         * @param string $key
-         * @param string $cipher
-         * @return bool 
-         * @static 
-         */        public static function supported($key, $cipher)
-        {
-                        return \Illuminate\Encryption\Encrypter::supported($key, $cipher);
-        }
-                    /**
-         * Create a new encryption key for the given cipher.
-         *
-         * @param string $cipher
-         * @return string 
-         * @static 
-         */        public static function generateKey($cipher)
-        {
-                        return \Illuminate\Encryption\Encrypter::generateKey($cipher);
-        }
-                    /**
-         * Encrypt the given value.
-         *
-         * @param mixed $value
-         * @param bool $serialize
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\EncryptException
          * @static 
          */        public static function encrypt($value, $serialize = true)
         {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
                         return $instance->encrypt($value, $serialize);
         }
                     /**
-         * Encrypt a string without serialization.
+         * 
          *
-         * @param string $value
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\EncryptException
-         * @static 
-         */        public static function encryptString($value)
-        {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->encryptString($value);
-        }
-                    /**
-         * Decrypt the given value.
-         *
-         * @param string $payload
-         * @param bool $unserialize
-         * @return mixed 
-         * @throws \Illuminate\Contracts\Encryption\DecryptException
          * @static 
          */        public static function decrypt($payload, $unserialize = true)
         {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
                         return $instance->decrypt($payload, $unserialize);
         }
                     /**
-         * Decrypt the given string without unserialization.
+         * 
          *
-         * @param string $payload
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\DecryptException
          * @static 
-         */        public static function decryptString($payload)
+         */        public static function generateKey($cipher)
         {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->decryptString($payload);
+                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::generateKey($cipher);
         }
                     /**
-         * Get the encryption key that the encrypter is currently using.
+         * 
          *
-         * @return string 
+         * @static 
+         */        public static function nonceSize()
+        {
+                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::nonceSize();
+        }
+                    /**
+         * 
+         *
          * @static 
          */        public static function getKey()
         {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
                         return $instance->getKey();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function supported($key, $cipher)
+        {
+                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::supported($key, $cipher);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function encryptString($value)
+        {
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        return $instance->encryptString($value);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function decryptString($payload)
+        {
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        return $instance->decryptString($payload);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function generateNonce($previous = null)
+        {
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        return $instance->generateNonce($previous);
         }
             }
             /**
@@ -17578,7 +17575,7 @@ namespace Barryvdh\Debugbar\Facades {
          * Returns a JavascriptRenderer for this instance
          *
          * @param string $baseUrl
-         * @param string $basePathng
+         * @param string $basePath
          * @return \Barryvdh\Debugbar\JavascriptRenderer 
          * @static 
          */        public static function getJavascriptRenderer($baseUrl = null, $basePath = null)

@@ -1,6 +1,6 @@
 ARG BASE="base"
 
-FROM debian:bookworm-slim AS base
+FROM dunglas/frankenphp AS base
 
 LABEL maintainer="Dusan Malusev"
 
@@ -17,41 +17,23 @@ ENV RUNNING_ON_LINUX="0"
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y gnupg curl ca-certificates \
-    libpq-dev zip unzip git supervisor libvips libcurl4-gnutls-dev libcurl4 \
-    libpng-dev libpng16-16 apt-transport-https software-properties-common lsb-release \
-    libc-ares-dev libc-ares2 gosu dnsutils \
-    && curl -sSL https://packages.sury.org/php/README.txt | bash -x
+    && apt-get install -y ca-certificates supervisor
 
-RUN  apt-get update \
-    && apt-get install -y \
-    php8.3-cli php8.3-pgsql php8.3-imagick \
-    php8.3-curl php8.3-mbstring  php8.3-gmp  php8.3-vips \
-    php8.3-zip php8.3-bcmath php8.3-ffi php8.3-sockets \
-    php8.3-intl php8.3-readline \
-    php8.3-msgpack php8.3-igbinary php8.3-redis php8.3-xml php8.3-apcu php8.3-uuid php8.3-zstd php8.3-dev \
-    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+RUN install-php-extensions \
+	  pdo_pgsql \
+    apcu \
+    pgsql \
+    zstd \
+    msgpack \
+    igbinary \
+    redis \
+	  intl \
+	  zip \
+    pcntl \
+	  opcache \
+    uuid
 
-RUN cd /tmp \
-    && apt-get install wget -y \
-    && wget https://github.com/swoole/swoole-src/archive/refs/tags/v5.1.1.zip \
-    && unzip v5.1.1 \
-    && cd swoole-src-5.1.1 \
-    && phpize \
-    && ./configure \
-    --enable-openssl \
-    --enable-brotli \
-    --enable-cares \
-    --enable-swoole \
-    --enable-sockets \
-    --enable-swoole-coro-time \
-    --enable-swoole-pgsql \
-    --enable-thread-context \
-    --enable-http2 \
-    && make \
-    && make install
-
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.3
+RUN setcap "cap_net_bind_service=+ep" /usr/local/bin/php
 RUN groupadd --force -g "$WWWGROUP" sail
 RUN useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail
 RUN mkdir -p /var/www/html \
@@ -71,7 +53,7 @@ RUN chmod +x /usr/local/bin/start-container
 # REMOVED FOR NOW -> Until contact page is setup
 # COPY ./docker/supervisord/sqs-worker.conf /etc/supervisor/conf.d/sqs-worker.conf
 COPY ./docker/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
-COPY ./docker/php/swoole.ini /etc/php/8.3/cli/conf.d/25-swoole.ini
+COPY ./docker/php/php.ini /usr/local/etc/php/conf.d/00-php.ini
 
 EXPOSE 8000
 
@@ -139,9 +121,7 @@ COPY ./docker/supervisord/horizon.conf /etc/supervisor/conf.d/horizon.conf
 COPY ./docker/supervisord/website.conf /etc/supervisor/conf.d/website.conf
 COPY ./docker/supervisord/scheduler.conf /etc/supervisor/conf.d/scheduler.conf
 
-COPY ./docker/php/php.ini /etc/php/8.3/cli/conf.d/00-php.ini
-COPY ./docker/php/preload.ini /etc/php/8.3/cli/conf.d/10-preload.ini
-COPY ./docker/php/swoole.ini /etc/php/8.3/cli/conf.d/25-swoole.ini
+COPY ./docker/php/preload.ini /usr/local/etc/php/conf.d/10-preload.ini
 
 ENTRYPOINT ["start-container"]
 
@@ -152,27 +132,23 @@ ARG NODE_VERSION=20
 ARG POSTGRES_VERSION=15
 
 RUN apt-get update \
+    && apt-get install gosu dnsutils libvips gnupg curl -y \
     && mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
     && apt-get install -y librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
-    php8.3-dev php8.3-ast nodejs npm git build-essential
+    nodejs npm git build-essential unzip
 
-RUN pecl install xdebug
-
-RUN mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
 
 COPY ./docker/supervisord/supervisord.dev.conf /etc/supervisor/supervisord.conf
-COPY ./docker/supervisord/horizon.dev.conf /etc/supervisor/conf.d/horizon.conf
 COPY ./docker/supervisord/website.dev.conf /etc/supervisor/conf.d/website.conf
-COPY ./docker/supervisord/scheduler.dev.conf /etc/supervisor/conf.d/scheduler.conf
+COPY ./docker/php/php.dev.ini /usr/local/etc/php/conf.d/10-php.ini
 
-COPY ./docker/php/php.dev.ini /etc/php/8.3/cli/conf.d/99-php.ini
-COPY ./docker/php/xdebug.ini /etc/php/8.3/cli/conf.d/99-xdebug.ini
-COPY ./docker/php/swoole.ini /etc/php/8.3/cli/conf.d/25-swoole.ini
-
-
+RUN install-php-extensions @composer xdebug && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY ./docker/php/xdebug.ini /usr/local/etc/php/conf.d/99-xdebug.ini
 RUN mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug
+
+RUN mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
 
 USER sail
 

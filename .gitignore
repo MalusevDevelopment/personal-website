@@ -20,3 +20,7 @@ yarn-error.log
 coverage.xml
 storage/pint.cache
 coverage/
+
+/caddy
+frankenphp
+frankenphp-worker.php
