@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.47.0.
+ * Generated for Laravel 10.46.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -25262,60 +25262,6 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Query\Builder $instance */
                                 return $instance->orWhereFullText($columns, $value, $options);
-            }
-                            /**
-             * Add a "where" clause to the query for multiple columns with "and" conditions between them.
-             *
-             * @param string[] $columns
-             * @param mixed $operator
-             * @param mixed $value
-             * @param string $boolean
-             * @return \Illuminate\Database\Query\Builder 
-             * @static 
-             */            public static function whereAll($columns, $operator = null, $value = null, $boolean = 'and')
-            {
-                                /** @var \Illuminate\Database\Query\Builder $instance */
-                                return $instance->whereAll($columns, $operator, $value, $boolean);
-            }
-                            /**
-             * Add an "or where" clause to the query for multiple columns with "and" conditions between them.
-             *
-             * @param string[] $columns
-             * @param string $operator
-             * @param mixed $value
-             * @return \Illuminate\Database\Query\Builder 
-             * @static 
-             */            public static function orWhereAll($columns, $operator = null, $value = null)
-            {
-                                /** @var \Illuminate\Database\Query\Builder $instance */
-                                return $instance->orWhereAll($columns, $operator, $value);
-            }
-                            /**
-             * Add an "where" clause to the query for multiple columns with "or" conditions between them.
-             *
-             * @param string[] $columns
-             * @param string $operator
-             * @param mixed $value
-             * @param string $boolean
-             * @return \Illuminate\Database\Query\Builder 
-             * @static 
-             */            public static function whereAny($columns, $operator = null, $value = null, $boolean = 'and')
-            {
-                                /** @var \Illuminate\Database\Query\Builder $instance */
-                                return $instance->whereAny($columns, $operator, $value, $boolean);
-            }
-                            /**
-             * Add an "or where" clause to the query for multiple columns with "or" conditions between them.
-             *
-             * @param string[] $columns
-             * @param string $operator
-             * @param mixed $value
-             * @return \Illuminate\Database\Query\Builder 
-             * @static 
-             */            public static function orWhereAny($columns, $operator = null, $value = null)
-            {
-                                /** @var \Illuminate\Database\Query\Builder $instance */
-                                return $instance->orWhereAny($columns, $operator, $value);
             }
                             /**
              * Add a "group by" clause to the query.

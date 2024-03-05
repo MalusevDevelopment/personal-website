@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26545f8a1cc34651e2385735aa401429",
+    "content-hash": "38d4332ef78dcc889eda54feca5e4f81",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -621,12 +621,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CodeLieutenant/laravel-crypto.git",
-                "reference": "0d1684b03875502b780c566f1599ab338492b287"
+                "reference": "ab11171b8aa473297eff44135fd7e5189025afe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CodeLieutenant/laravel-crypto/zipball/0d1684b03875502b780c566f1599ab338492b287",
-                "reference": "0d1684b03875502b780c566f1599ab338492b287",
+                "url": "https://api.github.com/repos/CodeLieutenant/laravel-crypto/zipball/ab11171b8aa473297eff44135fd7e5189025afe2",
+                "reference": "ab11171b8aa473297eff44135fd7e5189025afe2",
                 "shasum": ""
             },
             "require": {
@@ -698,7 +698,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-05T11:53:16+00:00"
+            "time": "2024-03-05T20:32:46+00:00"
         },
         {
             "name": "danharrin/date-format-converter",
@@ -2828,16 +2828,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.47.0",
+            "version": "v10.46.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "fce29b8de62733cdecbe12e3bae801f83fff2ea4"
+                "reference": "5e95946a8283a8d5c015035793f9c61c297e937f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/fce29b8de62733cdecbe12e3bae801f83fff2ea4",
-                "reference": "fce29b8de62733cdecbe12e3bae801f83fff2ea4",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5e95946a8283a8d5c015035793f9c61c297e937f",
+                "reference": "5e95946a8283a8d5c015035793f9c61c297e937f",
                 "shasum": ""
             },
             "require": {
@@ -3030,7 +3030,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-03-05T15:18:36+00:00"
+            "time": "2024-02-27T16:46:54+00:00"
         },
         {
             "name": "laravel/horizon",
@@ -5005,16 +5005,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.1",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69"
+                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2218c2252c874a4624ab2f613d86ac32d227bc69",
-                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/139676794dc1e9231bf7bcd123cfc0c99182cb13",
+                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13",
                 "shasum": ""
             },
             "require": {
@@ -5057,9 +5057,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.1"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.2"
             },
-            "time": "2024-02-21T19:24:10+00:00"
+            "time": "2024-03-05T20:51:40+00:00"
         },
         {
             "name": "nunomaduro/termwind",
@@ -13264,12 +13264,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "f55d0680d4af9e99a48d9a545863b670f6a0e53e"
+                "reference": "5e00628ceaa787ae9459f0b6a9320b2b7953d7f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f55d0680d4af9e99a48d9a545863b670f6a0e53e",
-                "reference": "f55d0680d4af9e99a48d9a545863b670f6a0e53e",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5e00628ceaa787ae9459f0b6a9320b2b7953d7f0",
+                "reference": "5e00628ceaa787ae9459f0b6a9320b2b7953d7f0",
                 "shasum": ""
             },
             "conflict": {
@@ -13996,7 +13996,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-05T16:04:58+00:00"
+            "time": "2024-03-05T22:04:04+00:00"
         },
         {
             "name": "sebastian/cli-parser",
