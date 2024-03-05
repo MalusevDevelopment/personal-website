@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
@@ -19,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for(
             'api',
-            static fn(Request $request) => Limit::perMinute(60)->by(self::getRateLimitKey($request)),
+            static fn (Request $request) => Limit::perMinute(60)->by(self::getRateLimitKey($request)),
         );
 
         $this->routes(function () {
@@ -46,6 +44,6 @@ class RouteServiceProvider extends ServiceProvider
         $ip = $request->ip() ?? '';
         $browser = $request->userAgent() ?? '';
 
-        return sodium_crypto_generichash($ip . $browser);
+        return sodium_crypto_generichash($ip.$browser);
     }
 }

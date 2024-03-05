@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use CodeLieutenant\LaravelCrypto\Encoder\JsonEncoder;
 use CodeLieutenant\LaravelCrypto\Encoder\PhpEncoder;
 use CodeLieutenant\LaravelCrypto\Hashing\Blake2b as Blake2bHash;
@@ -30,7 +28,7 @@ return [
             ],
             JsonEncoder::class => [
                 'decode_as_array' => true,
-            ]
+            ],
         ],
     ],
 

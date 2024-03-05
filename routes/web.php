@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
-use App\Http\Middleware\AddContentSecurityPolicyHeaders;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\PolicesController;
+use App\Http\Middleware\AddContentSecurityPolicyHeaders;
+use Illuminate\Support\Facades\Route;
 
 $middleware = [];
 

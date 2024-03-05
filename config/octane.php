@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 use Laravel\Octane\Contracts\OperationTerminated;
 use Laravel\Octane\Events\RequestHandled;
@@ -80,7 +79,7 @@ return [
         ],
 
         RequestTerminated::class => [
-             FlushUploadedFiles::class,
+            FlushUploadedFiles::class,
         ],
 
         TaskReceived::class => [

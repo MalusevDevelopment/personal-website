@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -13,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 readonly class AddContentSecurityPolicyHeaders
 {
     private string $domain;
+
     private string $umamiDomain;
 
     public function __construct(private Repository $config)
@@ -24,7 +23,7 @@ readonly class AddContentSecurityPolicyHeaders
     /**
      * Handle an incoming request.
      *
-     * @param Closure(Request): (Response) $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -44,7 +43,6 @@ readonly class AddContentSecurityPolicyHeaders
     {
         return "frame-src 'self' https://github.com";
     }
-
 
     protected function frameAncestors(): string
     {

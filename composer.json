@@ -17,7 +17,7 @@
     "ext-redis": "*",
     "ext-sodium": "*",
     "aws/aws-sdk-php": "^3.294",
-    "codelieutenant/laravel-crypto": "^v1.0.0-beta1",
+    "codelieutenant/laravel-crypto": "^v1.0.0-rc1",
     "doctrine/dbal": "^3.7",
     "filament/filament": "^3.2",
     "guzzlehttp/guzzle": "^7.8",
@@ -38,11 +38,12 @@
     "spatie/laravel-permission": "^6.3",
     "spatie/laravel-sitemap": "^7.0",
     "symfony/cache": "^v7.0",
-    "tpetry/laravel-postgresql-enhanced": "^0.33"
+    "tpetry/laravel-postgresql-enhanced": "^0.35.0"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest",
     "barryvdh/laravel-debugbar": "^3.9",
-    "barryvdh/laravel-ide-helper": "*",
+    "barryvdh/laravel-ide-helper": "^3.0",
     "brianium/paratest": "^7.2",
     "fakerphp/faker": "^1.9.1",
     "laravel/pint": "^1.11",
@@ -55,8 +56,7 @@
     "pestphp/pest-plugin-livewire": "^2.1",
     "pestphp/pest-plugin-watch": "^2.0",
     "phpunit/phpunit": "^10.1",
-    "spatie/laravel-ignition": "^2.0",
-    "swoole/ide-helper": "^5.1"
+    "spatie/laravel-ignition": "^2.0"
   },
   "autoload": {
     "psr-4": {

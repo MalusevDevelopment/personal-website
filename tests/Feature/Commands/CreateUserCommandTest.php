@@ -1,15 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Helpers\Roles;
 use App\Models\User;
-
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithConsole;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
-use function Pest\Laravel\{artisan, assertDatabaseHas, seed};
+use function Pest\Laravel\artisan;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\seed;
 
 uses(LazilyRefreshDatabase::class, InteractsWithConsole::class);
 
@@ -18,7 +17,7 @@ beforeEach(function () {
 });
 
 it('creates user with command line arguments', function () {
-    artisan('app:create-user', ['name' => "Dusan Malusev", 'email' => "dusan@dusanmalusev.dev", 'role' => Roles::OWNER])
+    artisan('app:create-user', ['name' => 'Dusan Malusev', 'email' => 'dusan@dusanmalusev.dev', 'role' => Roles::OWNER])
         ->expectsQuestion('What will be user\'s password?', 'really-Complicated-password-$678')
         ->assertExitCode(0)
         ->expectsOutput('User create with ID 1');
@@ -43,7 +42,7 @@ it('creates user with prompts', function () {
 it('failed with email already exists', function () {
     $user = User::factory()->create();
 
-    artisan('app:create-user', ['name' => "Dusan Malusev", 'email' => $user->email, 'role' => Roles::OWNER])
+    artisan('app:create-user', ['name' => 'Dusan Malusev', 'email' => $user->email, 'role' => Roles::OWNER])
         ->expectsOutput('Check you input: The email has already been taken.')
         ->expectsQuestion('What will be user\'s password?', 'really-Complicated-password-$678')
         ->assertFailed();

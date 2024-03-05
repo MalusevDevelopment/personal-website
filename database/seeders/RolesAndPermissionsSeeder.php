@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Database\Seeders;
 
 use App\Helpers\Permissions;
 use App\Helpers\Roles;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;

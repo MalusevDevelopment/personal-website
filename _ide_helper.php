@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.46.0.
+ * Generated for Laravel 10.47.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -4459,6 +4459,7 @@ namespace Illuminate\Support\Facades {
             /**
      * 
      *
+     * @method static string generateKey(string $cipher)
      * @see \Illuminate\Encryption\Encrypter
      */        class Crypt {
                     /**
@@ -4467,7 +4468,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function encrypt($value, $serialize = true)
         {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
                         return $instance->encrypt($value, $serialize);
         }
                     /**
@@ -4476,16 +4477,8 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function decrypt($payload, $unserialize = true)
         {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
                         return $instance->decrypt($payload, $unserialize);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function generateKey($cipher)
-        {
-                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::generateKey($cipher);
         }
                     /**
          * 
@@ -4493,7 +4486,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function nonceSize()
         {
-                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::nonceSize();
+                        return \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter::nonceSize();
         }
                     /**
          * 
@@ -4501,7 +4494,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getKey()
         {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
                         return $instance->getKey();
         }
                     /**
@@ -4510,7 +4503,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function supported($key, $cipher)
         {
-                        return \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor::supported($key, $cipher);
+                        return \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter::supported($key, $cipher);
         }
                     /**
          * 
@@ -4518,7 +4511,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function encryptString($value)
         {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
                         return $instance->encryptString($value);
         }
                     /**
@@ -4527,7 +4520,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function decryptString($payload)
         {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
                         return $instance->decryptString($payload);
         }
                     /**
@@ -4536,7 +4529,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function generateNonce($previous = null)
         {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\AesGcm256Encryptor $instance */
+                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
                         return $instance->generateNonce($previous);
         }
             }
@@ -25271,6 +25264,60 @@ namespace  {
                                 return $instance->orWhereFullText($columns, $value, $options);
             }
                             /**
+             * Add a "where" clause to the query for multiple columns with "and" conditions between them.
+             *
+             * @param string[] $columns
+             * @param mixed $operator
+             * @param mixed $value
+             * @param string $boolean
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */            public static function whereAll($columns, $operator = null, $value = null, $boolean = 'and')
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->whereAll($columns, $operator, $value, $boolean);
+            }
+                            /**
+             * Add an "or where" clause to the query for multiple columns with "and" conditions between them.
+             *
+             * @param string[] $columns
+             * @param string $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */            public static function orWhereAll($columns, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->orWhereAll($columns, $operator, $value);
+            }
+                            /**
+             * Add an "where" clause to the query for multiple columns with "or" conditions between them.
+             *
+             * @param string[] $columns
+             * @param string $operator
+             * @param mixed $value
+             * @param string $boolean
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */            public static function whereAny($columns, $operator = null, $value = null, $boolean = 'and')
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->whereAny($columns, $operator, $value, $boolean);
+            }
+                            /**
+             * Add an "or where" clause to the query for multiple columns with "or" conditions between them.
+             *
+             * @param string[] $columns
+             * @param string $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */            public static function orWhereAny($columns, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->orWhereAny($columns, $operator, $value);
+            }
+                            /**
              * Add a "group by" clause to the query.
              *
              * @param array|\Illuminate\Contracts\Database\Query\Expression|string $groups
@@ -26237,6 +26284,11 @@ namespace  {
     }
 
 
+namespace Facades\Livewire\Features\SupportFileUploads {
+    /**
+     * @mixin \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl     */
+    class GenerateSignedUploadUrl extends \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl {}
+}
 
 
 

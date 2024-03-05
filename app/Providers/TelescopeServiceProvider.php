@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Providers;
 
 use App\Helpers\Permissions;
@@ -17,14 +15,14 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     public function register(): void
     {
         Telescope::night();
-        Telescope::filter(static fn(IncomingEntry $entry) => true);
+        Telescope::filter(static fn (IncomingEntry $entry) => true);
         Telescope::filterBatch(static function (Collection $entries) {
             return true;
         });
 
-//        Telescope::avatar(static function (string $id, string $email) {
-//            return '/avatars/' . User::find($id)->avatar_path;
-//        });
+        //        Telescope::avatar(static function (string $id, string $email) {
+        //            return '/avatars/' . User::find($id)->avatar_path;
+        //        });
 
         $this->hideSensitiveRequestDetails();
     }

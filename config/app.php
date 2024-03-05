@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-use CodeLieutenant\LaravelCrypto\Encryption\Encryption;
+use CodeLieutenant\LaravelCrypto\Enums\Encryption;
 use CodeLieutenant\LaravelCrypto\ServiceProvider as LaravelCryptoServiceProvider;
 use Illuminate\Encryption\EncryptionServiceProvider as LaravelEncryptionServiceProvider;
 use Illuminate\Support\Facades\Facade;
@@ -136,8 +134,7 @@ return [
 
     'key' => env('APP_KEY'),
 
-    // TODO: Replace with XChaCha20Poly1305 -> better for ARM processors
-    'cipher' => Encryption::SodiumAES256GCM->value,
+    'cipher' => Encryption::SodiumXChaCha20Poly1305->value,
 
     /*
     |--------------------------------------------------------------------------
