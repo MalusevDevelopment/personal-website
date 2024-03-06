@@ -3,8 +3,8 @@
 docker build \
     --build-arg WWWUSER="$(id -u)" \
     --build-arg WWWUSER="$(id -g)" \
-    --build-arg BASE="ghcr.io/dmalusev/website:base" \
+    --build-arg BASE="ghcr.io/codelieutenant/website:base" \
     --file ./docker/php/Dockerfile \
     --target production \
-    --tag ghcr.io/dmalusev/website:latest \
+    --tag ghcr.io/codelieutenant/website:latest \
     .

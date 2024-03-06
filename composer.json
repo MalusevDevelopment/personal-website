@@ -109,6 +109,7 @@
   },
   "config": {
     "optimize-autoloader": true,
+    "apcu-autoloader": true,
     "preferred-install": "dist",
     "sort-packages": true,
     "allow-plugins": {

@@ -5,5 +5,5 @@ docker build \
     --build-arg WWWGROUP="$(id -g)" \
     --file ./docker/php/Dockerfile \
     --target base \
-    --tag ghcr.io/dmalusev/website:base \
+    --tag ghcr.io/codelieutenant/website:base \
     .

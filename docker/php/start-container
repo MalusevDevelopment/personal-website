@@ -6,12 +6,15 @@ if [ ! -z "$WWWUSER" ]; then
 fi
 
 if [ "$APP_ENV" == "production" ]; then
-    php artisan clear-compiled -n
-    php artisan optimize -n
-    php artisan route:cache -n
-    php artisan view:cache -n
-    php artisan event:cache -n
-    php artisan permission:cache-reset -n
+    php artisan clear-compiled -n --ansi
+    php artisan optimize -n --ansi
+    php artisan config:cache -n --ansi
+    php artisan route:cache -n --ansi
+    php artisan view:cache -n --ansi
+    php artisan event:cache -n --ansi
+    php artisan permission:cache-reset -n --ansi
+    php artisan filament:cache-components -n --ansi
+    php artisan about
 fi
 
 if [ $# -gt 0 ]; then

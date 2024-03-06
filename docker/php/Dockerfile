@@ -68,7 +68,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY . .
 
-RUN composer install \
+RUN install-php-extensions @composer \
+    && composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction \
@@ -97,10 +98,7 @@ COPY --from=frontend --chown=root:root /app/public/build ./public/build
 COPY --from=vendor --chown=root:root /app/vendor ./vendor
 
 RUN apt-get purge -y \
-    gcc make autotools build-essential g++ gnupg \
-    apache2 php8.3-dev php8.3-mysql libpq-dev \
-    libpng-dev libc-ares-dev libcurl4-gnutls-dev \
-    git zip unzip apt-transport-https software-properties-common lsb-release \
+    gcc make g++ apt-transport-https \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
