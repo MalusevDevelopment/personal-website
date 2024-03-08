@@ -2,8 +2,7 @@ import {defineConfig, loadEnv} from 'vite';
 import manifestSRI from 'vite-plugin-manifest-sri';
 import laravel, {refreshPaths} from 'laravel-vite-plugin';
 
-import fs from 'node:fs';
-import path from 'path';
+import path from 'node:path';
 import GithubActionsReporter from 'vitest-github-actions-reporter';
 
 export default ({mode}) => {

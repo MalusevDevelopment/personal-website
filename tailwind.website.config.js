@@ -1,15 +1,11 @@
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
-// import from
 
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     './resources/views/**/*.blade.php',
     './resources/js/**/*.js',
-    '!./resources/views/vendor/filament/**/*.blade.php',
-    '!./resources/views/vendor/filament-forms/**/*.blade.php',
-    '!./resources/views/vendor/filament-panels/**/*.blade.php',
   ],
   darkMode: 'class',
   theme: {

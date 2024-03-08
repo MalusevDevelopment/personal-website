@@ -14,6 +14,7 @@ if [ "$APP_ENV" == "production" ]; then
     php artisan event:cache -n --ansi
     php artisan permission:cache-reset -n --ansi
     php artisan filament:cache-components -n --ansi
+    php artisan schedule-monitor:sync -n --ansi
     php artisan about
 fi
 
