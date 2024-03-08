@@ -35,11 +35,11 @@ class AdminPanelProvider extends PanelProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::STYLES_BEFORE,
-            static fn(): string => Blade::render('@livewireStyles'),
+            static fn (): string => Blade::render('@livewireStyles'),
         );
         FilamentView::registerRenderHook(
             PanelsRenderHook::STYLES_AFTER,
-            static fn(): string => Blade::render('@livewireScripts'),
+            static fn (): string => Blade::render('@livewireScripts'),
         );
     }
 
@@ -61,21 +61,22 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->navigationItems([
                 NavigationItem::make('Telescope')
-                    ->visible(fn() => auth()->user()->can(Permissions::VIEW_TELESCOPE))
+                    ->visible(fn () => auth()->user()->can(Permissions::VIEW_TELESCOPE))
                     ->group('Monitoring')
                     ->icon('heroicon-o-eye')
-                    ->url('/' . rtrim(config('telescope.path'))),
+                    ->url('/'.rtrim(config('telescope.path'))),
                 NavigationItem::make('Horizon')
-                    ->visible(fn() => auth()->user()->can(Permissions::VIEW_HORIZON))
+                    ->visible(fn () => auth()->user()->can(Permissions::VIEW_HORIZON))
                     ->group('Monitoring')
                     ->icon('heroicon-o-queue-list')
-                    ->url('/' . rtrim(config('horizon.path'))),
+                    ->url('/'.rtrim(config('horizon.path'))),
             ])
             ->colors([
                 'primary' => Color::Blue,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->pages([
                 Pages\Dashboard::class,
             ])
@@ -112,7 +113,7 @@ class AdminPanelProvider extends PanelProvider
                         force: app()->environment('production')
                     )
                     ->enableSanctumTokens()
-                    ->avatarUploadComponent(fn() => FileUpload::make('avatar_url')->disk('profile-photos'))
+                    ->avatarUploadComponent(fn () => FileUpload::make('avatar_url')->disk('profile-photos'))
                     ->passwordUpdateRules(
                         rules: [
                             Password::default()
