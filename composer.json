@@ -23,7 +23,7 @@
     "guzzlehttp/guzzle": "^7.8",
     "http-interop/http-factory-guzzle": "^1.2",
     "jeffgreco13/filament-breezy": "^2.3",
-    "laravel/framework": "v10.46",
+    "laravel/framework": "^v10.46",
     "laravel/horizon": "^v5.21",
     "laravel/octane": "^2.1",
     "laravel/prompts": "^0.1.14",
@@ -39,7 +39,7 @@
     "spatie/laravel-permission": "^6.3",
     "spatie/laravel-sitemap": "^7.0",
     "symfony/cache": "^v7.0",
-    "tpetry/laravel-postgresql-enhanced": "^0.35.0"
+    "tpetry/laravel-postgresql-enhanced": "^0.36"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.9",
