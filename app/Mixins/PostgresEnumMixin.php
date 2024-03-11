@@ -66,4 +66,53 @@ class PostgresEnumMixin
             );
         };
     }
+
+    public function renameEnum(): Closure
+    {
+        return function (string $type, string $newName) {
+            /** @var $this Builder */
+            $conn = $this->getConnection();
+            [$type] = FormatEnumArgs::formatArgs($conn, $type, []);
+            [$newName] = FormatEnumArgs::formatArgs($conn, $newName, []);
+            $conn->statement("ALTER TYPE $type RENAME TO $newName;");
+        };
+    }
+
+    public function renameEnumValue(): Closure
+    {
+        return function (string $type, string $oldName, string $newName) {
+            /** @var $this Builder */
+            $conn = $this->getConnection();
+            [$oldName] = FormatEnumArgs::formatArgs($conn, $oldName, []);
+            [$newName] = FormatEnumArgs::formatArgs($conn, $newName, []);
+            $conn->statement("ALTER TYPE $type RENAME VALUE  $oldName TO $newName;");
+        };
+    }
+
+    public function addEnumValue(): Closure
+    {
+        return function (string $type, string $value, ?PgEnumAddValueDirection $direction = null, ?string $otherValue = null, bool $ifNotExists = false) {
+            /** @var $this Builder */
+            $conn = $this->getConnection();
+            [$type, $value] = FormatEnumArgs::formatArgs($conn, $type, [$value]);
+            $stmt = "ALTER TYPE $type ADD VALUE";
+
+            if ($ifNotExists) {
+                $stmt .= " IF NOT EXISTS";
+            }
+
+            $stmt .= " $value";
+
+            if ($direction && $otherValue) {
+                $stmt .= " $direction->value $otherValue";
+            }
+
+            $conn->statement($stmt);
+        };
+    }
+
+    public function addEnumValueIfNotExist(): Closure
+    {
+        return $this->addEnumValue();
+    }
 }

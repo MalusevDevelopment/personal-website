@@ -10,7 +10,7 @@ class PostgresEnumGrammarMixin
     public function typeEnumeration(): Closure
     {
         return function (ColumnDefinition $columnDefinition) {
-            return $columnDefinition->get('pg_enum');
+            return $columnDefinition['pg_enum'];
         };
     }
 }

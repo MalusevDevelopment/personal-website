@@ -13,16 +13,14 @@ class PostgresEnumProvider extends ServiceProvider
 {
     public function register(): void
     {
-        if ($this->app->runningInConsole()) {
-            Schema::mixin(new PostgresEnumMixin());
-            Grammar::mixin(new PostgresEnumGrammarMixin());
+        Schema::mixin(new PostgresEnumMixin());
+        Grammar::mixin(new PostgresEnumGrammarMixin());
 
-            Blueprint::macro('enumeration', function (string $name, string $type, array $options = []) {
-                return $this->addColumn('enumeration', $name, [
-                    'pg_enum' => $type,
-                    ...$options,
-                ]);
-            });
-        }
+        Blueprint::macro('enumeration', function (string $name, string $type, array $options = []) {
+            return $this->addColumn('enumeration', $name, [
+                'pg_enum' => $type,
+                ...$options,
+            ]);
+        });
     }
 }

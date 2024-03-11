@@ -30,7 +30,7 @@ return new class extends Migration
                 ->cascadeOnUpdate();
 
             $table->uniqueIndex('title');
-            $table->index('status');
+            $table->index('status')->include('title');
         });
     }
 };

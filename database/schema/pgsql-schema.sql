@@ -72,6 +72,17 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
 
+--
+-- Name: post_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.post_status AS ENUM (
+    'draft',
+    'published',
+    'archived'
+);
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -238,6 +249,71 @@ CREATE TABLE public.model_has_roles (
 
 
 --
+-- Name: monitored_scheduled_task_log_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.monitored_scheduled_task_log_items (
+    id bigint NOT NULL,
+    type character varying(255) NOT NULL,
+    meta jsonb,
+    created_at timestamp(0) with time zone,
+    updated_at timestamp(0) with time zone,
+    monitored_scheduled_task_id bigint NOT NULL
+);
+
+
+--
+-- Name: monitored_scheduled_task_log_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.monitored_scheduled_task_log_items ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.monitored_scheduled_task_log_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: monitored_scheduled_tasks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.monitored_scheduled_tasks (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    type character varying(255),
+    cron_expression character varying(255) NOT NULL,
+    timezone character varying(255),
+    ping_url character varying(255),
+    last_started_at timestamp(0) with time zone,
+    last_finished_at timestamp(0) with time zone,
+    last_failed_at timestamp(0) with time zone,
+    last_skipped_at timestamp(0) with time zone,
+    registered_on_oh_dear_at timestamp(0) with time zone,
+    last_pinged_at timestamp(0) with time zone,
+    grace_time_in_minutes integer NOT NULL,
+    created_at timestamp(0) with time zone,
+    updated_at timestamp(0) with time zone
+);
+
+
+--
+-- Name: monitored_scheduled_tasks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.monitored_scheduled_tasks ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.monitored_scheduled_tasks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: notifications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -315,6 +391,36 @@ CREATE TABLE public.personal_access_tokens (
 
 ALTER TABLE public.personal_access_tokens ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.personal_access_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: posts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.posts (
+    id bigint NOT NULL,
+    title character varying(255) NOT NULL,
+    body text NOT NULL,
+    metadata jsonb,
+    status public.post_status DEFAULT 'draft'::public.post_status NOT NULL,
+    created_at timestamp(0) with time zone,
+    updated_at timestamp(0) with time zone,
+    user_id bigint NOT NULL
+);
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.posts ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.posts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -552,6 +658,22 @@ ALTER TABLE ONLY public.model_has_roles
 
 
 --
+-- Name: monitored_scheduled_task_log_items monitored_scheduled_task_log_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.monitored_scheduled_task_log_items
+    ADD CONSTRAINT monitored_scheduled_task_log_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: monitored_scheduled_tasks monitored_scheduled_tasks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.monitored_scheduled_tasks
+    ADD CONSTRAINT monitored_scheduled_tasks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -597,6 +719,14 @@ ALTER TABLE ONLY public.personal_access_tokens
 
 ALTER TABLE ONLY public.personal_access_tokens
     ADD CONSTRAINT personal_access_tokens_token_unique UNIQUE (token);
+
+
+--
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
 
 
 --
@@ -720,6 +850,20 @@ CREATE INDEX personal_access_tokens_tokenable_type_tokenable_id_index ON public.
 
 
 --
+-- Name: posts_status_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX posts_status_index ON public.posts USING btree (status) INCLUDE (title);
+
+
+--
+-- Name: posts_title_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX posts_title_unique ON public.posts USING btree (title);
+
+
+--
 -- Name: telescope_entries_batch_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -792,6 +936,22 @@ ALTER TABLE ONLY public.model_has_roles
 
 
 --
+-- Name: monitored_scheduled_task_log_items monitored_scheduled_task_log_items_monitored_scheduled_task_id_; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.monitored_scheduled_task_log_items
+    ADD CONSTRAINT monitored_scheduled_task_log_items_monitored_scheduled_task_id_ FOREIGN KEY (monitored_scheduled_task_id) REFERENCES public.monitored_scheduled_tasks(id) ON DELETE CASCADE;
+
+
+--
+-- Name: posts posts_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: role_has_permissions role_has_permissions_permission_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -855,6 +1015,8 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 11	2024_01_21_201619_create_contacts_table	1
 12	2024_03_04_213058_create_breezy_sessions_table	2
 13	2024_03_04_214500_add_avatar_url_column_to_users_table	3
+14	2024_03_06_091001_create_schedule_monitor_tables	4
+15	2024_03_08_234622_create_posts_table	4
 \.
 
 
@@ -862,7 +1024,7 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 -- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.migrations_id_seq', 13, true);
+SELECT pg_catalog.setval('public.migrations_id_seq', 15, true);
 
 
 --
