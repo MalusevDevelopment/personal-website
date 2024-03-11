@@ -1,5 +1,5 @@
 <div class="relative flex flex-col grow">
-    <main id=main-content class=grow>
+    <main id="main-content" class="grow">
         <header><h1 class="mt-0 text-4xl font-extrabold text-neutral">Blog</h1></header>
         <section class="mt-0 flex max-w-full flex-col prose-invert lg:flex-row">
             <div class="min-w-0 min-h-0 max-w-prose grow"></div>
