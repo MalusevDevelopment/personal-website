@@ -9,7 +9,7 @@ class CreateScheduleMonitorTables extends Migration
 {
     use ZeroDowntimeMigration;
 
-    public function up()
+    public function up(): void
     {
         Schema::create('monitored_scheduled_tasks', function (Blueprint $table) {
             $table->identity(always: true)->primary();

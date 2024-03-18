@@ -11,6 +11,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 
@@ -87,16 +88,18 @@ final readonly class UserUI
                         ->uncompromised(3),
                 ])
                 ->maxLength(72),
-            Select::make('role')
-                ->searchable(['name'])
-                ->label('Role')
-                ->preload()
+            Select::make('roles')
+                ->relationship(name: 'roles', titleAttribute: 'name')
+                ->saveRelationshipsUsing(function (Model $record, $state) {
+                    $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
+                })
                 ->multiple()
+                ->preload()
+                ->searchable(['name'])
                 ->native(false)
-                ->relationship('roles', titleAttribute: 'name'),
+                ->label('Role'),
             Toggle::make('email_verified_at')
                 ->inline()
-                ->formatStateUsing(fn (User $record) => $record->hasVerifiedEmail())
                 ->default(false)
                 ->label('Email Verified'),
         ];
@@ -133,13 +136,16 @@ final readonly class UserUI
                         ->uncompromised(3),
                 ])
                 ->maxLength(72),
-            Select::make('role')
-                ->searchable(['name'])
-                ->label('Role')
-                ->preload()
+            Select::make('roles')
+                ->relationship(name: 'roles', titleAttribute: 'name')
+                ->saveRelationshipsUsing(function (Model $record, $state) {
+                    $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
+                })
                 ->multiple()
+                ->preload()
+                ->searchable(['name'])
                 ->native(false)
-                ->relationship('roles', titleAttribute: 'name'),
+                ->label('Role'),
             Toggle::make('email_verified_at')
                 ->inline()
                 ->formatStateUsing(fn (User $record) => $record->hasVerifiedEmail())

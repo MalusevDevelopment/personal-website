@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Althinect\FilamentSpatieRolesPermissions\Concerns\HasSuperAdmin;
 use App\Helpers\Permissions;
+use App\Helpers\Roles;
 use Database\Factories\UserFactory;
 use Eloquent;
 use Filament\Models\Contracts\FilamentUser;
@@ -106,5 +108,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->avatar_url ? Storage::drive('profile-photos')->url($this->avatar_url) : null;
+    }
+
+    public function isOwner(): bool
+    {
+        return $this->hasRole(Roles::OWNER);
     }
 }

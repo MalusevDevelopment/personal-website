@@ -16,6 +16,7 @@ if [ "$APP_ENV" == "production" ]; then
     php artisan filament:cache-components -n --ansi
     php artisan schedule-monitor:sync -n --ansi
     php artisan icons:cache -n --ansi
+    php artisan permissions:sync -n --ansi
     php artisan about
 fi
 

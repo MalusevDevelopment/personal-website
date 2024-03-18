@@ -9,6 +9,7 @@ ARG WWWUSER
 
 WORKDIR /var/www/html
 
+ENV SERVER_NAME="dusanmalusev.test"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 ENV MAKEFLAGS=-j20
@@ -17,7 +18,7 @@ ENV RUNNING_ON_LINUX="0"
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y ca-certificates supervisor
+    && apt-get install -y ca-certificates supervisor top
 
 RUN install-php-extensions \
 	  pdo_pgsql \
@@ -116,6 +117,8 @@ RUN apt-get purge -y \
     && chmod -R 755 storage/framework/sessions
 
 COPY ./docker/supervisord/horizon.conf /etc/supervisor/conf.d/horizon.conf
+COPY ./docker/supervisord/horizon.conf /etc/supervisor/conf.d/pulse-work.conf
+COPY ./docker/supervisord/horizon.conf /etc/supervisor/conf.d/pulse-check.conf
 COPY ./docker/supervisord/website.conf /etc/supervisor/conf.d/website.conf
 COPY ./docker/supervisord/scheduler.conf /etc/supervisor/conf.d/scheduler.conf
 
@@ -138,14 +141,14 @@ RUN apt-get update \
     nodejs npm git build-essential unzip
 
 
-COPY ./docker/supervisord/supervisord.dev.conf /etc/supervisor/supervisord.conf
-COPY ./docker/supervisord/website.dev.conf /etc/supervisor/conf.d/website.conf
 COPY ./docker/php/php.dev.ini /usr/local/etc/php/conf.d/10-php.ini
 
 RUN install-php-extensions @composer xdebug && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY ./docker/php/xdebug.ini /usr/local/etc/php/conf.d/99-xdebug.ini
 RUN mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug
 
+COPY ./docker/supervisord/supervisord.dev.conf /etc/supervisor/supervisord.conf
+COPY ./docker/supervisord/website.dev.conf /etc/supervisor/conf.d/website.conf
 RUN mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
 
 USER sail

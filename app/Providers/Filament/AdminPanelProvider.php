@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use App\Helpers\Permissions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
@@ -70,6 +71,11 @@ class AdminPanelProvider extends PanelProvider
                     ->group('Monitoring')
                     ->icon('heroicon-o-queue-list')
                     ->url('/'.rtrim(config('horizon.path'))),
+                NavigationItem::make('Pulse')
+                    ->visible(fn () => auth()->user()->can(Permissions::VIEW_PULSE))
+                    ->group('Monitoring')
+                    ->icon('heroicon-o-heart')
+                    ->url('/'.rtrim(config('pulse.path'))),
             ])
             ->colors([
                 'primary' => Color::Blue,
@@ -103,6 +109,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 ScheduleMonitorFilamentPlugin::make(),
+                FilamentSpatieRolesPermissionsPlugin::make(),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterNavigation: true,

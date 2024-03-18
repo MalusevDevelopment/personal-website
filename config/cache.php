@@ -53,6 +53,12 @@ return [
             'lock_connection' => 'locks',
         ],
 
+        'pulse' => [
+            'driver' => 'redis',
+            'connection' => 'pulse',
+            'lock_connection' => 'locks',
+        ],
+
         'octane' => [
             'driver' => 'octane',
         ],
