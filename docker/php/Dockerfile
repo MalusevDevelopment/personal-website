@@ -18,7 +18,7 @@ ENV RUNNING_ON_LINUX="0"
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y ca-certificates supervisor top
+    && apt-get install -y ca-certificates supervisor procps
 
 RUN install-php-extensions \
 	  pdo_pgsql \
