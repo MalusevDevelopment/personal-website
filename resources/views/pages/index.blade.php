@@ -2,27 +2,27 @@
     @section('css')
         @vite('resources/css/pages/home.css')
     @endsection
-    <article class="h-full flex flex-col items-center justify-center text-center">
-        <header class="mb-3 flex flex-col items-center">
+    <article class="profile">
+        <header class="profile-header">
             <img
-                    class="mb-2 h-36 w-36 rounded-full"
+                    class="profile-header-image"
                     width="36"
                     height="36"
                     decoding="async"
                     alt="Dusan Malusev"
                     src="{{ asset('images/me.jpeg') }}"
             />
-            <h1 class="text-4xl font-extrabold">
+            <h1 class="profile-h1">
                 Dusan Malusev
             </h1>
-            <h2 class="text-xl text-neutral-500 text-neutral-400">
+            <h2 class="profile-h2">
                 Senior Software Developer
             </h2>
-            <div class="mt-1 text-2xl">
+            <div class="profile-links">
                 <x-profile-links/>
             </div>
         </header>
-        <section class="prose-lg prose-invert"><br>
+        <section class="about"><br>
             Greetings 👋!
             <p>
                 I'm an experienced remote software developer deeply passionate about creating efficient
@@ -38,21 +38,19 @@
             </p>
 
         </section>
-        <section class="prose-lg prose-invert mt-5">
+        <section class="about mt-5">
             <p>
                 If you find value in my work and would like to support ongoing projects, consider becoming a
                 sponsor.
             </p>
-
             <div class="w-full">
                 <iframe
-                        src="https://github.com/sponsors/dmalusev/card"
-                        title="Sponsor dmalusev"
+                        src="https://github.com/sponsors/{{ config('app.owner.github') }}/card"
+                        title="Sponsor CodeLieutenant"
                         style="border: 0;"
                         class="w-full"
                 ></iframe>
             </div>
-
         </section>
     </article>
 </x-layouts.website>

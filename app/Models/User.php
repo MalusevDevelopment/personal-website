@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Althinect\FilamentSpatieRolesPermissions\Concerns\HasSuperAdmin;
 use App\Helpers\Permissions;
 use App\Helpers\Roles;
 use Database\Factories\UserFactory;

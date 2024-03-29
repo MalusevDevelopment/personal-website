@@ -12,6 +12,13 @@ body button {
     @apply transition-colors;
 }
 
+.inner {
+    @apply relative;
+    @apply flex;
+    @apply flex-col;
+    @apply grow;
+}
+
 body:has(#menu-controller:checked) {
     @apply h-screen overflow-hidden;
 }

@@ -1545,11 +1545,11 @@ namespace Illuminate\Support\Facades {
          * Re-route the Symfony command events to their Laravel counterparts.
          *
          * @internal 
-         * @return \App\Console\Kernel 
+         * @return \Illuminate\Foundation\Console\Kernel 
          * @static 
          */        public static function rerouteSymfonyCommandEvents()
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->rerouteSymfonyCommandEvents();
         }
                     /**
@@ -1560,8 +1560,8 @@ namespace Illuminate\Support\Facades {
          * @return int 
          * @static 
          */        public static function handle($input, $output = null)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->handle($input, $output);
         }
                     /**
@@ -1572,8 +1572,8 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function terminate($input, $status)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         $instance->terminate($input, $status);
         }
                     /**
@@ -1584,8 +1584,8 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function whenCommandLifecycleIsLongerThan($threshold, $handler)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         $instance->whenCommandLifecycleIsLongerThan($threshold, $handler);
         }
                     /**
@@ -1594,8 +1594,8 @@ namespace Illuminate\Support\Facades {
          * @return \Illuminate\Support\Carbon|null 
          * @static 
          */        public static function commandStartedAt()
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->commandStartedAt();
         }
                     /**
@@ -1604,8 +1604,8 @@ namespace Illuminate\Support\Facades {
          * @return \Illuminate\Console\Scheduling\Schedule 
          * @static 
          */        public static function resolveConsoleSchedule()
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->resolveConsoleSchedule();
         }
                     /**
@@ -1616,8 +1616,8 @@ namespace Illuminate\Support\Facades {
          * @return \Illuminate\Foundation\Console\ClosureCommand 
          * @static 
          */        public static function command($signature, $callback)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->command($signature, $callback);
         }
                     /**
@@ -1627,8 +1627,8 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function registerCommand($command)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         $instance->registerCommand($command);
         }
                     /**
@@ -1641,8 +1641,8 @@ namespace Illuminate\Support\Facades {
          * @throws \Symfony\Component\Console\Exception\CommandNotFoundException
          * @static 
          */        public static function call($command, $parameters = [], $outputBuffer = null)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->call($command, $parameters, $outputBuffer);
         }
                     /**
@@ -1653,8 +1653,8 @@ namespace Illuminate\Support\Facades {
          * @return \Illuminate\Foundation\Bus\PendingDispatch 
          * @static 
          */        public static function queue($command, $parameters = [])
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->queue($command, $parameters);
         }
                     /**
@@ -1663,8 +1663,8 @@ namespace Illuminate\Support\Facades {
          * @return array 
          * @static 
          */        public static function all()
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->all();
         }
                     /**
@@ -1673,8 +1673,8 @@ namespace Illuminate\Support\Facades {
          * @return string 
          * @static 
          */        public static function output()
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->output();
         }
                     /**
@@ -1683,8 +1683,8 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function bootstrap()
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         $instance->bootstrap();
         }
                     /**
@@ -1693,8 +1693,8 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function bootstrapWithoutBootingProviders()
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         $instance->bootstrapWithoutBootingProviders();
         }
                     /**
@@ -1704,41 +1704,41 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function setArtisan($artisan)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         $instance->setArtisan($artisan);
         }
                     /**
          * Set the Artisan commands provided by the application.
          *
          * @param array $commands
-         * @return \App\Console\Kernel 
+         * @return \Illuminate\Foundation\Console\Kernel 
          * @static 
          */        public static function addCommands($commands)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->addCommands($commands);
         }
                     /**
          * Set the paths that should have their Artisan commands automatically discovered.
          *
          * @param array $paths
-         * @return \App\Console\Kernel 
+         * @return \Illuminate\Foundation\Console\Kernel 
          * @static 
          */        public static function addCommandPaths($paths)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->addCommandPaths($paths);
         }
                     /**
          * Set the paths that should have their Artisan "routes" automatically discovered.
          *
          * @param array $paths
-         * @return \App\Console\Kernel 
+         * @return \Illuminate\Foundation\Console\Kernel 
          * @static 
          */        public static function addCommandRoutePaths($paths)
-        {            //Method inherited from \Illuminate\Foundation\Console\Kernel         
-                        /** @var \App\Console\Kernel $instance */
+        {
+                        /** @var \Illuminate\Foundation\Console\Kernel $instance */
                         return $instance->addCommandRoutePaths($paths);
         }
             }
@@ -3488,8 +3488,6 @@ namespace Illuminate\Support\Facades {
             /**
      * 
      *
-     * @method static \Illuminate\Contracts\Cache\Lock lock(string $name, int $seconds = 0, string|null $owner = null)
-     * @method static \Illuminate\Contracts\Cache\Lock restoreLock(string $name, string $owner)
      * @see \Illuminate\Cache\CacheManager
      * @mixin \Illuminate\Cache\Repository
      */        class Cache {
@@ -4079,14 +4077,71 @@ namespace Illuminate\Support\Facades {
                         return $instance->macroCall($method, $parameters);
         }
                     /**
+         * Get a lock instance.
+         *
+         * @param string $name
+         * @param int $seconds
+         * @param string|null $owner
+         * @return \Illuminate\Contracts\Cache\Lock 
+         * @static 
+         */        public static function lock($name, $seconds = 0, $owner = null)
+        {
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        return $instance->lock($name, $seconds, $owner);
+        }
+                    /**
+         * Restore a lock instance using the owner identifier.
+         *
+         * @param string $name
+         * @param string $owner
+         * @return \Illuminate\Contracts\Cache\Lock 
+         * @static 
+         */        public static function restoreLock($name, $owner)
+        {
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        return $instance->restoreLock($name, $owner);
+        }
+                    /**
+         * Remove an item from the cache if it is expired.
+         *
+         * @param string $key
+         * @return bool 
+         * @static 
+         */        public static function forgetIfExpired($key)
+        {
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        return $instance->forgetIfExpired($key);
+        }
+                    /**
          * Remove all items from the cache.
          *
          * @return bool 
          * @static 
          */        public static function flush()
         {
-                        /** @var \Illuminate\Cache\ApcStore $instance */
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
                         return $instance->flush();
+        }
+                    /**
+         * Get the underlying database connection.
+         *
+         * @return \Tpetry\PostgresqlEnhanced\PostgresEnhancedConnection 
+         * @static 
+         */        public static function getConnection()
+        {
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        return $instance->getConnection();
+        }
+                    /**
+         * Specify the name of the connection that should be used to manage locks.
+         *
+         * @param \Illuminate\Database\ConnectionInterface $connection
+         * @return \Illuminate\Cache\DatabaseStore 
+         * @static 
+         */        public static function setLockConnection($connection)
+        {
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        return $instance->setLockConnection($connection);
         }
                     /**
          * Get the cache key prefix.
@@ -4095,7 +4150,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getPrefix()
         {
-                        /** @var \Illuminate\Cache\ApcStore $instance */
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
                         return $instance->getPrefix();
         }
             }
@@ -22489,33 +22544,6 @@ namespace Illuminate\Support {
             /**
      * 
      *
-     */        class Str {
-                    /**
-         * 
-         *
-         * @see \Filament\Support\SupportServiceProvider::packageBooted()
-         * @param string $html
-         * @return string 
-         * @static 
-         */        public static function sanitizeHtml($html)
-        {
-                        return \Illuminate\Support\Str::sanitizeHtml($html);
-        }
-                    /**
-         * 
-         *
-         * @see \Filament\Support\SupportServiceProvider::packageBooted()
-         * @param string $value
-         * @return string 
-         * @static 
-         */        public static function ucwords($value)
-        {
-                        return \Illuminate\Support\Str::ucwords($value);
-        }
-            }
-            /**
-     * 
-     *
      * @template TKey of array-key
      * @template-covariant TValue
      * @implements \ArrayAccess<TKey, TValue>
@@ -22539,6 +22567,33 @@ namespace Illuminate\Support {
          */        public static function ray($description = '')
         {
                         return \Illuminate\Support\Collection::ray($description);
+        }
+            }
+            /**
+     * 
+     *
+     */        class Str {
+                    /**
+         * 
+         *
+         * @see \Filament\Support\SupportServiceProvider::packageBooted()
+         * @param string $html
+         * @return string 
+         * @static 
+         */        public static function sanitizeHtml($html)
+        {
+                        return \Illuminate\Support\Str::sanitizeHtml($html);
+        }
+                    /**
+         * 
+         *
+         * @see \Filament\Support\SupportServiceProvider::packageBooted()
+         * @param string $value
+         * @return string 
+         * @static 
+         */        public static function ucwords($value)
+        {
+                        return \Illuminate\Support\Str::ucwords($value);
         }
             }
             /**
@@ -22943,6 +22998,13 @@ namespace Tpetry\PostgresqlEnhanced\Query {
      * 
      *
      */        class Grammar {
+            }
+            /**
+     * 
+     *
+     * @method PostgresEnhancedConnection getConnection()
+     * @method Grammar getGrammar()
+     */        class Builder {
             }
     }
 

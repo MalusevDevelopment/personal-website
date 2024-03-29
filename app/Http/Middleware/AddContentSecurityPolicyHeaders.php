@@ -17,7 +17,7 @@ readonly class AddContentSecurityPolicyHeaders
     public function __construct(private Repository $config)
     {
         $this->domain = $this->config->get('app.domain');
-        $this->umamiDomain = parse_url($this->config->get('umami.script'), PHP_URL_HOST);
+        $this->umamiDomain = parse_url($this->config->get('services.umami.script'), PHP_URL_HOST);
     }
 
     /**

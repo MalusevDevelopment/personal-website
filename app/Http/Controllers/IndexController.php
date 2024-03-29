@@ -11,7 +11,7 @@ class IndexController extends Controller
 
     public function blog()
     {
-        return 'Blog';
+        return view('pages.blog');
     }
 
     public function projects()

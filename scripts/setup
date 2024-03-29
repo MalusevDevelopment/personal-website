@@ -18,3 +18,4 @@ sleep 5
 ./vendor/bin/sail artisan key:generate || exit 1
 ./vendor/bin/sail artisan storage:link
 ./vendor/bin/sail artisan db:seed || exit 1
+./vendor/bin/sail artisan crypto:keys || exit 1

@@ -19,4 +19,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'eu-central-1'),
     ],
+
+    'umami' => [
+        'script' => env('UMAMI_SCRIPT'),
+        'id' => env('UMAMI_ID'),
+    ]
 ];

@@ -104,54 +104,10 @@ return [
 
     'include_vendors' => true,
 
-    /*
-     |--------------------------------------------------------------------------
-     | Capture Ajax Requests
-     |--------------------------------------------------------------------------
-     |
-     | The Debugbar can capture Ajax requests and display them. If you don't want this (ie. because of errors),
-     | you can use this option to disable sending the data through the headers.
-     |
-     | Optionally, you can also send ServerTiming headers on ajax requests for the Chrome DevTools.
-     |
-     | Note for your request to be identified as ajax requests they must either send the header
-     | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
-     */
-
     'capture_ajax' => true,
-    'add_ajax_timing' => false,
-
-    /*
-     |--------------------------------------------------------------------------
-     | Custom Error Handler for Deprecated warnings
-     |--------------------------------------------------------------------------
-     |
-     | When enabled, the Debugbar shows deprecated warnings for Symfony components
-     | in the Messages tab.
-     |
-     */
-    'error_handler' => false,
-
-    /*
-     |--------------------------------------------------------------------------
-     | Clockwork integration
-     |--------------------------------------------------------------------------
-     |
-     | The Debugbar can emulate the Clockwork headers, so you can use the Chrome
-     | Extension, without the server-side code. It uses Debugbar collectors instead.
-     |
-     */
-    'clockwork' => false,
-
-    /*
-     |--------------------------------------------------------------------------
-     | DataCollectors
-     |--------------------------------------------------------------------------
-     |
-     | Enable/disable DataCollectors
-     |
-     */
-
+    'add_ajax_timing' => true,
+    'error_handler' => true,
+    'clockwork' => true,
     'collectors' => [
         'phpinfo' => true,  // Php version
         'messages' => true,  // Messages

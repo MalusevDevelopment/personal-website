@@ -20,9 +20,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             return true;
         });
 
-        //        Telescope::avatar(static function (string $id, string $email) {
-        //            return '/avatars/' . User::find($id)->avatar_path;
-        //        });
+        Telescope::avatar(static function (string $id) {
+            return '/avatars/' . User::find($id)->avatar_url;
+        });
 
         $this->hideSensitiveRequestDetails();
     }

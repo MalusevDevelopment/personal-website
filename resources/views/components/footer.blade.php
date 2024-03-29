@@ -1,13 +1,13 @@
-<footer class="py-10 print:hidden">
-    <div class="flex items-center justify-between">
-        <p class="text-sm text-neutral-500 dark:text-neutral-400">
-            &copy; Copyright {{ now()->year }}
+<footer class="footer">
+    <div>
+        <p class="text-sm text-neutral-400">
+            &copy; Copyright 2023 - {{ now()->year }}
         </p>
-        <p class="text-xs text-neutral-500 dark:text-neutral-400">
-            Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+        <p class="text-xs text-neutral-400">
+            Powered by <a class="link"
                           href="https://www.laravel.com/" target="_blank" rel="noopener noreferrer">Laravel</a> &amp;
             <a
-                    class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+                    class="link"
                     href="https://github.com/jpanther/congo" target="_blank" rel="noopener noreferrer">
                 Templated Based on Congo
             </a>

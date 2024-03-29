@@ -13,31 +13,34 @@ ENV SERVER_NAME="dusanmalusev.test"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 ENV MAKEFLAGS=-j20
-ENV RUNNING_ON_LINUX="0"
 
-RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
+COPY ./docker/php/start-container /usr/local/bin/start-container
+COPY ./docker/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
+COPY ./docker/php/php.ini /usr/local/etc/php/conf.d/00-php.ini
+# REMOVED FOR NOW -> Until contact page is setup
+# COPY ./docker/supervisord/sqs-worker.conf /etc/supervisor/conf.d/sqs-worker.conf
 
-RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y ca-certificates supervisor procps
-
-RUN install-php-extensions \
-	  pdo_pgsql \
-    apcu \
-    pgsql \
-    zstd \
-    msgpack \
-    igbinary \
-    redis \
-	  intl \
-	  zip \
-    pcntl \
-	  opcache \
-    uuid
-
-RUN setcap "cap_net_bind_service=+ep" /usr/local/bin/php
-RUN groupadd --force -g "$WWWGROUP" sail
-RUN useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail
-RUN mkdir -p /var/www/html \
+RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone \
+    && apt-get update && apt-get upgrade -y \
+    && apt-get install -y ca-certificates supervisor procps \
+    && install-php-extensions \
+        pdo_pgsql \
+        apcu \
+        pgsql \
+        zstd \
+        msgpack \
+        igbinary \
+        redis \
+        intl \
+        zip \
+        pcntl \
+        opcache \
+        ffi \
+        uuid \
+    && setcap "cap_net_bind_service=+ep" /usr/local/bin/php \
+    && groupadd --force -g "$WWWGROUP" sail \
+    && useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail \
+    && mkdir -p /var/www/html \
     && chown -R sail:sail /var/www/html \
     && chmod g+s /var/www/html \
     && mkdir -p /var/log/website \
@@ -45,20 +48,10 @@ RUN mkdir -p /var/www/html \
     && mkdir -p /var/run/supervisord \
     && chown -R sail:sail /var/log/website \
     && chown -R sail:sail /var/log/supervisor \
-    && chown -R sail:sail /var/run/supervisord
+    && chown -R sail:sail /var/run/supervisord \
+    && chmod +x /usr/local/bin/start-container
 
 
-COPY ./docker/php/start-container /usr/local/bin/start-container
-RUN chmod +x /usr/local/bin/start-container
-
-# REMOVED FOR NOW -> Until contact page is setup
-# COPY ./docker/supervisord/sqs-worker.conf /etc/supervisor/conf.d/sqs-worker.conf
-COPY ./docker/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
-COPY ./docker/php/php.ini /usr/local/etc/php/conf.d/00-php.ini
-
-EXPOSE 8000
-
-# FROM laravelsail/php83-composer:latest AS vendor
 FROM ${BASE} AS vendor
 
 WORKDIR /app
@@ -117,11 +110,10 @@ RUN apt-get purge -y \
     && chmod -R 755 storage/framework/sessions
 
 COPY ./docker/supervisord/horizon.conf /etc/supervisor/conf.d/horizon.conf
-COPY ./docker/supervisord/horizon.conf /etc/supervisor/conf.d/pulse-work.conf
-COPY ./docker/supervisord/horizon.conf /etc/supervisor/conf.d/pulse-check.conf
+COPY ./docker/supervisord/pulse-work.conf /etc/supervisor/conf.d/pulse-work.conf
+COPY ./docker/supervisord/pulse-check.conf /etc/supervisor/conf.d/pulse-check.conf
 COPY ./docker/supervisord/website.conf /etc/supervisor/conf.d/website.conf
 COPY ./docker/supervisord/scheduler.conf /etc/supervisor/conf.d/scheduler.conf
-
 COPY ./docker/php/preload.ini /usr/local/etc/php/conf.d/10-preload.ini
 
 ENTRYPOINT ["start-container"]
@@ -140,19 +132,19 @@ RUN apt-get update \
     && apt-get install -y librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
     nodejs npm git build-essential unzip
 
-
 COPY ./docker/php/php.dev.ini /usr/local/etc/php/conf.d/10-php.ini
-
-RUN install-php-extensions @composer xdebug && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY ./docker/php/xdebug.ini /usr/local/etc/php/conf.d/99-xdebug.ini
-RUN mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug
-
 COPY ./docker/supervisord/supervisord.dev.conf /etc/supervisor/supervisord.conf
 COPY ./docker/supervisord/website.dev.conf /etc/supervisor/conf.d/website.conf
-RUN mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
+
+RUN install-php-extensions @composer xdebug && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug \
+    && mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
 
 USER sail
 
 EXPOSE 5173
+EXPOSE 80
 
 ENTRYPOINT ["start-container"]
+

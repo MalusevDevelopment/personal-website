@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description"
           content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff"/>
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e293b"/>
     <meta property="og:title" content="Dusan Malusev"/>
     <meta property="og:description" content="Dusan's Website"/>
@@ -25,12 +24,12 @@
             "mainEntity": {
                 "@type": "Person",
                 "name": "Dusan Malusev",
-                "alternateName": "dmalusev",
+                "alternateName": "{{ config('app.owner.github') }}",
                 "identifier": "123475623",
                 "description": "I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions. My journey involves honing skills through diverse projects, all crafted within the confines of my remote workspace.",
                 "image": "https://avatars.githubusercontent.com/u/33778979",
                 "sameAs": [
-                  "https://github.com/dmalusev",
+                  "https://github.com/{{ config('app.owner.github') }}",
                   "https://dev.to/malusev998",
                   "https://www.linkedin.com/in/malusevd998",
                   "https://www.reddit.com/user/Back_Professional",
@@ -42,7 +41,7 @@
     <meta name="author" content="Dusan Malusev"/>
     <link href="mailto:dusan@dusanmalusev.dev" rel="me"/>
     <link href="https://dev.to/malusev998" rel="me"/>
-    <link href="https://github.com/dmalusev" rel="me"/>
+    <link href="https://github.com/{{ config('app.owner.github') }}" rel="me"/>
     <link href="https://www.linkedin.com/in/malusevd998" rel="me"/>
     <link href="https://www.reddit.com/user/Back_Professional" rel="me"/>
     <link href="https://stackoverflow.com/users/8411483/dusan-malusev" rel="me"/>
@@ -58,9 +57,9 @@
 </head>
 
 <body class="body">
-<div class="relative flex flex-col grow">
+<div class="inner">
     <x-header/>
-    <div class="relative flex flex-col grow">
+    <div class="inner">
         <main class="grow">
             {{ $slot }}
         </main>
@@ -70,10 +69,10 @@
 </div>
 
 <script defer
-        src="{{ config('umami.script') }}"
+        src="{{ config('services.umami.script') }}"
         data-cache="true"
         data-domains="{{ config('app.domain') }}"
-        data-website-id="{{ config('umami.id') }}"
+        data-website-id="{{ config('services.umami.id') }}"
         data-auto-track="false"
         nonce="{{ Vite::cspNonce() }}"
 ></script>

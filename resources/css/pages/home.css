@@ -6,6 +6,11 @@
     }
 }
 
+.profile-links {
+    @apply mt-1;
+    @apply text-2xl;
+}
+
 .profile-link {
     @apply px-1;
     @apply transition-transform;
@@ -13,4 +18,43 @@
     @apply hover:text-primary-700;
     @apply dark:hover:text-primary-400;
     @apply will-change;
+}
+
+.profile {
+    @apply h-full;
+    @apply flex;
+    @apply flex-col;
+    @apply items-center;
+    @apply justify-center;
+    @apply text-center;
+}
+
+.profile-header {
+    @apply mb-3;
+    @apply flex;
+    @apply flex-col;
+    @apply items-center;
+}
+
+.profile-header-image {
+    @apply mb-2;
+    @applt h-36;
+    @apply w-36;
+    @apply rounded-full;
+}
+
+.profile-h1 {
+    @apply text-4xl;
+    @apply font-extrabold;
+}
+
+.profile-h2 {
+    @apply text-xl;
+    @apply text-neutral-500;
+    @apply text-neutral-400;
+}
+
+.about {
+    @apply prose-lg;
+    @apply prose-invert;
 }
