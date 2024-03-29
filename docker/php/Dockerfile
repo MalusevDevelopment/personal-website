@@ -15,7 +15,6 @@ ENV TZ=UTC
 ENV MAKEFLAGS=-j20
 
 COPY ./docker/php/start-container /usr/local/bin/start-container
-COPY ./docker/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
 COPY ./docker/php/php.ini /usr/local/etc/php/conf.d/00-php.ini
 # REMOVED FOR NOW -> Until contact page is setup
 # COPY ./docker/supervisord/sqs-worker.conf /etc/supervisor/conf.d/sqs-worker.conf
@@ -24,19 +23,19 @@ RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezo
     && apt-get update && apt-get upgrade -y \
     && apt-get install -y ca-certificates supervisor procps \
     && install-php-extensions \
-        pdo_pgsql \
-        apcu \
-        pgsql \
-        zstd \
-        msgpack \
-        igbinary \
-        redis \
-        intl \
-        zip \
-        pcntl \
-        opcache \
-        ffi \
-        uuid \
+    pdo_pgsql \
+    apcu \
+    pgsql \
+    zstd \
+    msgpack \
+    igbinary \
+    redis \
+    intl \
+    zip \
+    pcntl \
+    opcache \
+    ffi \
+    uuid \
     && setcap "cap_net_bind_service=+ep" /usr/local/bin/php \
     && groupadd --force -g "$WWWGROUP" sail \
     && useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail \
@@ -50,6 +49,8 @@ RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezo
     && chown -R sail:sail /var/log/supervisor \
     && chown -R sail:sail /var/run/supervisord \
     && chmod +x /usr/local/bin/start-container
+
+COPY ./docker/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
 
 
 FROM ${BASE} AS vendor
@@ -137,9 +138,9 @@ COPY ./docker/php/xdebug.ini /usr/local/etc/php/conf.d/99-xdebug.ini
 COPY ./docker/supervisord/supervisord.dev.conf /etc/supervisor/supervisord.conf
 COPY ./docker/supervisord/website.dev.conf /etc/supervisor/conf.d/website.conf
 
-RUN install-php-extensions @composer xdebug && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug \
-    && mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
+RUN mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug \
+    && mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord \
+    && install-php-extensions @composer xdebug
 
 USER sail
 
@@ -147,4 +148,3 @@ EXPOSE 5173
 EXPOSE 80
 
 ENTRYPOINT ["start-container"]
-
