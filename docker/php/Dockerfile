@@ -21,7 +21,7 @@ COPY ./docker/php/php.ini /usr/local/etc/php/conf.d/00-php.ini
 
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone \
     && apt-get update && apt-get upgrade -y \
-    && apt-get install -y ca-certificates supervisor procps \
+    && apt-get install -y --no-install-recommends ca-certificates supervisor procps \
     && install-php-extensions \
     pdo_pgsql \
     apcu \
@@ -94,6 +94,8 @@ COPY --from=vendor --chown=root:root /app/vendor ./vendor
 
 RUN apt-get purge -y \
     gcc make g++ apt-transport-https \
+    autoconf bzip2 cpp-12 cpp g++ g++-12 gcc gcc-12 gcc-12 libasan8 m4 libtirpc3 libtsan2 libubsan1 \
+    pkg-config pkgconf pkgconf-bin re2c \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
