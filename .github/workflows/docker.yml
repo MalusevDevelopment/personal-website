@@ -18,7 +18,7 @@ on:
       dev:
         default: false
         required: false
-        type: bool
+        type: boolean
   workflow_call:
     inputs:
       version:
@@ -36,7 +36,7 @@ on:
       dev:
         default: false
         required: false
-        type: bool
+        type: boolean
     secrets:
       CR_PAT:
         required: true
