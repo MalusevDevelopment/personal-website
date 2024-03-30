@@ -10,7 +10,7 @@
 }
 
 .footer .link {
-    @apply hover:underline
+    @apply hover:underline;
     @apply hover:decoration-primary-400;
     @apply hover:text-primary-500;
 }

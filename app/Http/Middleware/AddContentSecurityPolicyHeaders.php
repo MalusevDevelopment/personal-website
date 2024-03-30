@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 readonly class AddContentSecurityPolicyHeaders
 {
     private string $domain;
-
     private string $umamiDomain;
 
     public function __construct(private Repository $config)
@@ -53,12 +52,12 @@ readonly class AddContentSecurityPolicyHeaders
     {
         $nonce = Vite::cspNonce();
 
-        return "script-src 'nonce-$nonce' 'sha256-abS8bXelr2wTMtWfwv4Q2SgF9jc3EmpFalJLyucKH4o=' https://$this->domain https://$this->umamiDomain";
+        return "script-src 'nonce-$nonce' 'sha256-abS8bXelr2wTMtWfwv4Q2SgF9jc3EmpFalJLyucKH4o=' 'self' https://$this->umamiDomain";
     }
 
     protected function imgSrc(): string
     {
-        return "img-src https://$this->domain";
+        return "img-src 'self'";
     }
 
     protected function objectSrc(): string
@@ -68,7 +67,7 @@ readonly class AddContentSecurityPolicyHeaders
 
     protected function fontSrc(): string
     {
-        return "font-src 'unsafe-inline'";
+        return "font-src 'self' 'unsafe-inline'";
     }
 
     protected function childSrc(): string

@@ -3,12 +3,10 @@
 return [
     'use' => 'horizon',
 
-    'waits' => [
-        'redis:default' => 60,
-        'redis:horizon' => 60,
-        'redis:queue' => 60,
-        'redis:locks' => 60,
-    ],
+    'waits' => collect(explode(',', env('HORIZON_QUEUES', 'default,emails,notifications')))
+        ->mapToDictionary(static fn(string $queue) => ['redis:' . $queue => 60])
+        ->map(static fn(array $val) => $val[0])
+        ->toArray(),
 
     'metrics' => [
         'trim_snapshots' => [
@@ -22,7 +20,7 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default', 'emails', 'notifications'],
+            'queue' => explode(',', env('HORIZON_QUEUES', 'default,emails,notifications')),
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
             'maxProcesses' => 1,

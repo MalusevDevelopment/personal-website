@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 11.0.6.
+ * Generated for Laravel 11.1.1.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -4554,6 +4554,7 @@ namespace Illuminate\Support\Facades {
          * @param string $key
          * @param mixed $values
          * @return \Illuminate\Log\Context\Repository 
+         * @throws \RuntimeException
          * @static 
          */        public static function push($key, ...$values)
         {
@@ -4566,6 +4567,7 @@ namespace Illuminate\Support\Facades {
          * @param string $key
          * @param mixed $values
          * @return \Illuminate\Log\Context\Repository 
+         * @throws \RuntimeException
          * @static 
          */        public static function pushHidden($key, ...$values)
         {
@@ -4642,11 +4644,42 @@ namespace Illuminate\Support\Facades {
          * @internal 
          * @param \Illuminate\Log\Context\?array $context
          * @return \Illuminate\Log\Context\Repository 
+         * @throws \RuntimeException
          * @static 
          */        public static function hydrate($context)
         {
                         /** @var \Illuminate\Log\Context\Repository $instance */
                         return $instance->hydrate($context);
+        }
+                    /**
+         * Apply the callback if the given "value" is (or resolves to) truthy.
+         *
+         * @template TWhenParameter
+         * @template TWhenReturnType
+         * @param \Illuminate\Log\Context\(\Closure($this):  TWhenParameter)|TWhenParameter|null  $value
+         * @param \Illuminate\Log\Context\(callable($this,  TWhenParameter): TWhenReturnType)|null  $callback
+         * @param \Illuminate\Log\Context\(callable($this,  TWhenParameter): TWhenReturnType)|null  $default
+         * @return $this|\Illuminate\Log\Context\TWhenReturnType 
+         * @static 
+         */        public static function when($value = null, $callback = null, $default = null)
+        {
+                        /** @var \Illuminate\Log\Context\Repository $instance */
+                        return $instance->when($value, $callback, $default);
+        }
+                    /**
+         * Apply the callback if the given "value" is (or resolves to) falsy.
+         *
+         * @template TUnlessParameter
+         * @template TUnlessReturnType
+         * @param \Illuminate\Log\Context\(\Closure($this):  TUnlessParameter)|TUnlessParameter|null  $value
+         * @param \Illuminate\Log\Context\(callable($this,  TUnlessParameter): TUnlessReturnType)|null  $callback
+         * @param \Illuminate\Log\Context\(callable($this,  TUnlessParameter): TUnlessReturnType)|null  $default
+         * @return $this|\Illuminate\Log\Context\TUnlessReturnType 
+         * @static 
+         */        public static function unless($value = null, $callback = null, $default = null)
+        {
+                        /** @var \Illuminate\Log\Context\Repository $instance */
+                        return $instance->unless($value, $callback, $default);
         }
                     /**
          * Register a custom macro.
@@ -4893,102 +4926,6 @@ namespace Illuminate\Support\Facades {
          */        public static function flushMacros()
         {
                         \Illuminate\Cookie\CookieJar::flushMacros();
-        }
-            }
-            /**
-     * 
-     *
-     * @method static string generateKey(string $cipher)
-     * @method static \Illuminate\Encryption\Encrypter previousKeys(array $keys)
-     * @see \Illuminate\Encryption\Encrypter
-     */        class Crypt {
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function encrypt($value, $serialize = true)
-        {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
-                        return $instance->encrypt($value, $serialize);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function decrypt($payload, $unserialize = true)
-        {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
-                        return $instance->decrypt($payload, $unserialize);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function nonceSize()
-        {
-                        return \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter::nonceSize();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getKey()
-        {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
-                        return $instance->getKey();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getAllKeys()
-        {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
-                        return $instance->getAllKeys();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getPreviousKeys()
-        {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
-                        return $instance->getPreviousKeys();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function supported($key, $cipher)
-        {
-                        return \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter::supported($key, $cipher);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function encryptString($value)
-        {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
-                        return $instance->encryptString($value);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function decryptString($payload)
-        {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
-                        return $instance->decryptString($payload);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function generateNonce($previous = null)
-        {
-                        /** @var \CodeLieutenant\LaravelCrypto\Encryption\XChaCha20Poly1305Encrypter $instance */
-                        return $instance->generateNonce($previous);
         }
             }
             /**
@@ -21597,22 +21534,26 @@ namespace Livewire\Features\SupportTesting {
          *
          * @see \Filament\Tables\Testing\TestsActions::assertTableActionExists()
          * @param array|string $name
+         * @param \Closure|null $checkActionUsing
+         * @param mixed $record
          * @return static 
          * @static 
-         */        public static function assertTableActionExists($name)
+         */        public static function assertTableActionExists($name, $checkActionUsing = null, $record = null)
         {
-                        return \Livewire\Features\SupportTesting\Testable::assertTableActionExists($name);
+                        return \Livewire\Features\SupportTesting\Testable::assertTableActionExists($name, $checkActionUsing, $record);
         }
                     /**
          * 
          *
          * @see \Filament\Tables\Testing\TestsActions::assertTableActionDoesNotExist()
          * @param array|string $name
+         * @param \Closure|null $checkActionUsing
+         * @param mixed $record
          * @return static 
          * @static 
-         */        public static function assertTableActionDoesNotExist($name)
+         */        public static function assertTableActionDoesNotExist($name, $checkActionUsing = null, $record = null)
         {
-                        return \Livewire\Features\SupportTesting\Testable::assertTableActionDoesNotExist($name);
+                        return \Livewire\Features\SupportTesting\Testable::assertTableActionDoesNotExist($name, $checkActionUsing, $record);
         }
                     /**
          * 
@@ -22203,6 +22144,19 @@ namespace Livewire\Features\SupportTesting {
          */        public static function assertTableColumnExists($name, $checkColumnUsing = null, $record = null)
         {
                         return \Livewire\Features\SupportTesting\Testable::assertTableColumnExists($name, $checkColumnUsing, $record);
+        }
+                    /**
+         * 
+         *
+         * @see \Filament\Tables\Testing\TestsColumns::assertTableColumnDoesNotExist()
+         * @param string $name
+         * @param \Closure|null $checkColumnUsing
+         * @param mixed $record
+         * @return static 
+         * @static 
+         */        public static function assertTableColumnDoesNotExist($name, $checkColumnUsing = null, $record = null)
+        {
+                        return \Livewire\Features\SupportTesting\Testable::assertTableColumnDoesNotExist($name, $checkColumnUsing, $record);
         }
                     /**
          * 
@@ -23399,7 +23353,6 @@ namespace  {
             class Config extends \Illuminate\Support\Facades\Config {}
             class Context extends \Illuminate\Support\Facades\Context {}
             class Cookie extends \Illuminate\Support\Facades\Cookie {}
-            class Crypt extends \Illuminate\Support\Facades\Crypt {}
             class Date extends \Illuminate\Support\Facades\Date {}
             class DB extends \Illuminate\Support\Facades\DB {}
             class Eloquent extends \Illuminate\Database\Eloquent\Model {                            /**

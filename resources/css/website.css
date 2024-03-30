@@ -1,5 +1,6 @@
 @import 'parts/website-theme.css';
 @import 'parts/header.css';
+@import 'parts/footer.css';
 
 @config "../../tailwind.website.config.js";
 

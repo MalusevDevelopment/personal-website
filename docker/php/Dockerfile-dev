@@ -1,0 +1,70 @@
+FROM dunglas/frankenphp:1.1-php8.3
+
+LABEL maintainer="Dusan Malusev"
+
+ARG WWWGROUP=1000
+ARG WWWUSER=1000
+ARG NODE_VERSION=20
+ARG POSTGRES_VERSION=15
+
+WORKDIR /var/www/html
+
+ENV SERVER_NAME="dusanmalusev.test"
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+ENV MAKEFLAGS=-j20
+
+COPY ./scripts/start-container-dev /usr/local/bin/start-container
+COPY ./docker/php/php.ini $PHP_INI_DIR/00-php.ini
+COPY ./docker/php/php.dev.ini $PHP_INI_DIR/10-php.ini
+COPY ./docker/php/xdebug.ini $PHP_INI_DIR/99-xdebug.ini
+
+RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone \
+    && mkdir -p /etc/apt/keyrings \
+    && apt-get update && apt-get upgrade -y \
+    && apt-get install -y \
+      ca-certificates supervisor procps \
+      gosu dnsutils libvips gnupg curl \
+      git build-essential unzip gcc \
+      librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
+    && install-php-extensions \
+        pdo_pgsql \
+        apcu \
+        pgsql \
+        zstd \
+        msgpack \
+        igbinary \
+        redis \
+        intl \
+        zip \
+        pcntl \
+        opcache \
+        ffi \
+        uuid \
+        @composer \
+        xdebug \
+    && groupadd --force -g "$WWWGROUP" sail \
+    && useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail \
+    && chmod +x /usr/local/bin/start-container \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+
+
+RUN apt-get update && apt-get install -y nodejs \
+    && mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug \
+    && mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
+
+COPY ./docker/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
+COPY ./docker/supervisord/horizon.conf /etc/supervisor/conf.d/horizon.conf
+COPY ./docker/supervisord/pulse-work.conf /etc/supervisor/conf.d/pulse-work.conf
+COPY ./docker/supervisord/pulse-check.conf /etc/supervisor/conf.d/pulse-check.conf
+COPY ./docker/supervisord/website.conf /etc/supervisor/conf.d/website.conf
+COPY ./docker/supervisord/scheduler.conf /etc/supervisor/conf.d/scheduler.conf
+
+USER sail
+
+EXPOSE 5173
+EXPOSE 80
+
+#HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
+ENTRYPOINT ["start-container"]

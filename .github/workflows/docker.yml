@@ -15,6 +15,10 @@ on:
         default: linux/amd64
         required: false
         type: string
+      dev:
+        default: false
+        required: false
+        type: bool
   workflow_call:
     inputs:
       version:
@@ -29,6 +33,10 @@ on:
         default: linux/amd64
         required: false
         type: string
+      dev:
+        default: false
+        required: false
+        type: bool
     secrets:
       CR_PAT:
         required: true
@@ -50,6 +58,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.CR_PAT }}
       - name: Build and push API
+        if: ${{ inputs.dev }}
+        uses: docker/build-push-action@v5
+        with:
+          file: docker/php/Dockerfile-dev
+          context: .
+          push: true
+          pull: true
+          platforms: ${{ inputs.platforms }}
+          target: ${{ inputs.docker_target }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ghcr.io/codelieutenant/website:dev
+          build-args: |
+            WWWGROUP=1000
+            WWWUSER=1000
+            BASE=ghcr.io/codelieutenant/website:base
+      - name: Build and push API
+        if: ${{ !inputs.dev }}
         uses: docker/build-push-action@v5
         with:
           file: docker/php/Dockerfile
@@ -61,7 +87,3 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ghcr.io/codelieutenant/website:${{ inputs.version }}
-          build-args: |
-            WWWGROUP=1000
-            WWWUSER=1000
-            BASE=ghcr.io/codelieutenant/website:base

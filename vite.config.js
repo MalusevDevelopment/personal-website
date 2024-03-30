@@ -19,9 +19,9 @@ export default ({mode}) => {
     server: {
       cors: true,
       https: false,
-      host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',
+      host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.test',
       hmr: {
-        host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.local',
+        host: process.env.VITE_SERVE_DOMAIN ?? 'dusanmalusev.test',
       },
     },
     resolve: {

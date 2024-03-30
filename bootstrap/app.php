@@ -10,10 +10,12 @@ use Illuminate\Encryption\EncryptionServiceProvider as LaravelEncryptionServiceP
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Middleware\TrustHosts;
 use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -22,19 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function(Middleware $middleware) {
-        TrustProxies::at('*');
-        TrustProxies::withHeaders(
-            Request::HEADER_X_FORWARDED_FOR |
-            Request::HEADER_X_FORWARDED_HOST |
-            Request::HEADER_X_FORWARDED_PORT |
-            Request::HEADER_X_FORWARDED_PROTO
-        );
-
-//        TrustHosts::at([config('app.domain')]);
-        EncryptCookies::except([UserIdMiddleware::COOKIE_NAME]);
-
-        $middleware->web(UserIdMiddleware::class);
-        $middleware->web(AddContentSecurityPolicyHeaders::class);
+        $middleware->web(append: AddLinkHeadersForPreloadedAssets::class);
+        $middleware->web(append: AddContentSecurityPolicyHeaders::class);
+        $middleware->web(append: UserIdMiddleware::class);
     })
     ->withProviders([
         LaravelEncryptionServiceProvider::class => LaravelCryptoServiceProvider::class,
@@ -46,5 +38,16 @@ return Application::configure(basePath: dirname(__DIR__))
         Gate::before(function (User $user) {
             return $user->isOwner() ? true: null;
         });
+
+        TrustHosts::at([config('app.domain')]);
+        EncryptCookies::except([UserIdMiddleware::COOKIE_NAME]);
+        TrustProxies::at('*');
+        TrustProxies::withHeaders(
+            Request::HEADER_X_FORWARDED_FOR |
+            Request::HEADER_X_FORWARDED_HOST |
+            Request::HEADER_X_FORWARDED_PORT |
+            Request::HEADER_X_FORWARDED_PROTO
+        );
+
     })
     ->create();

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC2236
+if [ ! -z "$WWWUSER" ]; then
+    usermod -u "$WWWUSER" sail
+fi
+
+if [ $# -gt 0 ]; then
+    exec gosu "$WWWUSER" "$@"
+else
+    exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+fi
