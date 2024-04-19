@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-use App\Http\Middleware\AddContentSecurityPolicyHeaders;
-use App\Http\Middleware\UserIdMiddleware;
 use App\Models\User;
-use CodeLieutenant\LaravelCrypto\ServiceProvider as LaravelCryptoServiceProvider;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Encryption\EncryptionServiceProvider as LaravelEncryptionServiceProvider;
-use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
-use Illuminate\Http\Middleware\TrustHosts;
-use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Application;
+use App\Http\Middleware\UserIdMiddleware;
+use Illuminate\Http\Middleware\TrustHosts;
+use Illuminate\Http\Middleware\TrustProxies;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\AddContentSecurityPolicyHeaders;
+use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use CodeLieutenant\LaravelCrypto\ServiceProvider as LaravelCryptoServiceProvider;
+use Illuminate\Encryption\EncryptionServiceProvider as LaravelEncryptionServiceProvider;
 
 
 return Application::configure(basePath: dirname(__DIR__))
