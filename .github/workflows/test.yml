@@ -74,12 +74,12 @@ jobs:
         with:
           fetch-depth: 0
       - name: Cache Vendor
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
           key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
       - name: Cache Node Modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
@@ -93,7 +93,7 @@ jobs:
           npm install
           npm run build
       - name: Cache Pint
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./storage/pint.cache
           key: ${{ runner.os }}-pint-${{ hashFiles('**/composer.lock') }}
@@ -107,11 +107,10 @@ jobs:
           LARAVEL_BYPASS_ENV_CHECK: 1
       - name: Run Pint
         run: ./vendor/bin/pint
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4.0.1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
-          flags: tests
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: codelieutenant/website
           name: website
-          fail_ci_if_error: true
-          verbose: false
+          fail_ci_if_error: false
