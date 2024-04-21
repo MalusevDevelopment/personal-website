@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use App\Enums\PostStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Builder;
 use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\AutomaticDateFormatWithMilliseconds;
 use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\RefreshDataOnSave;
 
@@ -23,13 +23,16 @@ class Post extends Model
         'status',
     ];
 
-    protected $casts = [
-        'title' => 'string',
-        'body' => 'string',
-        'metadata' => 'json',
-        'status' => PostStatus::class,
-        'user_id' =>'int',
-    ];
+    public function casts(): array
+    {
+        return [
+            'title' => 'string',
+            'body' => 'string',
+            'metadata' => 'json',
+            'status' => PostStatus::class,
+            'user_id' => 'int',
+        ];
+    }
 
     public function user(): BelongsTo
     {

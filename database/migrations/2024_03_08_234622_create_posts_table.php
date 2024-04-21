@@ -13,7 +13,7 @@ return new class extends Migration
 
     public function up(): void
     {
-        Schema::createEnumIfNotExists('post_status', PostStatus::cases());
+        Schema::createEnumIfNotExists(PostStatus::class);
 
         Schema::create('posts', function (Blueprint $table) {
             $table->identity(always: true)->primary();
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->longText('body')->nullable(false);
             $table->jsonb('metadata')->nullable();
             $table->enumeration('status', 'post_status')
-                ->default(PostStatus::DRAFT->value);
+                ->default(PostStatus::DRAFT);
             $table->timestampsTz();
 
             $table->foreignIdFor(User::class)

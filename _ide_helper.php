@@ -22576,209 +22576,6 @@ namespace Illuminate\Testing {
             }
     }
 
-namespace Tpetry\PostgresqlEnhanced\Query {
-            /**
-     * 
-     *
-     */        class Grammar {
-            }
-            /**
-     * 
-     *
-     * @method PostgresEnhancedConnection getConnection()
-     * @method Grammar getGrammar()
-     */        class Builder {
-            }
-    }
-
-namespace Illuminate\Database\Query\Grammars {
-            /**
-     * 
-     *
-     */        class PostgresGrammar {
-            }
-            /**
-     * 
-     *
-     */        class Grammar {
-            }
-    }
-
-namespace Illuminate\Database {
-            /**
-     * 
-     *
-     */        class Grammar {
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumGrammarMixin::typeEnumeration()
-         * @param \Illuminate\Database\Schema\ColumnDefinition $columnDefinition
-         * @static 
-         */        public static function typeEnumeration($columnDefinition)
-        {
-                        return \Illuminate\Database\Grammar::typeEnumeration($columnDefinition);
-        }
-            }
-    }
-
-namespace Tpetry\PostgresqlEnhanced\Schema\Grammars {
-            /**
-     * 
-     *
-     */        class Grammar {
-            }
-    }
-
-namespace Illuminate\Database\Schema\Grammars {
-            /**
-     * 
-     *
-     */        class PostgresGrammar {
-            }
-            /**
-     * 
-     *
-     */        class Grammar {
-            }
-    }
-
-namespace Tpetry\PostgresqlEnhanced\Schema {
-            /**
-     * 
-     *
-     */        class Builder {
-            }
-            /**
-     * 
-     *
-     */        class Blueprint {
-            }
-    }
-
-namespace Illuminate\Database\Schema {
-            /**
-     * 
-     *
-     */        class PostgresBuilder {
-            }
-            /**
-     * 
-     *
-     */        class Builder {
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumMixin::createEnum()
-         * @param string $name
-         * @param array $values
-         * @static 
-         */        public static function createEnum($name, $values)
-        {
-                        return \Illuminate\Database\Schema\Builder::createEnum($name, $values);
-        }
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumMixin::createEnumIfNotExists()
-         * @param string $name
-         * @param array $values
-         * @static 
-         */        public static function createEnumIfNotExists($name, $values)
-        {
-                        return \Illuminate\Database\Schema\Builder::createEnumIfNotExists($name, $values);
-        }
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumMixin::dropEnum()
-         * @param string $name
-         * @static 
-         */        public static function dropEnum($name)
-        {
-                        return \Illuminate\Database\Schema\Builder::dropEnum($name);
-        }
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumMixin::dropEnumIfExists()
-         * @param string $name
-         * @static 
-         */        public static function dropEnumIfExists($name)
-        {
-                        return \Illuminate\Database\Schema\Builder::dropEnumIfExists($name);
-        }
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumMixin::renameEnum()
-         * @param string $type
-         * @param string $newName
-         * @static 
-         */        public static function renameEnum($type, $newName)
-        {
-                        return \Illuminate\Database\Schema\Builder::renameEnum($type, $newName);
-        }
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumMixin::renameEnumValue()
-         * @param string $type
-         * @param string $oldName
-         * @param string $newName
-         * @static 
-         */        public static function renameEnumValue($type, $oldName, $newName)
-        {
-                        return \Illuminate\Database\Schema\Builder::renameEnumValue($type, $oldName, $newName);
-        }
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumMixin::addEnumValue()
-         * @param string $type
-         * @param string $value
-         * @param \App\Mixins\PgEnumAddValueDirection|null $direction
-         * @param string|null $otherValue
-         * @param bool $ifNotExists
-         * @static 
-         */        public static function addEnumValue($type, $value, $direction = null, $otherValue = null, $ifNotExists = false)
-        {
-                        return \Illuminate\Database\Schema\Builder::addEnumValue($type, $value, $direction, $otherValue, $ifNotExists);
-        }
-                    /**
-         * 
-         *
-         * @see \App\Mixins\PostgresEnumMixin::addEnumValue()
-         * @param string $type
-         * @param string $value
-         * @param \App\Mixins\PgEnumAddValueDirection|null $direction
-         * @param string|null $otherValue
-         * @param bool $ifNotExists
-         * @static 
-         */        public static function addEnumValueIfNotExist($type, $value, $direction = null, $otherValue = null, $ifNotExists = false)
-        {
-                        return \Illuminate\Database\Schema\Builder::addEnumValueIfNotExist($type, $value, $direction, $otherValue, $ifNotExists);
-        }
-            }
-            /**
-     * 
-     *
-     */        class Blueprint {
-                    /**
-         * 
-         *
-         * @see \App\Providers\PostgresEnumProvider::register()
-         * @param string $name
-         * @param string $type
-         * @param array $options
-         * @static 
-         */        public static function enumeration($name, $type, $options = [])
-        {
-                        return \Illuminate\Database\Schema\Blueprint::enumeration($name, $type, $options);
-        }
-            }
-    }
-
 namespace Illuminate\Routing {
             /**
      * 
@@ -22814,6 +22611,16 @@ namespace Illuminate\Routing {
         {
                         return \Illuminate\Routing\Route::permission($permissions);
         }
+            }
+    }
+
+namespace Tpetry\PostgresqlEnhanced\Query {
+            /**
+     * 
+     *
+     * @method PostgresEnhancedConnection getConnection()
+     * @method Grammar getGrammar()
+     */        class Builder {
             }
     }
 
