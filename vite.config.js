@@ -32,7 +32,6 @@ export default ({mode}) => {
     plugins: [
       laravel({
         input: [
-          'resources/css/app.css',
           'resources/css/website.css',
           'resources/css/pages/blog.css',
           'resources/css/pages/home.css',

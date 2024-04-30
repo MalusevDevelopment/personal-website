@@ -5,13 +5,19 @@
         </div>
         <label id="menu-button" for="menu-controller" class="block sm:hidden">
             <input type="checkbox" id="menu-controller" class="hidden">
-            <x-nav-sm-hamburger-menu-icon/>
+            <div class="icon-wrapper">
+                <x-svg name="sm-hamburger-menu"/>
+            </div>
             <div id="menu-wrapper" class="sm:menu">
                 <ul>
-                    <x-nav-sm-close/>
-                    <x-nav-search-button/>
+                    <li class="mb-1">
+                      <span class="icon-wrapper">
+                        <x-svg name="close"/>
+                      </span>
+                    </li>
+                    <x-nav.search-button/>
                     @foreach($links as $name => $route)
-                        <x-nav-item :link="$route" :title="$name"/>
+                        <x-nav.item :link="$route" :title="$name"/>
                     @endforeach
                 </ul>
             </div>
@@ -19,9 +25,9 @@
 
         <ul>
             @foreach($links as $name => $route)
-                <x-nav-item :link="$route" :title="$name"/>
+                <x-nav.item :link="$route" :title="$name"/>
             @endforeach
-            <x-nav-search-button/>
+            <x-nav.search-button/>
         </ul>
     </nav>
 </header>

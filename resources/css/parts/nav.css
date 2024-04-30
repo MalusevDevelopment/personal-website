@@ -1,0 +1,11 @@
+.nav-item {
+    @apply mb-1 sm:mb-0 sm:me-7 sm:last:me-0;
+
+    a span {
+        @apply decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2;
+    }
+
+    button span {
+        @apply transition-colors group-hover:text-primary-400;
+    }
+}

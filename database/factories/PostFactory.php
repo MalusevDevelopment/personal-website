@@ -3,10 +3,12 @@
 namespace Database\Factories;
 
 use App\Enums\PostStatus;
+use App\Models\Post;
+use Carbon\Month;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
+ * @extends Factory<Post>
  */
 class PostFactory extends Factory
 {
@@ -19,33 +21,45 @@ class PostFactory extends Factory
     {
         return [
             'title' => fake()->text(100),
-            'content' => fake()->text(1000),
+            'body' => fake()->text(1000),
             'metadata' => [],
             'status' => fake()->randomElement([
                 PostStatus::PUBLISHED,
                 PostStatus::DRAFT,
                 PostStatus::ARCHIVED,
             ]),
+            'created_at' => now(),
         ];
+    }
+
+    public function withRandomMonth(int $year)
+    {
+        return $this->state(fn () => [
+            'created_at' => now()
+                ->setYear($year)
+                ->setMonth(
+                    fake()->randomElement(Month::cases())
+                ),
+        ]);
     }
 
     public function published(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn () => [
             'status' => PostStatus::PUBLISHED,
         ]);
     }
 
     public function draft(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn () => [
             'status' => PostStatus::DRAFT,
         ]);
     }
 
     public function archived(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn () => [
             'status' => PostStatus::ARCHIVED,
         ]);
     }

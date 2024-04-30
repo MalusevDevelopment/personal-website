@@ -8,16 +8,16 @@ class PolicesController extends Controller
 {
     public function privacy(): View
     {
-        return view('privacy');
+        return view('pages.privacy');
     }
 
     public function cookie(): View
     {
-        return view('cookie');
+        return view('pages.cookie');
     }
 
     public function terms(): View
     {
-        return view('terms');
+        return view('pages.terms');
     }
 }

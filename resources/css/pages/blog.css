@@ -1,8 +1,12 @@
-@import '../parts/highlight.css';
-@import '../parts/chroma.css';
+/*@import '../parts/highlight.css';*/
+/*@import '../parts/chroma.css';*/
+@import '../parts/pagination.css';
 
 @config "../../../tailwind.website.config.js";
 
+header > h1 {
+    @apply mt-0 text-4xl font-extrabold text-neutral;
+}
 
 .toc ul,
 .toc li {
@@ -19,4 +23,36 @@
 
 .toc ul > li {
     @apply rtl:mr-0;
+}
+
+.blog h2 {
+    @apply mt-12 text-2xl font-bold first:mt-8 text-neutral-300;
+}
+
+.blog hr {
+    @apply border-solid w-36 border-neutral-400;
+}
+
+.article {
+    @apply mt-6 flex max-w-prose flex-row;
+}
+
+.article h3 {
+    @apply flex items-center text-xl font-semibold;
+}
+
+.article h3 a {
+    @apply decoration-primary-500 hover:underline hover:underline-offset-2 text-neutral;
+}
+
+.article-footer {
+    @apply text-sm text-neutral-400;
+}
+
+.article-footer div {
+    @apply flex flex-row flex-wrap items-center text-sm text-neutral-400;
+}
+
+.article-sep {
+    @apply px-2 text-primary-500;
 }

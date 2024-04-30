@@ -1,16 +1,20 @@
 .footer {
     @apply py-10;
     @apply print:hidden;
-}
 
-.footer div {
-    @apply flex;
-    @apply items-center;
-    @apply justify-between;
-}
+    p {
+        @apply text-sm text-neutral-400;
+    }
 
-.footer .link {
-    @apply hover:underline;
-    @apply hover:decoration-primary-400;
-    @apply hover:text-primary-500;
+    a {
+        @apply hover:underline;
+        @apply hover:decoration-primary-400;
+        @apply hover:text-primary-500;
+    }
+
+    div {
+        @apply flex;
+        @apply items-center;
+        @apply justify-between;
+    }
 }

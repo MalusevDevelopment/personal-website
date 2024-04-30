@@ -26,3 +26,5 @@ config/caddy/
 /caddy
 frankenphp
 frankenphp-worker.php
+
+config/composer/

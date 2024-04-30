@@ -1,4 +1,5 @@
 @import 'parts/website-theme.css';
+@import 'parts/nav.css';
 @import 'parts/header.css';
 @import 'parts/footer.css';
 
@@ -44,7 +45,6 @@ body:has(#menu-controller:checked) {
     @apply lg:px-32;
 }
 
-
 #menu-button:has(#menu-controller:checked) {
     @apply invisible;
 }
@@ -55,4 +55,12 @@ body:has(#menu-controller:checked) {
 
 .prose div.min-w-0.max-w-prose > *:first-child {
     @apply mt-3;
+}
+
+.profile-icon {
+    @apply relative inline-block align-text-bottom px-1 icon;
+}
+
+.icon-wrapper {
+    @apply cursor-pointer hover:text-primary-400;
 }

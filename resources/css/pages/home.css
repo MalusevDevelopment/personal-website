@@ -6,20 +6,6 @@
     }
 }
 
-.profile-links {
-    @apply mt-1;
-    @apply text-2xl;
-}
-
-.profile-link {
-    @apply px-1;
-    @apply transition-transform;
-    @apply hover:scale-125;
-    @apply hover:text-primary-700;
-    @apply dark:hover:text-primary-400;
-    @apply will-change;
-}
-
 .profile {
     @apply h-full;
     @apply flex;
@@ -27,31 +13,39 @@
     @apply items-center;
     @apply justify-center;
     @apply text-center;
-}
 
-.profile-header {
-    @apply mb-3;
-    @apply flex;
-    @apply flex-col;
-    @apply items-center;
-}
+    header {
+        @apply mb-3 flex flex-col items-center;
 
-.profile-header-image {
-    @apply mb-2;
-    @applt h-36;
-    @apply w-36;
-    @apply rounded-full;
-}
+        img {
+            @apply mb-2 h-36 w-36 rounded-full;
+        }
+    }
 
-.profile-h1 {
-    @apply text-4xl;
-    @apply font-extrabold;
-}
+    h1 {
+        @apply text-4xl;
+        @apply font-extrabold;
+    }
 
-.profile-h2 {
-    @apply text-xl;
-    @apply text-neutral-500;
-    @apply text-neutral-400;
+    h2 {
+        @apply text-xl;
+        @apply text-neutral-500;
+        @apply text-neutral-400;
+    }
+
+    .links {
+        @apply mt-1;
+        @apply text-2xl;
+    }
+
+    .link {
+        @apply px-1;
+        @apply transition-transform;
+        @apply hover:scale-125;
+        @apply hover:text-primary-700;
+        @apply dark:hover:text-primary-400;
+        @apply will-change;
+    }
 }
 
 .about {

@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 11.4.0.
+ * Generated for Laravel 11.5.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2891,6 +2891,33 @@ namespace Illuminate\Support\Facades {
                         return $instance->socket($request);
         }
                     /**
+         * Begin sending an anonymous broadcast to the given channels.
+         *
+         * @static 
+         */        public static function on($channels)
+        {
+                        /** @var \Illuminate\Broadcasting\BroadcastManager $instance */
+                        return $instance->on($channels);
+        }
+                    /**
+         * Begin sending an anonymous broadcast to the given private channels.
+         *
+         * @static 
+         */        public static function private($channel)
+        {
+                        /** @var \Illuminate\Broadcasting\BroadcastManager $instance */
+                        return $instance->private($channel);
+        }
+                    /**
+         * Begin sending an anonymous broadcast to the given presence channels.
+         *
+         * @static 
+         */        public static function presence($channel)
+        {
+                        /** @var \Illuminate\Broadcasting\BroadcastManager $instance */
+                        return $instance->presence($channel);
+        }
+                    /**
          * Begin broadcasting an event.
          *
          * @param mixed|null $event
@@ -4086,7 +4113,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function lock($name, $seconds = 0, $owner = null)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->lock($name, $seconds, $owner);
         }
                     /**
@@ -4098,19 +4125,8 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function restoreLock($name, $owner)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->restoreLock($name, $owner);
-        }
-                    /**
-         * Remove an item from the cache if it is expired.
-         *
-         * @param string $key
-         * @return bool 
-         * @static 
-         */        public static function forgetIfExpired($key)
-        {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
-                        return $instance->forgetIfExpired($key);
         }
                     /**
          * Remove all items from the cache.
@@ -4119,29 +4135,70 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function flush()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->flush();
         }
                     /**
-         * Get the underlying database connection.
+         * Remove all expired tag set entries.
          *
-         * @return \Tpetry\PostgresqlEnhanced\PostgresEnhancedConnection 
+         * @return void 
          * @static 
-         */        public static function getConnection()
+         */        public static function flushStaleTags()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
-                        return $instance->getConnection();
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        $instance->flushStaleTags();
+        }
+                    /**
+         * Get the Redis connection instance.
+         *
+         * @return \Illuminate\Redis\Connections\Connection 
+         * @static 
+         */        public static function connection()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->connection();
+        }
+                    /**
+         * Get the Redis connection instance that should be used to manage locks.
+         *
+         * @return \Illuminate\Redis\Connections\Connection 
+         * @static 
+         */        public static function lockConnection()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->lockConnection();
+        }
+                    /**
+         * Specify the name of the connection that should be used to store data.
+         *
+         * @param string $connection
+         * @return void 
+         * @static 
+         */        public static function setConnection($connection)
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        $instance->setConnection($connection);
         }
                     /**
          * Specify the name of the connection that should be used to manage locks.
          *
-         * @param \Illuminate\Database\ConnectionInterface $connection
-         * @return \Illuminate\Cache\DatabaseStore 
+         * @param string $connection
+         * @return \Illuminate\Cache\RedisStore 
          * @static 
          */        public static function setLockConnection($connection)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->setLockConnection($connection);
+        }
+                    /**
+         * Get the Redis database instance.
+         *
+         * @return \Illuminate\Contracts\Redis\Factory 
+         * @static 
+         */        public static function getRedis()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->getRedis();
         }
                     /**
          * Get the cache key prefix.
@@ -4150,7 +4207,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getPrefix()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->getPrefix();
         }
                     /**
@@ -4161,7 +4218,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function setPrefix($prefix)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         $instance->setPrefix($prefix);
         }
             }
@@ -10507,6 +10564,19 @@ namespace Illuminate\Support\Facades {
                         return $instance->increment($key, $decaySeconds, $amount);
         }
                     /**
+         * Decrement the counter for a given key for a given decay time by a given amount.
+         *
+         * @param string $key
+         * @param int $decaySeconds
+         * @param int $amount
+         * @return int 
+         * @static 
+         */        public static function decrement($key, $decaySeconds = 60, $amount = 1)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->decrement($key, $decaySeconds, $amount);
+        }
+                    /**
          * Get the number of attempts for the given key.
          *
          * @param string $key
@@ -11111,7 +11181,7 @@ namespace Illuminate\Support\Facades {
                         return $instance->mergeIfMissing($input);
         }
                     /**
-         * Replace the input for the current request.
+         * Replace the input values for the current request.
          *
          * @param array $input
          * @return \Illuminate\Http\Request 
@@ -15876,6 +15946,20 @@ namespace Illuminate\Support\Facades {
                         return $instance->to($path, $extra, $secure);
         }
                     /**
+         * Generate an absolute URL with the given query parameters.
+         *
+         * @param string $path
+         * @param array $query
+         * @param mixed $extra
+         * @param bool|null $secure
+         * @return string 
+         * @static 
+         */        public static function query($path, $query = [], $extra = [], $secure = null)
+        {
+                        /** @var \Illuminate\Routing\UrlGenerator $instance */
+                        return $instance->query($path, $query, $extra, $secure);
+        }
+                    /**
          * Generate a secure, absolute URL to the given path.
          *
          * @param string $path
@@ -19348,6 +19432,15 @@ namespace Livewire {
          * 
          *
          * @static 
+         */        public static function withoutLazyLoading()
+        {
+                        /** @var \Livewire\LivewireManager $instance */
+                        return $instance->withoutLazyLoading();
+        }
+                    /**
+         * 
+         *
+         * @static 
          */        public static function test($name, $params = [])
         {
                         /** @var \Livewire\LivewireManager $instance */
@@ -22611,16 +22704,6 @@ namespace Illuminate\Routing {
         {
                         return \Illuminate\Routing\Route::permission($permissions);
         }
-            }
-    }
-
-namespace Tpetry\PostgresqlEnhanced\Query {
-            /**
-     * 
-     *
-     * @method PostgresEnhancedConnection getConnection()
-     * @method Grammar getGrammar()
-     */        class Builder {
             }
     }
 

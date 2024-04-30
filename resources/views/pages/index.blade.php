@@ -3,22 +3,14 @@
         @vite('resources/css/pages/home.css')
     @endsection
     <article class="profile">
-        <header class="profile-header">
-            <img
-                    class="profile-header-image"
-                    width="36"
-                    height="36"
-                    decoding="async"
-                    alt="Dusan Malusev"
-                    src="{{ asset('images/me.jpeg') }}"
+        <header>
+            <img width="36" height="36" decoding="async" alt="Dusan Malusev"
+                 src="{{ asset('images/me.jpeg') }}"
+                 loading="lazy"
             />
-            <h1 class="profile-h1">
-                Dusan Malusev
-            </h1>
-            <h2 class="profile-h2">
-                Senior Software Developer
-            </h2>
-            <div class="profile-links">
+            <h1>Dusan Malusev</h1>
+            <h2>Senior Software Developer</h2>
+            <div class="links">
                 <x-profile-links/>
             </div>
         </header>
@@ -43,10 +35,10 @@
                 If you find value in my work and would like to support ongoing projects, consider becoming a
                 sponsor.
             </p>
-            <div class="w-full">
+            <div>
                 <iframe
                         src="https://github.com/sponsors/{{ config('app.owner.github') }}/card"
-                        title="Sponsor CodeLieutenant"
+                        title="Sponsor {{ config('app.owner.github') }}"
                         style="border: 0;"
                         class="w-full"
                 ></iframe>

@@ -65,17 +65,8 @@
         </main>
     </div>
     @include('components.footer')
-    @include('components.search')
+    {{--    @include('components.search')--}}
 </div>
-
-<script defer
-        src="{{ config('services.umami.script') }}"
-        data-cache="true"
-        data-domains="{{ config('app.domain') }}"
-        data-website-id="{{ config('services.umami.id') }}"
-        data-auto-track="false"
-        nonce="{{ Vite::cspNonce() }}"
-></script>
 
 @if(($useLivewire ?? false))
     @livewireScriptConfig
@@ -83,6 +74,18 @@
 @else
     @vite('resources/js/app.js')
 @endif
+
+@if(app()->environment('production'))
+    <script defer
+            src="{{ config('services.umami.script') }}"
+            data-cache="true"
+            data-domains="{{ config('app.domain') }}"
+            data-website-id="{{ config('services.umami.id') }}"
+            data-auto-track="false"
+            nonce="{{ Vite::cspNonce() }}"
+    />
+@endif
+
 
 </body>
 </html>
