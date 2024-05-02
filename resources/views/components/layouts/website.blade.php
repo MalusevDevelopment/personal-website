@@ -57,6 +57,7 @@
 </head>
 
 <body class="body">
+
 <div class="inner">
     <x-header/>
     <div class="inner">
@@ -64,8 +65,9 @@
             {{ $slot }}
         </main>
     </div>
-    @include('components.footer')
-    {{--    @include('components.search')--}}
+
+    <x-footer/>
+    <x-search/>
 </div>
 
 @if(($useLivewire ?? false))
