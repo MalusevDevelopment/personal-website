@@ -24,38 +24,43 @@ jobs:
           passphrase: ${{ secrets.SERVER_PRIVATE_KEY_PASSPHRASE }}
           port: 22
           script: |
-            export VERSION=${{ inputs.version }}
-            export IMAGE="ghcr.io/codelieutenant/website:$VERSION"
-            export STATIC_FILES="/var/www/www.dusanmalusev.dev"
-            export CONTAINER_BASE_PATH="/var/www/html"
-            export CONTAINER_STATIC_FILES="$CONTAINER_BASE_PATH/public"
-            export CONTAINER_APP_LOCAL_STORAGE="$CONTAINER_BASE_PATH/storage/app"
-            export APP_LOCAL_STORAGE="/opt/website/storage"
-            export EXTRACT_PATH="/extract"
-            export LOGS_PATH="/var/log/website"
-            export ENV_FILE="/home/${{ secrets.SERVER_USERNAME }}/website/.env"
-            docker login ghcr.io --username dmalusev --password ${{ secrets.REGISTRY_TOKEN  }} || exit 1
-            docker pull "$IMAGE"
-            docker logout ghcr.io
+            docker login ${{ secrets.REGISTRY }} \
+              --username ${{ secrets.REGISTRY_USERNAME }} \
+              --password ${{ secrets.REGISTRY_TOKEN }} || exit 1
 
-            docker rm -f website
-            docker run --name extract-static-files --rm -it -v "$STATIC_FILES:$EXTRACT_PATH" "$IMAGE" cp -a "$CONTAINER_STATIC_FILES/." "$EXTRACT_PATH"
+            docker pull "${{ env.IMAGE }}:${{ inputs.version }}"
+
+            docker logout ${{ secrets.REGISTRY }}
+
+            docker stop -s SIGINT -t 30 website scheduler pulse_work pulse_check sqs
+
+            docker exec -it horizon php artisan horizon:terminate
+            docker exec -it horizon php artisan horizon:purge
+            docker exec -it horizon php artisan horizon:clear-metrics
+            docker stop -s SIGINT -t 30 horizon
+
+            docker rm -f horizon website pulse_work pulse_check scheduler sqs
+
+            docker run --name extract-static-files --rm -it -v "${{ env.STATIC_FILES }}:/extract" "$IMAGE" cp -a "${{ env.CONTAINER_STATIC_FILES }}/." "/extract"
+
             docker run \
               --name migrate \
               --rm \
               --network website \
               --add-host=host.docker.internal:host-gateway \
-              --env-file "$ENV_FILE" \
-              -it "$IMAGE" php artisan migrate -n --force
+              --env-file "${{ secrets.ENV_FILE }}" \
+              -it "${{ env.IMAGE }}:${{ inputs.version }}" \
+              php artisan migrate -n --force
 
-              sudo mkdir -p "$STATIC_FILES"
-              sudo mkdir -p "$APP_LOCAL_STORAGE"
-              sudo mkdir -p "$APP_LOCAL_STORAGE/public"
-              sudo mkdir -p "$LOGS_PATH"
+              sudo mkdir -p "${{ env.STATIC_FILES }}"
+              sudo mkdir -p "${{ env.LOCAL_STORAGE }}"
+              sudo mkdir -p "${{ env.LOCAL_STORAGE }}/public"
+              sudo mkdir -p "${{ env.LOGS_PATH }}"
 
-              export FILE="$STATIC_FILES/storage"
-              if [[ ! -L "$FILE" ]]; then
-                  sudo ln -s "$APP_LOCAL_STORAGE/public" "$STATIC_FILES/storage"
+              if [[ ! -L "${{ env.STATIC_FILES }}/storage" ]]; then
+                  sudo ln -s \
+                    ${{ env.LOCAL_STORAGE }}/public \
+                    ${{ env.STATIC_FILES }}/storage
               fi
 
               docker run \
@@ -63,11 +68,115 @@ jobs:
               	--name website \
               	-d \
               	--restart unless-stopped \
-              	-p 8000:8080 \
+              	-p 8000:80 \
               	--network website \
-              	-v "$LOGS_PATH:$LOGS_PATH" \
-              	-v "$STATIC_FILES:$CONTAINER_STATIC_FILES" \
-              	-v "$APP_LOCAL_STORAGE:$CONTAINER_APP_LOCAL_STORAGE" \
-              	-v "$APP_LOCAL_STORAGE/public:$APP_LOCAL_STORAGE/public" \
+              	-v "${{ env.LOGS_PATH }}:${{ env.LOGS_PATH }}" \
+              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
-              	--env-file "$ENV_FILE" "$IMAGE"
+              	--env-file "${{ secrets.ENV_FILE }}" \
+              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	php \
+              	  -d variables_order=EGPCS \
+              	  /var/www/html/artisan serve \
+              	  --host=0.0.0.0 \
+              	  --port=80 \
+              	  --tries=3
+
+              docker run \
+              	-it \
+              	--name scheduler \
+              	-d \
+              	--restart unless-stopped \
+              	--network website \
+              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
+              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	--add-host=host.docker.internal:host-gateway \
+              	--env-file "${{ secrets.ENV_FILE }}" \
+              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	php artisan schedule:work -n --ansi
+
+              docker run \
+              	-it \
+              	--name horizon \
+              	-d \
+              	--restart unless-stopped \
+              	--network website \
+              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
+              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	--add-host=host.docker.internal:host-gateway \
+              	--env-file "${{ secrets.ENV_FILE }}" \
+              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	php artisan horizon -n --ansi
+
+              docker run \
+              	-it \
+              	--name horizon \
+              	-d \
+              	--restart unless-stopped \
+              	--network website \
+              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
+              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	--add-host=host.docker.internal:host-gateway \
+              	--env-file "${{ secrets.ENV_FILE }}" \
+              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	php artisan horizon -n --ansi
+
+              docker run \
+              	-it \
+              	--name pulse_check \
+              	-d \
+              	--restart unless-stopped \
+              	--network website \
+              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
+              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	--add-host=host.docker.internal:host-gateway \
+              	--env-file "${{ secrets.ENV_FILE }}" \
+              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	php artisan pulse:check -n --ansi
+
+              docker run \
+              	-it \
+              	--name pulse_work \
+              	-d \
+              	--restart unless-stopped \
+              	--network website \
+              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
+              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	--add-host=host.docker.internal:host-gateway \
+              	--env-file "${{ secrets.ENV_FILE }}" \
+              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	php artisan pulse:work -n --ansi
+
+              docker run \
+              	-it \
+              	--name sqs \
+              	-d \
+              	--restart unless-stopped \
+              	--network website \
+              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
+              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	--add-host=host.docker.internal:host-gateway \
+              	--env-file "${{ secrets.ENV_FILE }}" \
+              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600

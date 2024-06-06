@@ -40,11 +40,11 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/codelieutenant/website:dev
+      image: ${{ env.IMAGE }}:dev
       options: --user root
       credentials:
         password: ${{ secrets.CR_PAT }}
-        username: ${{ github.actor }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
     services:
       pgsql:
         image: "postgres:15-alpine"
@@ -111,6 +111,6 @@ jobs:
         with:
           file: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: codelieutenant/website
+          slug: ${{ github.actor }}/website
           name: website
           fail_ci_if_error: false

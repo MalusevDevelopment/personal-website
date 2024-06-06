@@ -1,6 +1,4 @@
-ARG BASE=base
-
-FROM dunglas/frankenphp:1.1-php8.3 as base
+FROM dunglas/frankenphp:1.2-php8.3 as base
 
 WORKDIR /var/www/html
 
@@ -35,7 +33,7 @@ EXPOSE 2019
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
 ENTRYPOINT ["start-container"]
 
-FROM ${BASE} AS vendor
+FROM base AS vendor
 
 WORKDIR /app
 
@@ -54,7 +52,7 @@ RUN install-php-extensions @composer \
     --no-progress \
     --prefer-dist
 
-FROM node:20-alpine AS frontend
+FROM node:22-alpine AS frontend
 
 WORKDIR /app
 
@@ -63,7 +61,7 @@ COPY --chown=root:root --from=vendor /app/vendor ./vendor
 
 RUN npm install && NODE_ENV=production npm run build
 
-FROM ${BASE} AS production
+FROM base AS production
 
 WORKDIR /var/www/html
 
