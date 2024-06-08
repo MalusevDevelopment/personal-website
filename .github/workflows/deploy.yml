@@ -27,7 +27,7 @@ jobs:
               --username ${{ secrets.REGISTRY_USERNAME }} \
               --password ${{ secrets.REGISTRY_TOKEN }} || exit 1
 
-            docker pull "${{ env.IMAGE }}:${{ inputs.version }}"
+            docker pull "${{ vars.IMAGE }}:${{ inputs.version }}"
 
             docker logout ${{ secrets.REGISTRY }}
 
@@ -40,7 +40,7 @@ jobs:
 
             docker rm -f horizon website pulse_work pulse_check scheduler sqs
 
-            docker run --name extract-static-files --rm -it -v "${{ env.STATIC_FILES }}:/extract" "$IMAGE" cp -a "${{ env.CONTAINER_STATIC_FILES }}/." "/extract"
+            docker run --name extract-static-files --rm -it -v "${{ vars.STATIC_FILES }}:/extract" "$IMAGE" cp -a "${{ vars.CONTAINER_STATIC_FILES }}/." "/extract"
 
             docker run \
               --name migrate \
@@ -48,18 +48,18 @@ jobs:
               --network website \
               --add-host=host.docker.internal:host-gateway \
               --env-file "${{ secrets.ENV_FILE }}" \
-              -it "${{ env.IMAGE }}:${{ inputs.version }}" \
+              -it "${{ vars.IMAGE }}:${{ inputs.version }}" \
               php artisan migrate -n --force
 
-              sudo mkdir -p "${{ env.STATIC_FILES }}"
-              sudo mkdir -p "${{ env.LOCAL_STORAGE }}"
-              sudo mkdir -p "${{ env.LOCAL_STORAGE }}/public"
-              sudo mkdir -p "${{ env.LOGS_PATH }}"
+              sudo mkdir -p "${{ vars.STATIC_FILES }}"
+              sudo mkdir -p "${{ vars.LOCAL_STORAGE }}"
+              sudo mkdir -p "${{ vars.LOCAL_STORAGE }}/public"
+              sudo mkdir -p "${{ vars.LOGS_PATH }}"
 
-              if [[ ! -L "${{ env.STATIC_FILES }}/storage" ]]; then
+              if [[ ! -L "${{ vars.STATIC_FILES }}/storage" ]]; then
                   sudo ln -s \
-                    ${{ env.LOCAL_STORAGE }}/public \
-                    ${{ env.STATIC_FILES }}/storage
+                    ${{ vars.LOCAL_STORAGE }}/public \
+                    ${{ vars.STATIC_FILES }}/storage
               fi
 
               docker run \
@@ -69,14 +69,14 @@ jobs:
               	--restart unless-stopped \
               	-p 8000:80 \
               	--network website \
-              	-v "${{ env.LOGS_PATH }}:${{ env.LOGS_PATH }}" \
-              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOGS_PATH }}:${{ vars.LOGS_PATH }}" \
+              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=dusanmalusev.dev" \
-              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	php \
               	  -d variables_order=EGPCS \
               	  /var/www/html/artisan serve \
@@ -90,14 +90,14 @@ jobs:
               	-d \
               	--restart unless-stopped \
               	--network website \
-              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
-              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
+              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=dusanmalusev.dev" \
-              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	php artisan schedule:work -n --ansi
 
               docker run \
@@ -106,14 +106,14 @@ jobs:
               	-d \
               	--restart unless-stopped \
               	--network website \
-              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
-              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
+              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=dusanmalusev.dev" \
-              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	php artisan horizon -n --ansi
 
               docker run \
@@ -122,14 +122,14 @@ jobs:
               	-d \
               	--restart unless-stopped \
               	--network website \
-              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
-              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
+              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=dusanmalusev.dev" \
-              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	php artisan horizon -n --ansi
 
               docker run \
@@ -138,14 +138,14 @@ jobs:
               	-d \
               	--restart unless-stopped \
               	--network website \
-              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
-              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
+              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	php artisan pulse:check -n --ansi
 
               docker run \
@@ -154,14 +154,14 @@ jobs:
               	-d \
               	--restart unless-stopped \
               	--network website \
-              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
-              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
+              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	php artisan pulse:work -n --ansi
 
               docker run \
@@ -170,12 +170,12 @@ jobs:
               	-d \
               	--restart unless-stopped \
               	--network website \
-              	-v "${{ env.LOGS_PATH }}/scheduler:${{ env.LOGS_PATH }}" \
-              	-v "${{ env.STATIC_FILES }}:${{ env.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ env.LOCAL_STORAGE }}:${{ env.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
+              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
+              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ env.IMAGE }}:${{ inputs.version }}" \
+              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600

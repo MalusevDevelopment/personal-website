@@ -40,7 +40,7 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.IMAGE }}:dev
+      image: ${{ vars.IMAGE }}:dev
       options: --user root
       credentials:
         password: ${{ secrets.CR_PAT }}

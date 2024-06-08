@@ -27,7 +27,7 @@ jobs:
       docker_target: production
       platforms: linux/arm64
       version: ${{ needs.tag.outputs.version }}
-      image: ${{ env.IMAGE }}
+      image: ${{ vars.IMAGE }}
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
       REGISTRY: ${{ secrets.REGISTRY }}
