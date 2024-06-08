@@ -19,7 +19,7 @@ on:
         default: false
         required: false
         type: boolean
-      dev:
+      image:
         default: 'ghcr.io/codelieutenant/website'
         required: false
         type: string
@@ -76,7 +76,7 @@ jobs:
           platforms: ${{ inputs.platforms }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ env.IMAGE }}:dev
+          tags: ${{ inputs.image }}:dev
           build-args: |
             WWWGROUP=1000
             WWWUSER=1000
