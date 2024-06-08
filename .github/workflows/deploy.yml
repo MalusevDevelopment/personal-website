@@ -21,7 +21,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SERVER_PRIVATE_KEY_PASSPHRASE }}
           port: 22
           script: |
             docker login ${{ secrets.REGISTRY }} \
@@ -145,7 +144,7 @@ jobs:
               	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
-              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ env.IMAGE }}:${{ inputs.version }}" \
               	php artisan pulse:check -n --ansi
 
@@ -161,7 +160,7 @@ jobs:
               	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
-              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ env.IMAGE }}:${{ inputs.version }}" \
               	php artisan pulse:work -n --ansi
 
@@ -177,6 +176,6 @@ jobs:
               	-v "${{ env.LOCAL_STORAGE }}/public:${{ env.LOCAL_STORAGE }}/public" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
-              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ env.IMAGE }}:${{ inputs.version }}" \
               	php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600

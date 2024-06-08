@@ -40,6 +40,10 @@ on:
     secrets:
       CR_PAT:
         required: true
+      REGISTRY:
+        required: true
+      REGISTRY_USERNAME:
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
