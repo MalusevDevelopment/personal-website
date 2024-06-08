@@ -41,6 +41,10 @@ on:
         default: false
         required: false
         type: boolean
+      image:
+        default: 'ghcr.io/codelieutenant/website'
+        required: false
+        type: string
     secrets:
       CR_PAT:
         required: true
