@@ -19,6 +19,10 @@ on:
         default: false
         required: false
         type: boolean
+      dev:
+        default: 'ghcr.io/codelieutenant/website'
+        required: false
+        type: string
   workflow_call:
     inputs:
       version:
@@ -88,4 +92,4 @@ jobs:
           target: ${{ inputs.docker_target }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ env.IMAGE }}:${{ inputs.version }}
+          tags: ${{ inputs.image }}:${{ inputs.version }}
