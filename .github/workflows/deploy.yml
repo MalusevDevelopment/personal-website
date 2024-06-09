@@ -22,6 +22,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           passphrase: ${{ secrets.SERVER_PRIVATE_KEY_PASSPHRASE }}
+          cipher: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
           port: 22
           script: |
             docker login ${{ secrets.REGISTRY }} \
