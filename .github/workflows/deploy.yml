@@ -47,7 +47,7 @@ jobs:
               --rm \
               -v "${{ vars.STATIC_FILES }}:/extract" \
               "$IMAGE" \
-              cp -a "${{ vars.CONTAINER_STATIC_FILES }}/." "/extract"
+              start-container cp -a "${{ vars.CONTAINER_STATIC_FILES }}/." "/extract"
 
             docker run \
               --name migrate \
@@ -60,7 +60,7 @@ jobs:
               -v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               -it "${{ vars.IMAGE }}:${{ inputs.version }}" \
-              php artisan migrate -n --force
+              start-container php artisan migrate -n --force
 
               sudo mkdir -p "${{ vars.STATIC_FILES }}"
               sudo mkdir -p "${{ vars.LOCAL_STORAGE }}"
