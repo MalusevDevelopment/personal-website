@@ -65,7 +65,6 @@ jobs:
               fi
 
               docker run \
-              	-it \
               	--name website \
               	-d \
               	--restart unless-stopped \
@@ -86,7 +85,6 @@ jobs:
               	  --tries=3
 
               docker run \
-              	-it \
               	--name scheduler \
               	-d \
               	--restart unless-stopped \
@@ -101,7 +99,6 @@ jobs:
               	php artisan schedule:work -n --ansi
 
               docker run \
-              	-it \
               	--name horizon \
               	-d \
               	--restart unless-stopped \
@@ -117,7 +114,6 @@ jobs:
 
 
               docker run \
-              	-it \
               	--name pulse_check \
               	-d \
               	--restart unless-stopped \
@@ -132,7 +128,6 @@ jobs:
               	php artisan pulse:check -n --ansi
 
               docker run \
-              	-it \
               	--name pulse_work \
               	-d \
               	--restart unless-stopped \
@@ -147,7 +142,6 @@ jobs:
               	php artisan pulse:work -n --ansi
 
               docker run \
-              	-it \
               	--name sqs \
               	-d \
               	--restart unless-stopped \

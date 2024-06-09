@@ -66,7 +66,7 @@ return [
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_SESSIONS_DB', 6),
+            'database' => env('REDIS_PULSE_DB', 6),
         ],
 
         'broadcasting' => [
@@ -74,7 +74,7 @@ return [
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_SESSIONS_DB', 7),
+            'database' => env('REDIS_BROADCASTING_DB', 7),
         ],
     ],
 

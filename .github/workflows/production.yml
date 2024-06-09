@@ -22,12 +22,8 @@ jobs:
           tagRegex: "v(.*)"
   production:
     needs: ["tag"]
-    uses: "./.github/workflows/docker.yml"
-    with:
-      docker_target: production
-      platforms: linux/arm64
+    uses: "./.github/workflows/production-image.yml"
       version: ${{ needs.tag.outputs.version }}
-      image: ${{ vars.IMAGE }}
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
       REGISTRY: ${{ secrets.REGISTRY }}
