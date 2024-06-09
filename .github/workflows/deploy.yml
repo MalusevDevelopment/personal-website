@@ -115,20 +115,6 @@ jobs:
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	php artisan horizon -n --ansi
 
-              docker run \
-              	-it \
-              	--name horizon \
-              	-d \
-              	--restart unless-stopped \
-              	--network website \
-              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
-              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
-              	--add-host=host.docker.internal:host-gateway \
-              	--env-file "${{ secrets.ENV_FILE }}" \
-              	-e "SERVER_NAME=dusanmalusev.dev" \
-              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	php artisan horizon -n --ansi
 
               docker run \
               	-it \
@@ -153,8 +139,7 @@ jobs:
               	--network website \
               	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
               	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
@@ -169,8 +154,7 @@ jobs:
               	--network website \
               	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
               	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_LOCAL_STORAGE }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}/public:${{ vars.LOCAL_STORAGE }}/public" \
+              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
