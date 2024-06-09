@@ -54,10 +54,11 @@ jobs:
               --rm \
               --network website \
               --add-host=host.docker.internal:host-gateway \
-              --env-file "${{ secrets.ENV_FILE }}" \
+              --env-file "" \
               -v "${{ vars.LOGS_PATH }}:${{ vars.LOGS_PATH }}" \
               -v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
               -v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
+              -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               -it "${{ vars.IMAGE }}:${{ inputs.version }}" \
               php artisan migrate -n --force
 
@@ -81,8 +82,8 @@ jobs:
               	-v "${{ vars.LOGS_PATH }}:${{ vars.LOGS_PATH }}" \
               	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
+                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               	--add-host=host.docker.internal:host-gateway \
-              	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container php \
@@ -100,8 +101,8 @@ jobs:
               	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
               	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
+                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               	--add-host=host.docker.internal:host-gateway \
-              	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container php artisan schedule:work -n --ansi
@@ -114,8 +115,8 @@ jobs:
               	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
               	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
+                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               	--add-host=host.docker.internal:host-gateway \
-              	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container php artisan horizon -n --ansi
@@ -129,8 +130,8 @@ jobs:
               	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
               	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
+                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               	--add-host=host.docker.internal:host-gateway \
-              	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container php artisan pulse:check -n --ansi
@@ -143,8 +144,8 @@ jobs:
               	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
               	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
+                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               	--add-host=host.docker.internal:host-gateway \
-              	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container php artisan pulse:work -n --ansi
@@ -157,8 +158,8 @@ jobs:
               	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
               	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
+                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               	--add-host=host.docker.internal:host-gateway \
-              	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container \

@@ -45,8 +45,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY . .
 
-RUN install-php-extensions @composer \
-    && composer install \
+RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction \
