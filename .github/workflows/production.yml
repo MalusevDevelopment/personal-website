@@ -1,4 +1,4 @@
-name: "Production Image"
+name: "Production Image On Tag"
 
 on:
   push:
@@ -23,6 +23,7 @@ jobs:
   production:
     needs: ["tag"]
     uses: "./.github/workflows/production-image.yml"
+    with:
       version: ${{ needs.tag.outputs.version }}
     secrets:
       CR_PAT: ${{ secrets.CR_PAT }}
