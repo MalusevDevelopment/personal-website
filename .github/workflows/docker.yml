@@ -97,3 +97,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ inputs.image }}:${{ inputs.version }}
+          build-args: |
+            BASE=${{ inputs.image }}:base

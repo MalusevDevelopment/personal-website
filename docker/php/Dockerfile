@@ -1,3 +1,5 @@
+ARG BASE=base
+
 FROM dunglas/frankenphp:1.2-php8.3 as base
 
 WORKDIR /var/www/html
@@ -33,7 +35,7 @@ EXPOSE 2019
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
 ENTRYPOINT ["start-container"]
 
-FROM base AS vendor
+FROM ${BASE} AS vendor
 
 WORKDIR /app
 
@@ -61,7 +63,7 @@ COPY --chown=root:root --from=vendor /app/vendor ./vendor
 
 RUN npm install && NODE_ENV=production npm run build
 
-FROM base AS production
+FROM ${BASE} AS production
 
 WORKDIR /var/www/html
 
