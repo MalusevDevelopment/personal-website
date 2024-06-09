@@ -21,6 +21,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SERVER_PRIVATE_KEY_PASSPHRASE }}
           port: 22
           script: |
             docker login ${{ secrets.REGISTRY }} \
