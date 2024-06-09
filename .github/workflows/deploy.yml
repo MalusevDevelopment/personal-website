@@ -50,6 +50,9 @@ jobs:
               --network website \
               --add-host=host.docker.internal:host-gateway \
               --env-file "${{ secrets.ENV_FILE }}" \
+              -v "${{ vars.LOGS_PATH }}:${{ vars.LOGS_PATH }}" \
+              -v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
+              -v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               -it "${{ vars.IMAGE }}:${{ inputs.version }}" \
               php artisan migrate -n --force
 
