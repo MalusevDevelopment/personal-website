@@ -35,14 +35,19 @@ jobs:
 
             docker stop -s SIGINT -t 30 website scheduler pulse_work pulse_check sqs
 
-            docker exec -it horizon php artisan horizon:terminate
-            docker exec -it horizon php artisan horizon:purge
-            docker exec -it horizon php artisan horizon:clear-metrics
+            docker exec horizon php artisan horizon:terminate
+            docker exec horizon php artisan horizon:purge
+            docker exec horizon php artisan horizon:clear-metrics
             docker stop -s SIGINT -t 30 horizon
 
             docker rm -f horizon website pulse_work pulse_check scheduler sqs
 
-            docker run --name extract-static-files --rm -it -v "${{ vars.STATIC_FILES }}:/extract" "$IMAGE" cp -a "${{ vars.CONTAINER_STATIC_FILES }}/." "/extract"
+            docker run \
+              --name extract-static-files \
+              --rm \
+              -v "${{ vars.STATIC_FILES }}:/extract" \
+              "$IMAGE" \
+              cp -a "${{ vars.CONTAINER_STATIC_FILES }}/." "/extract"
 
             docker run \
               --name migrate \
@@ -78,9 +83,9 @@ jobs:
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
-              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	php \
+              	/usr/local/bin/start-container php \
               	  -d variables_order=EGPCS \
               	  /var/www/html/artisan serve \
               	  --host=0.0.0.0 \
@@ -97,9 +102,9 @@ jobs:
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
-              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	php artisan schedule:work -n --ansi
+              	/usr/local/bin/start-container php artisan schedule:work -n --ansi
 
               docker run \
               	--name horizon \
@@ -111,9 +116,9 @@ jobs:
               	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               	--add-host=host.docker.internal:host-gateway \
               	--env-file "${{ secrets.ENV_FILE }}" \
-              	-e "SERVER_NAME=dusanmalusev.dev" \
+              	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	php artisan horizon -n --ansi
+              	/usr/local/bin/start-container php artisan horizon -n --ansi
 
 
               docker run \
@@ -128,7 +133,7 @@ jobs:
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	php artisan pulse:check -n --ansi
+              	/usr/local/bin/start-container php artisan pulse:check -n --ansi
 
               docker run \
               	--name pulse_work \
@@ -142,7 +147,7 @@ jobs:
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	php artisan pulse:work -n --ansi
+              	/usr/local/bin/start-container php artisan pulse:work -n --ansi
 
               docker run \
               	--name sqs \
@@ -156,4 +161,11 @@ jobs:
               	--env-file "${{ secrets.ENV_FILE }}" \
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600
+              	/usr/local/bin/start-container \
+              	  php artisan \
+              	    queue:work \
+              	    sqs \
+              	    --max-jobs=1000 \
+              	    --sleep=3 \
+              	    --tries=3 \
+              	    --max-time=3600

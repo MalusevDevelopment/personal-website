@@ -27,13 +27,13 @@ RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime \
         pcntl \
         opcache \
         ffi \
-        uuid
+        uuid \
+        @composer
 
 EXPOSE 80
 EXPOSE 2019
 
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
-ENTRYPOINT ["start-container"]
 
 FROM ${BASE} AS vendor
 
@@ -74,8 +74,7 @@ COPY --chown=root:root . .
 COPY --from=frontend --chown=root:root /app/public/build ./public/build
 COPY --from=vendor --chown=root:root /app/vendor ./vendor
 
-RUN install-php-extensions @composer \
-    && apt-get purge -y \
+RUN apt-get purge -y \
     gcc make g++ apt-transport-https \
     autoconf bzip2 cpp-12 cpp g++ g++-12 gcc gcc-12 gcc-12 libasan8 m4 libtirpc3 libtsan2 libubsan1 \
     pkg-config pkgconf pkgconf-bin re2c \
@@ -95,4 +94,4 @@ RUN install-php-extensions @composer \
     && chmod -R 755 storage/framework/views \
     && chmod -R 755 storage/framework/sessions
 
-ENTRYPOINT ["start-container"]
+ENTRYPOINT ["/bin/bash"]
