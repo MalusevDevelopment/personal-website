@@ -74,7 +74,8 @@ COPY --chown=root:root . .
 COPY --from=frontend --chown=root:root /app/public/build ./public/build
 COPY --from=vendor --chown=root:root /app/vendor ./vendor
 
-RUN apt-get purge -y \
+RUN install-php-extensions @composer \
+    && apt-get purge -y \
     gcc make g++ apt-transport-https \
     autoconf bzip2 cpp-12 cpp g++ g++-12 gcc gcc-12 gcc-12 libasan8 m4 libtirpc3 libtsan2 libubsan1 \
     pkg-config pkgconf pkgconf-bin re2c \
