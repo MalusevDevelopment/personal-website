@@ -114,6 +114,14 @@ jobs:
                     -n \
                     --ansi
 
+              docker exec \
+              	scheduler \
+                /usr/local/bin/start-container \
+                    php artisan \
+                    pulse:clear \
+                    -n \
+                    --ansi
+
               docker run \
               	--name horizon \
               	-d \
@@ -127,7 +135,6 @@ jobs:
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container php artisan horizon -n --ansi
-
 
               docker run \
               	--name pulse_check \
