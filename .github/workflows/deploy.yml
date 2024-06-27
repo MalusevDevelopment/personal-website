@@ -106,13 +106,14 @@ jobs:
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container php artisan schedule:work -n --ansi
 
-              docker run \
-              	--rm \
-              	--network website \
-                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
-              	--add-host=host.docker.internal:host-gateway \
-              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	/usr/local/bin/start-container php artisan schedule-monitor:sync -n --ansi
+              docker exec \
+              	-it \
+              	scheduler \
+                /usr/local/bin/start-container \
+                    php artisan \
+                    schedule-monitor:sync \
+                    -n \
+                    --ansi
 
               docker run \
               	--name horizon \
