@@ -67,7 +67,7 @@ readonly class AddContentSecurityPolicyHeaders
 
     protected function fontSrc(): string
     {
-        return "font-src 'self' 'unsafe-inline'";
+        return "font-src 'self' 'unsafe-inline' https://fonts.bunny.net";
     }
 
     protected function childSrc(): string

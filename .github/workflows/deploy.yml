@@ -54,13 +54,12 @@ jobs:
               --rm \
               --network website \
               --add-host=host.docker.internal:host-gateway \
-              --env-file "" \
               -v "${{ vars.LOGS_PATH }}:${{ vars.LOGS_PATH }}" \
               -v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
               -v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               -it "${{ vars.IMAGE }}:${{ inputs.version }}" \
-              start-container php artisan migrate -n --force
+              start-container php artisan migrate -n --force || exit 1
 
               sudo mkdir -p "${{ vars.STATIC_FILES }}"
               sudo mkdir -p "${{ vars.LOCAL_STORAGE }}"
@@ -106,6 +105,14 @@ jobs:
               	-e "SERVER_NAME=www.dusanmalusev.dev" \
               	"${{ vars.IMAGE }}:${{ inputs.version }}" \
               	/usr/local/bin/start-container php artisan schedule:work -n --ansi
+
+              docker run \
+              	--rm \
+              	--network website \
+                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
+              	--add-host=host.docker.internal:host-gateway \
+              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
+              	/usr/local/bin/start-container php artisan schedule-monitor:sync -n --ansi
 
               docker run \
               	--name horizon \
