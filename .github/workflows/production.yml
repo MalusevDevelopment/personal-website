@@ -26,6 +26,6 @@ jobs:
     with:
       version: ${{ needs.tag.outputs.version }}
     secrets:
-      CR_PAT: ${{ secrets.CR_PAT }}
-      REGISTRY: ${{ secrets.REGISTRY }}
-      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+        CR_PAT: ${{ secrets.CR_PAT }}
+        REGISTRY: ${{ secrets.REGISTRY }}
+        REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
