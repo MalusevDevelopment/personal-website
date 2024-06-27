@@ -59,7 +59,7 @@ jobs:
               -v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
               -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
               -it "${{ vars.IMAGE }}:${{ inputs.version }}" \
-              start-container php artisan migrate -n --force || exit 1
+              start-container php artisan migrate -n --force
 
               sudo mkdir -p "${{ vars.STATIC_FILES }}"
               sudo mkdir -p "${{ vars.LOCAL_STORAGE }}"
