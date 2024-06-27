@@ -15,8 +15,8 @@
     "ext-curl": "*",
     "ext-intl": "*",
     "ext-json": "*",
-    "ext-pdo": "*",
     "ext-pcntl": "*",
+    "ext-pdo": "*",
     "ext-redis": "*",
     "ext-sodium": "*",
     "althinect/filament-spatie-roles-permissions": "^2.2",
@@ -27,7 +27,7 @@
     "filament/filament": "^3.2",
     "guzzlehttp/guzzle": "^7.8",
     "http-interop/http-factory-guzzle": "^1.2",
-    "jeffgreco13/filament-breezy": "^2.3",
+    "jeffgreco13/filament-breezy": "^2.4",
     "laravel/framework": "^11.4.0",
     "laravel/horizon": "^v5.23",
     "laravel/octane": "^2.3",
@@ -48,7 +48,6 @@
     "typesense/typesense-php": "^4.9"
   },
   "require-dev": {
-    "barryvdh/laravel-debugbar": "^v3.12.2",
     "barryvdh/laravel-ide-helper": "^v3.0",
     "brianium/paratest": "^7.4",
     "fakerphp/faker": "^1.19",
