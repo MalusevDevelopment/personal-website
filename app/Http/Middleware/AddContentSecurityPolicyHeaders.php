@@ -52,7 +52,7 @@ readonly class AddContentSecurityPolicyHeaders
     {
         $nonce = Vite::cspNonce();
 
-        return "script-src 'nonce-$nonce' 'sha256-abS8bXelr2wTMtWfwv4Q2SgF9jc3EmpFalJLyucKH4o=' 'self' https://$this->umamiDomain";
+        return "script-src 'nonce-$nonce' 'sha256-abS8bXelr2wTMtWfwv4Q2SgF9jc3EmpFalJLyucKH4o=' 'self' 'unsafe-inline' https://$this->umamiDomain";
     }
 
     protected function imgSrc(): string
