@@ -2,7 +2,7 @@ module github.com/CodeLieutenant/website/deploy
 
 go 1.22.2
 
-require github.com/docker/docker v26.1.1+incompatible
+require github.com/docker/docker v26.1.5+incompatible
 
 require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
