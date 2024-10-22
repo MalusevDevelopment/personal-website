@@ -2,19 +2,21 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-default-appearance="dark" class="dark">
 <head>
     <meta charset="utf-8"/>
-    <meta name="application-name" content="{{ config('app.name') }}"/>
+    <meta name="application-name" content="{{ config('app.name', 'Dusan\'s Website') }}"/>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description"
           content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e293b"/>
-    <meta property="og:title" content="Dusan Malusev"/>
-    <meta property="og:description" content="Dusan's Website"/>
+    <meta property="og:title" content="Dusan's Website"/>
+    <meta property="og:description"
+          content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="{{ config('app.url') }}"/>
     <meta name="twitter:card" content="Dusan's Website"/>
-    <meta name="twitter:title" content="Dusan Malusev"/>
-    <meta name="twitter:description" content="My awesome website"/>
+    <meta name="twitter:title" content="Dusan's Website"/>
+    <meta name="twitter:description"
+          content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -46,7 +48,7 @@
     <link href="https://www.reddit.com/user/Back_Professional" rel="me"/>
     <link href="https://stackoverflow.com/users/8411483/dusan-malusev" rel="me"/>
 
-    <title>Home Page - {{ config('app.name') }}</title>
+    <title>@yield('title', config('app.name', 'Dusan\'s Website'))</title>
 
     @if(($useLivewire ?? false))
         @livewireStyles
@@ -67,7 +69,7 @@
     </div>
 
     <x-footer/>
-    <x-search/>
+    <x-search.modal/>
 </div>
 
 @if(($useLivewire ?? false))

@@ -13,5 +13,4 @@ php artisan icons:cache -n --ansi
 php artisan permissions:sync -n --ansi
 php artisan about
 
-exec /bin/bash
-
+exec $@

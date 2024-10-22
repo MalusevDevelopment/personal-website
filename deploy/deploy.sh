@@ -1,28 +1,3 @@
-name: "Deploy"
-
-on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version to deploy"
-        required: true
-        type: string
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SERVER_PRIVATE_KEY_PASSPHRASE }}
-          port: 22
-          script: |
             export VERSION=${{ inputs.version }}
             export IMAGE="ghcr.io/codelieutenant/website:$VERSION"
             export STATIC_FILES="/var/www/www.dusanmalusev.dev"

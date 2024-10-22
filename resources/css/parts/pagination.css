@@ -4,10 +4,8 @@ nav[role="navigation"] {
     ul {
         @apply flex flex-row mt-8;
 
-        li {
-            .np {
-                @apply mx-1 block min-w-[1.8rem] rounded text-center hover:bg-primary-600 hover:text-neutral;
-            }
+        .np {
+            @apply mx-1 block min-w-[1.8rem] rounded text-center hover:bg-primary-600 hover:text-neutral;
         }
 
         li.page {

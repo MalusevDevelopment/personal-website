@@ -2,11 +2,17 @@ services:
     laravel.test:
         build:
             context: .
-            dockerfile: docker/php/Dockerfile-dev
+            dockerfile: docker/php/Dockerfile
+            target: development
             args:
                 WWWGROUP: '${WWWGROUP}'
                 WWWUSER: '${WWWUSER}'
-        image: 'ghcr.io/dmalusev/website:dev'
+        image: 'ghcr.io/codelieutenant/website:dev'
+        develop:
+          watch:
+            - action: sync
+              path: .
+              target: /var/www/html
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -43,7 +49,7 @@ services:
             - 'dusan_malusev-pgsql:/var/lib/postgresql/data'
             - './docker/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
             - './docker/pgsql/create-umami-database.sql:/docker-entrypoint-initdb.d/10-create-umami-database.sql'
-            - './docker/pgsql/create-grafana-database.sql:/docker-entrypoint-initdb.d/10-create-grafana-database.sql'
+#             - './docker/pgsql/create-grafana-database.sql:/docker-entrypoint-initdb.d/10-create-grafana-database.sql'
         networks:
             - dusan_malusev
         healthcheck:
@@ -121,7 +127,7 @@ services:
             SOKETI_DB_POSTGRES_USERNAME: '${DB_USERNAME:-dusan_malusev}'
             SOKETI_DB_POSTGRES_PASSWORD: '${DB_PASSWORD:-dusan_malusev}'
             SOKETI_DB_POSTGRES_DATABASE: '${DB_DATABASE:-dusan_malusev}'
-            SOKETI_APP_MANAGER_POSTGRES_TABLE: socketi_apps
+            SOKETI_APP_MANAGER_POSTGRES_TABLE: soketi_apps
             SOKETI_APP_MANAGER_POSTGRES_VERSION: '15'
             SOKETI_DB_POOLING_ENABLED: true
             SOKETI_DB_POOLING_MIN: 1
@@ -169,8 +175,6 @@ volumes:
     dusan_malusev-redis:
         driver: local
     dusan_malusev-minio:
-        driver: local
-    dusan_malusev-meilisearch:
         driver: local
     caddy_data:
         driver: local

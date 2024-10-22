@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-docker build \
-    --file ./docker/php/Dockerfile \
-    --target production \
-    --tag ghcr.io/codelieutenant/website:latest \
-    .

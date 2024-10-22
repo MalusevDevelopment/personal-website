@@ -1,0 +1,29 @@
+name: "Production/Development Images"
+
+on:
+  push:
+    tags:
+      - "v*"
+  schedule:
+    # Build base and development images on 1 and 15 day every month
+    - cron: '0 0 1,15 * *'
+  workflow_dispatch:
+
+jobs:
+  base:
+    uses: "./.github/workflows/docker.yml"
+    with:
+      docker_target: base
+      platforms: linux/amd64,linux/arm64
+      version: base
+    secrets:
+      CR_PAT: ${{ secrets.CR_PAT }}
+  dev:
+    needs: ["base"]
+    uses: "./.github/workflows/docker.yml"
+    with:
+      docker_target: development
+      platforms: linux/amd64
+      version: dev
+    secrets:
+      CR_PAT: ${{ secrets.CR_PAT }}

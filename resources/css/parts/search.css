@@ -29,3 +29,27 @@
 #close-search-button {
     @apply flex items-center justify-center w-8 h-8 text-neutral hover:text-primary-400;
 }
+
+#search-results {
+    @apply mt-4;
+
+    li {
+        @apply mb-2;
+    }
+
+    a {
+        @apply flex items-center px-3 py-2 rounded-md appearance-none bg-neutral-700 hover:bg-primary-900 focus:bg-primary-900 focus:outline-dotted focus:outline-transparent focus:outline-2;
+
+        div:last-child {
+            @apply ml-2 text-neutral-500;
+        }
+    }
+
+    .grow > div:first-child {
+        @apply -mb-1 text-lg font-bold;
+    }
+
+    .grow > div:last-child {
+        @apply mt-2 text-sm italic;
+    }
+}
