@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\PostStatus;
+use App\Http\Requests\GetBlogPostsRequest;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
@@ -17,12 +17,9 @@ class IndexController extends Controller
         return view('pages.index');
     }
 
-    public function blog(Request $request)
+    public function blog(GetBlogPostsRequest $request)
     {
-        $year = $request->validate(
-            ['year' => 'nullable|integer|gte:2022|lte:'.now()->year],
-            ['year' => $request->query('year')]
-        )['year'] ?? null;
+        $year = $request->validated()['year'] ?? null;
 
         $paginator = Post::query()
             ->where('posts.status', PostStatus::PUBLISHED)
@@ -32,7 +29,8 @@ class IndexController extends Controller
                     Carbon::create($year),
                     Carbon::create($year, 12, 31),
                 ])
-            )->orderByDesc('posts.created_at')
+            )
+            ->orderByDesc('posts.created_at')
             ->select([
                 'posts.id',
                 'posts.title',

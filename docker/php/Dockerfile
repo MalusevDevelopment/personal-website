@@ -1,6 +1,6 @@
 ARG BASE=base
 
-FROM dunglas/frankenphp:1.1-php8.3-bookworm as base
+FROM dunglas/frankenphp:1.2-php8.3 as base
 
 WORKDIR /var/www/html
 
@@ -15,23 +15,23 @@ RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime \
     && apt-get update && apt-get upgrade -y \
     && apt-get install -y ca-certificates procps libvips curl \
     && install-php-extensions \
-        pdo_pgsql \
-        apcu \
-        pgsql \
-        igbinary \
-        redis \
-        intl \
-        zip \
-        pcntl \
-        opcache \
-        ffi \
-        uuid
+    pdo_pgsql \
+    apcu \
+    pgsql \
+    igbinary \
+    redis \
+    intl \
+    zip \
+    pcntl \
+    opcache \
+    ffi \
+    uuid \
+    @composer
 
 EXPOSE 80
 EXPOSE 2019
 
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
-ENTRYPOINT ["/bin/start-container"]
 
 FROM ${BASE} AS vendor
 
@@ -43,8 +43,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY . .
 
-RUN install-php-extensions @composer \
-    && composer install \
+RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction \
@@ -106,10 +105,10 @@ ARG POSTGRES_VERSION=15
 
 RUN apt-get update \
     && apt-get install -y \
-        supervisor \
-        gosu dnsutils gnupg \
-        git build-essential unzip gcc \
-        librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
+    supervisor \
+    gosu dnsutils gnupg \
+    git build-essential unzip gcc \
+    librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
     && install-php-extensions @composer xdebug \
     && groupadd --force -g "$WWWGROUP" sail \
     && useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail \

@@ -19,6 +19,10 @@ on:
         default: false
         required: false
         type: boolean
+      image:
+        default: 'ghcr.io/codelieutenant/website'
+        required: false
+        type: string
   workflow_call:
     inputs:
       version:
@@ -37,8 +41,16 @@ on:
         default: false
         required: false
         type: boolean
+      image:
+        default: 'ghcr.io/codelieutenant/website'
+        required: false
+        type: string
     secrets:
       CR_PAT:
+        required: true
+      REGISTRY:
+        required: true
+      REGISTRY_USERNAME:
         required: true
 jobs:
   build:
@@ -54,8 +66,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.CR_PAT }}
       - name: Build and push API
         if: ${{ inputs.dev }}
@@ -68,11 +80,10 @@ jobs:
           platforms: ${{ inputs.platforms }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ghcr.io/codelieutenant/website:dev
+          tags: ${{ inputs.image }}:dev
           build-args: |
             WWWGROUP=1000
             WWWUSER=1000
-            BASE=ghcr.io/codelieutenant/website:base
       - name: Build and push API
         if: ${{ !inputs.dev }}
         uses: docker/build-push-action@v5
@@ -85,4 +96,6 @@ jobs:
           target: ${{ inputs.docker_target }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ghcr.io/codelieutenant/website:${{ inputs.version }}
+          tags: ${{ inputs.image }}:${{ inputs.version }}
+          build-args: |
+            BASE=${{ inputs.image }}:base

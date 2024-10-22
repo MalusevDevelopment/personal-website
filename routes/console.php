@@ -13,4 +13,6 @@ Schedule::command('queue:monitor', [
 ])->everyMinute();
 Schedule::command('queue:prune-batches')->daily();
 Schedule::command('queue:prune-failed')->daily();
+Schedule::command('sanctum:prune-expired')->daily();
 Schedule::command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
+Schedule::command('pulse:clear')->weekly();

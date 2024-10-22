@@ -1,4 +1,4 @@
-name: "Production Image"
+name: "Production Image On Tag"
 
 on:
   push:
@@ -16,16 +16,16 @@ jobs:
           fetch-depth: 0
       - name: Get Tag
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: olegtarasov/get-tag@v2.1.2
+        uses: olegtarasov/get-tag@v2.1.3
         id: version_tag
         with:
           tagRegex: "v(.*)"
   production:
     needs: ["tag"]
-    uses: "./.github/workflows/docker.yml"
+    uses: "./.github/workflows/production-image.yml"
     with:
-      docker_target: production
-      platforms: linux/arm64
       version: ${{ needs.tag.outputs.version }}
     secrets:
-      CR_PAT: ${{ secrets.CR_PAT }}
+        CR_PAT: ${{ secrets.CR_PAT }}
+        REGISTRY: ${{ secrets.REGISTRY }}
+        REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
