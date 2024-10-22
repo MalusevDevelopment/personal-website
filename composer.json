@@ -44,7 +44,7 @@
     "spatie/laravel-permission": "^6.3",
     "spatie/laravel-sitemap": "^7.0",
     "symfony/cache": "^v7.0",
-    "tpetry/laravel-postgresql-enhanced": "^0.37",
+    "tpetry/laravel-postgresql-enhanced": "^2.0",
     "typesense/typesense-php": "^4.9"
   },
   "require-dev": {
