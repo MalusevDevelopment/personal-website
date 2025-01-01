@@ -15,171 +15,26 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: appleboy/ssh-action@v1.0.3
+      - name: Copy deploy/compose.yml to production
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SERVER_PRIVATE_KEY_PASSPHRASE }}
+          source: "deploy/compose.yml,deploy/deploy.sh"
+          target: /opt/projects/website
+      - uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           passphrase: ${{ secrets.SERVER_PRIVATE_KEY_PASSPHRASE }}
           cipher: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
-          port: 22
           script: |
-            docker login ${{ secrets.REGISTRY }} \
-              --username ${{ secrets.REGISTRY_USERNAME }} \
-              --password ${{ secrets.REGISTRY_TOKEN }} || exit 1
-
-            docker pull "${{ vars.IMAGE }}:${{ inputs.version }}"
-
-            docker logout ${{ secrets.REGISTRY }}
-
-            docker stop -s SIGINT -t 30 website scheduler pulse_work pulse_check sqs
-
-            docker exec horizon php artisan horizon:terminate
-            docker exec horizon php artisan horizon:purge
-            docker exec horizon php artisan horizon:clear-metrics
-            docker stop -s SIGINT -t 30 horizon
-
-            docker rm -f horizon website pulse_work pulse_check scheduler sqs
-
-            docker run \
-              --name extract-static-files \
-              --rm \
-              -v "${{ vars.STATIC_FILES }}:/extract" \
-              "$IMAGE" \
-              start-container cp -a "${{ vars.CONTAINER_STATIC_FILES }}/." "/extract"
-
-            docker run \
-              --name migrate \
-              --rm \
-              --network website \
-              --add-host=host.docker.internal:host-gateway \
-              -v "${{ vars.LOGS_PATH }}:${{ vars.LOGS_PATH }}" \
-              -v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              -v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
-              -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
-              -it "${{ vars.IMAGE }}:${{ inputs.version }}" \
-              start-container php artisan migrate -n --force
-
-              sudo mkdir -p "${{ vars.STATIC_FILES }}"
-              sudo mkdir -p "${{ vars.LOCAL_STORAGE }}"
-              sudo mkdir -p "${{ vars.LOCAL_STORAGE }}/public"
-              sudo mkdir -p "${{ vars.LOGS_PATH }}"
-
-              if [[ ! -L "${{ vars.STATIC_FILES }}/storage" ]]; then
-                  sudo ln -s \
-                    ${{ vars.LOCAL_STORAGE }}/public \
-                    ${{ vars.STATIC_FILES }}/storage
-              fi
-
-              docker run \
-              	--name website \
-              	-d \
-              	--restart unless-stopped \
-              	-p 8000:80 \
-              	--network website \
-              	-v "${{ vars.LOGS_PATH }}:${{ vars.LOGS_PATH }}" \
-              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
-                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
-              	--add-host=host.docker.internal:host-gateway \
-              	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	/usr/local/bin/start-container php \
-              	  -d variables_order=EGPCS \
-              	  /var/www/html/artisan serve \
-              	  --host=0.0.0.0 \
-              	  --port=80 \
-              	  --tries=3
-
-              docker run \
-              	--name scheduler \
-              	-d \
-              	--restart unless-stopped \
-              	--network website \
-              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
-              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
-                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
-              	--add-host=host.docker.internal:host-gateway \
-              	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	/usr/local/bin/start-container php artisan schedule:work -n --ansi
-
-              docker exec \
-              	scheduler \
-                /usr/local/bin/start-container \
-                    php artisan \
-                    schedule-monitor:sync \
-                    -n \
-                    --ansi
-
-              docker exec \
-              	scheduler \
-                /usr/local/bin/start-container \
-                    php artisan \
-                    pulse:clear \
-                    -n \
-                    --ansi
-
-              docker run \
-              	--name horizon \
-              	-d \
-              	--restart unless-stopped \
-              	--network website \
-              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
-              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
-                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
-              	--add-host=host.docker.internal:host-gateway \
-              	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	/usr/local/bin/start-container php artisan horizon -n --ansi
-
-              docker run \
-              	--name pulse_check \
-              	-d \
-              	--restart unless-stopped \
-              	--network website \
-              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
-              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
-                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
-              	--add-host=host.docker.internal:host-gateway \
-              	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	/usr/local/bin/start-container php artisan pulse:check -n --ansi
-
-              docker run \
-              	--name pulse_work \
-              	-d \
-              	--restart unless-stopped \
-              	--network website \
-              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
-              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
-                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
-              	--add-host=host.docker.internal:host-gateway \
-              	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	/usr/local/bin/start-container php artisan pulse:work -n --ansi
-
-              docker run \
-              	--name sqs \
-              	-d \
-              	--restart unless-stopped \
-              	--network website \
-              	-v "${{ vars.LOGS_PATH }}/scheduler:${{ vars.LOGS_PATH }}" \
-              	-v "${{ vars.STATIC_FILES }}:${{ vars.CONTAINER_STATIC_FILES }}" \
-              	-v "${{ vars.LOCAL_STORAGE }}:${{ vars.CONTAINER_APP_LOCAL_STORAGE }}" \
-                -v "${{ secrets.ENV_FILE }}:/var/www/html/.env" \
-              	--add-host=host.docker.internal:host-gateway \
-              	-e "SERVER_NAME=www.dusanmalusev.dev" \
-              	"${{ vars.IMAGE }}:${{ inputs.version }}" \
-              	/usr/local/bin/start-container \
-              	  php artisan \
-              	    queue:work \
-              	    sqs \
-              	    --max-jobs=1000 \
-              	    --sleep=3 \
-              	    --tries=3 \
-              	    --max-time=3600
+            cd /opt/projects/website
+            chmod +x ./deploy.sh
+            ./deploy.sh \
+              -r ${{ secrets.REGISTRY }} \
+              -u ${{ secrets.REGISTRY_USERNAME }} \
+              -v ${{ inputs.version }} < ${{ secrets.REGISTRY_TOKEN }}

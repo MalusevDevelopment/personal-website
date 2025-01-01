@@ -42,7 +42,7 @@ services:
     ports:
       - '6001:6001'
     env_file:
-      - .env.soketi
+      - soketi.env
     deploy:
       mode: replicated
       replicas: 1
@@ -92,7 +92,7 @@ services:
     ports:
       - '3000:3000'
     env_file:
-      - /etc/umami/config
+      - umami.env
   scheduler:
     image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
     container_name: scheduler
@@ -111,7 +111,7 @@ services:
     extra_hosts:
         - 'host.docker.internal:host-gateway'
     env_file:
-      - /etc/website/config
+      - website.env
     environment:
       LARAVEL_SAIL: 0
       XDEBUG_MODE: 'off'
@@ -140,7 +140,7 @@ services:
       mode: replicated
       replicas: 1
     env_file:
-      - /etc/website/config
+      - website.env
     environment:
       LARAVEL_SAIL: 0
       XDEBUG_MODE: 'off'
@@ -168,7 +168,7 @@ services:
         max_attempts: 3
         window: 120s
     env_file:
-      - /etc/website/config
+      - website.env
     environment:
       LARAVEL_SAIL: 0
       XDEBUG_MODE: 'off'
@@ -197,7 +197,7 @@ services:
         max_attempts: 3
         window: 120s
     env_file:
-      - /etc/website/config
+      - website.env
     environment:
       LARAVEL_SAIL: 0
       XDEBUG_MODE: 'off'
@@ -225,7 +225,7 @@ services:
         max_attempts: 3
         window: 120s
     env_file:
-      - /etc/website/config
+      - website.env
     environment:
       LARAVEL_SAIL: 0
       XDEBUG_MODE: 'off'
@@ -261,7 +261,7 @@ services:
     ports:
       - '8000:8080'
     env_file:
-      - /etc/website/config
+      - website.env
     environment:
       LARAVEL_SAIL: 0
       XDEBUG_MODE: 'off'
