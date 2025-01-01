@@ -1,6 +1,6 @@
 ARG BASE=base
 
-FROM dunglas/frankenphp:1.2-php8.3 as base
+FROM dunglas/frankenphp:1.3-php8.4 AS base
 
 WORKDIR /var/www/html
 
@@ -13,22 +13,39 @@ COPY ./docker/php/php.ini $PHP_INI_DIR/10-php.ini
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime \
     && echo "$TZ" > /etc/timezone \
     && apt-get update && apt-get upgrade -y \
-    && apt-get install -y ca-certificates procps libvips curl \
-    && install-php-extensions \
-    pdo_pgsql \
-    apcu \
-    pgsql \
-    igbinary \
-    redis \
-    intl \
-    zip \
-    pcntl \
-    opcache \
-    ffi \
-    uuid \
-    @composer
+    && apt-get install -y \
+      ca-certificates procps libvips curl
+
+RUN install-php-extensions pgsql pdo_pgsql intl zip ffi pcntl opcache @composer igbinary msgpack sockets
+
+COPY --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
+
+RUN apt-get update && apt-get install -y \
+      git pkg-config libzstd-dev libcurl4-openssl-dev libc-ares-dev libsqlite3-dev libbrotli-dev libpq-dev \
+    && pie install phpredis/phpredis \
+      --enable-redis-igbinary \
+      --enable-redis-msgpack \
+      --enable-redis-zstd \
+    && pie install apcu/apcu --disable-valgrind-checks
+
+RUN git clone --depth=1 https://github.com/axboe/liburing.git /liburing \
+    && cd /liburing && ./configure && make install -j$(nproc) \
+    && cd / && rm -rf /liburing \
+    && pie install swoole/swoole \
+      --enable-swoole-curl \
+      --enable-cares \
+      --enable-brotli \
+      --enable-swoole-pgsql \
+      --enable-swoole-sqlite \
+      --enable-swoole-thread \
+      --enable-iouring \
+      --enable-sockets
+
+RUN apt-get purge -y git libzstd-dev libcurl4-openssl-dev libc-ares-dev libsqlite3-dev libbrotli-dev libpq-dev \
+    && apt-get install -y libzstd1 libcurl4 libc-ares2 libsqlite3-0 liburing2 libbrotli1 libpq5
 
 EXPOSE 80
+EXPOSE 8080
 EXPOSE 2019
 
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
@@ -51,15 +68,6 @@ RUN composer install \
     --no-progress \
     --prefer-dist
 
-FROM node:22-alpine AS frontend
-
-WORKDIR /app
-
-COPY --chown=root:root . .
-COPY --chown=root:root --from=vendor /app/vendor ./vendor
-
-RUN npm install && NODE_ENV=production npm run build
-
 FROM ${BASE} AS production
 
 WORKDIR /var/www/html
@@ -68,7 +76,6 @@ ENV APP_ENV=production
 ENV APP_DEBUG=false
 
 COPY --chown=root:root . .
-COPY --from=frontend --chown=root:root /app/public/build ./public/build
 COPY --from=vendor --chown=root:root /app/vendor ./vendor
 COPY ./scripts/start-container /bin/start-container
 
@@ -109,7 +116,7 @@ RUN apt-get update \
     gosu dnsutils gnupg \
     git build-essential unzip gcc \
     librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
-    && install-php-extensions @composer xdebug \
+    && pie install xdebug/xdebug \
     && groupadd --force -g "$WWWGROUP" sail \
     && useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \

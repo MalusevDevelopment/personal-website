@@ -5,10 +5,6 @@ on:
     inputs:
       version:
         default: ""
-        required: true
-        type: string
-      docker_target:
-        default: production
         required: false
         type: string
       platforms:
@@ -19,18 +15,26 @@ on:
         default: false
         required: false
         type: boolean
+      base:
+        default: false
+        required: false
+        type: boolean
       image:
         default: 'ghcr.io/codelieutenant/website'
+        required: false
+        type: string
+      nginx-image:
+        default: 'ghcr.io/codelieutenant/nginx'
+        required: false
+        type: string
+      valkey-image:
+        default: 'ghcr.io/codelieutenant/valkey'
         required: false
         type: string
   workflow_call:
     inputs:
       version:
         default: ""
-        required: true
-        type: string
-      docker_target:
-        default: production
         required: false
         type: string
       platforms:
@@ -41,8 +45,20 @@ on:
         default: false
         required: false
         type: boolean
+      base:
+        default: false
+        required: false
+        type: boolean
       image:
         default: 'ghcr.io/codelieutenant/website'
+        required: false
+        type: string
+      nginx-image:
+        default: 'ghcr.io/codelieutenant/nginx'
+        required: false
+        type: string
+      valkey-image:
+        default: 'ghcr.io/codelieutenant/valkey'
         required: false
         type: string
     secrets:
@@ -54,7 +70,7 @@ on:
         required: true
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -69,11 +85,27 @@ jobs:
           registry: ${{ secrets.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.CR_PAT }}
-      - name: Build and push API
+      - name: Build Base image
+        if: ${{ inputs.base }}
+        uses: docker/build-push-action@v5
+        with:
+          file: docker/php/Dockerfile
+          context: .
+          push: true
+          pull: true
+          platforms: ${{ inputs.platforms }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          target: base
+          tags: ${{ inputs.image }}:base
+          build-args: |
+            WWWGROUP=1000
+            WWWUSER=1000
+      - name: Build Development image
         if: ${{ inputs.dev }}
         uses: docker/build-push-action@v5
         with:
-          file: docker/php/Dockerfile-dev
+          file: docker/php/Dockerfile
           context: .
           push: true
           pull: true
@@ -82,10 +114,39 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ inputs.image }}:dev
           build-args: |
+            BASE=${{ inputs.image }}:base
             WWWGROUP=1000
             WWWUSER=1000
-      - name: Build and push API
-        if: ${{ !inputs.dev }}
+      - name: Build Nginx
+        if: ${{ inputs.version != '' }}
+        uses: docker/build-push-action@v5
+        with:
+          file: deploy/nginx/Dockerfile
+          context: .
+          push: true
+          pull: true
+          platforms: ${{ inputs.platforms }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ inputs.nginx-image }}:${{ inputs.version }}
+            ${{ inputs.nginx-image }}:latest
+      - name: Build Valkey
+        if: ${{ inputs.version != '' }}
+        uses: docker/build-push-action@v5
+        with:
+          file: deploy/valkey/Dockerfile
+          context: .
+          push: true
+          pull: true
+          platforms: ${{ inputs.platforms }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ inputs.valkey-image }}:${{ inputs.version }}
+            ${{ inputs.valkey-image }}:latest
+      - name: Build Production Image
+        if: ${{ inputs.version != '' }}
         uses: docker/build-push-action@v5
         with:
           file: docker/php/Dockerfile
@@ -93,9 +154,11 @@ jobs:
           push: true
           pull: true
           platforms: ${{ inputs.platforms }}
-          target: ${{ inputs.docker_target }}
+          target: production
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ inputs.image }}:${{ inputs.version }}
+          tags: |
+            ${{ inputs.image }}:${{ inputs.version }}
+            ${{ inputs.image }}:latest
           build-args: |
             BASE=${{ inputs.image }}:base

@@ -1,80 +1,69 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
     'redis' => [
         'client' => env('REDIS_CLIENT', 'phpredis'),
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_')),
+            'prefix' => env('REDIS_PREFIX', 'website:'),
             'serializer' => Redis::SERIALIZER_IGBINARY,
             'compression' => Redis::COMPRESSION_ZSTD,
         ],
 
         'default' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_DEFAULT_DB', 0),
+            'name' => 'website-default',
+            'url' => env('REDIS_URL', 'tcp://127.0.0.1:6379?database=0'),
+            'persistent' => true,
         ],
 
         'cache' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_CACHE_DB', 1),
+            'name' => 'website-cache',
+            'url' => env('REDIS_CACHE_URL', 'tcp://127.0.0.1:6379?database=1'),
+            'prefix' => 'cache:',
+            'persistent' => true,
         ],
 
         'queue' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_QUEUE_DB', 2),
+            'name' => 'website-queue',
+            'url' => env('REDIS_QUEUE_URL', 'tcp://127.0.0.1:6379?database=2'),
+            'prefix' => 'queue:',
+            'persistent' => true,
         ],
 
         'horizon' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_HORIZON_DB', 3),
+            'name' => 'website-horizon',
+            'url' => env('REDIS_HORIZON_URL', 'tcp://127.0.0.1:6379?database=3'),
+            'prefix' => 'horizon:',
+            'persistent' => true,
         ],
 
         'locks' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_LOCKS_DB', 4),
+            'name' => 'website-locks',
+            'url' => env('REDIS_LOCKS_URL', 'tcp://127.0.0.1:6379?database=4'),
+            'prefix' => 'locks:',
+            'persistent' => true,
         ],
 
         'sessions' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_SESSIONS_DB', 5),
+            'name' => 'website-sessions',
+            'url' => env('REDIS_SESSIONS_URL', 'tcp://127.0.0.1:6379?database=5'),
+            'prefix' => 'sessions:',
+            'persistent' => true,
         ],
 
         'pulse' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_PULSE_DB', 6),
+            'name' => 'website-pulse',
+            'url' => env('REDIS_PULSE_URL', 'tcp://127.0.0.1:6379?database=6'),
+            'prefix' => 'horizon:',
+            'persistent' => true,
         ],
 
         'broadcasting' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_BROADCASTING_DB', 7),
+            'name' => 'website-broadcasting',
+            'url' => env('REDIS_BROADCASTING_URL', 'tcp://127.0.0.1:6379?database=7'),
+            'prefix' => 'broadcasting:',
+            'persistent' => true,
         ],
     ],
 

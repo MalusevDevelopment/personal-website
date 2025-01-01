@@ -25,8 +25,7 @@ jobs:
   production:
     uses: "./.github/workflows/docker.yml"
     with:
-      docker_target: production
-      platforms: linux/arm64
+      platforms: linux/arm64/v8
       version: ${{ inputs.version }}
       image: ${{ vars.IMAGE }}
     secrets:

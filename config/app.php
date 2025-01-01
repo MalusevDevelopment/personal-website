@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use CodeLieutenant\LaravelCrypto\Enums\Encryption;
 
 return [

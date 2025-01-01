@@ -5,17 +5,17 @@ docker run --rm \
   -v "$(pwd):/var/www/html" \
   -w /var/www/html \
   -e COMPOSER_ALLOW_SUPERUSER=1 \
-  laravelsail/php83-composer:latest \
+  laravelsail/php84-composer:latest \
   composer update --ignore-platform-reqs
 
 cp .env.example .env
 
-./vendor/bin/sail up -d --build || exit 1
+./vendor/bin/sail up -d --build
 
 sleep 5
 
-./vendor/bin/sail artisan migrate || exit 1
-./vendor/bin/sail artisan key:generate || exit 1
+./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan storage:link
-./vendor/bin/sail artisan db:seed || exit 1
-./vendor/bin/sail artisan crypto:keys || exit 1
+./vendor/bin/sail artisan db:seed
+./vendor/bin/sail artisan crypto:keys

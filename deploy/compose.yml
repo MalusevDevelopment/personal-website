@@ -1,0 +1,283 @@
+services:
+  nginx:
+    image: 'ghcr.io/codelieutenant/nginx:${VERSION:-latest}'
+    build:
+      context: ../
+      dockerfile: deploy/nginx/Dockerfile
+    container_name: nginx
+    restart: unless-stopped
+    depends_on:
+      - soketi
+      - umami
+      - website
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      - website
+    volumes:
+      - '/etc/letsencrypt:/etc/letsencrypt'
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - node.loadbalancer == true
+  soketi:
+    image: 'quay.io/soketi/soketi:latest-16'
+    container_name: soketi
+    stop_signal: SIGINT
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - pgsql
+      - valkey
+    networks:
+      - website
+    ports:
+      - '6001:6001'
+    env_file:
+      - .env.soketi
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+  valkey:
+    image: 'ghcr.io/codelieutenant/valkey:${VERSION:-latest}'
+    restart: unless-stopped
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.valkey == true
+    volumes:
+      - 'valkey:/data'
+      - '/usr/local/etc/valkey/users.acl:/usr/local/etc/valkey/users.acl'
+    networks:
+      - website
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: umami
+    restart: unless-stopped
+    stop_signal: SIGINT
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - website
+    ports:
+      - '3000:3000'
+    env_file:
+      - /etc/umami/config
+  scheduler:
+    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    container_name: scheduler
+    stop_signal: SIGINT
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    entrypoint: /usr/local/bin/start-container
+    working_dir: /var/www/html
+    command: php artisan schedule:work -n --ansi
+    extra_hosts:
+        - 'host.docker.internal:host-gateway'
+    env_file:
+      - /etc/website/config
+    environment:
+      LARAVEL_SAIL: 0
+      XDEBUG_MODE: 'off'
+      SERVER_NAME: www.dusanmalusev.dev
+    networks:
+      - website
+    depends_on:
+      - valkey
+      - umami
+      - soketi
+  horizon:
+    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    container_name: horizon
+    entrypoint: /usr/local/bin/start-container
+    working_dir: /var/www/html
+    command: php artisan pulse:check -n --ansi
+    stop_signal: SIGINT
+    extra_hosts:
+        - 'host.docker.internal:host-gateway'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      mode: replicated
+      replicas: 1
+    env_file:
+      - /etc/website/config
+    environment:
+      LARAVEL_SAIL: 0
+      XDEBUG_MODE: 'off'
+      SERVER_NAME: www.dusanmalusev.dev
+    networks:
+      - website
+    depends_on:
+      - valkey
+      - umami
+      - soketi
+  pulse-check:
+    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    container_name: pulse-check
+    entrypoint: /usr/local/bin/start-container
+    working_dir: /var/www/html
+    stop_signal: SIGINT
+    command: php artisan pulse:check -n --ansi
+    extra_hosts:
+        - 'host.docker.internal:host-gateway'
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    env_file:
+      - /etc/website/config
+    environment:
+      LARAVEL_SAIL: 0
+      XDEBUG_MODE: 'off'
+      SERVER_NAME: www.dusanmalusev.dev
+    networks:
+      - website
+    depends_on:
+      - valkey
+      - umami
+      - soketi
+  pulse-work:
+    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    container_name: pulse-work
+    entrypoint: /usr/local/bin/start-container
+    stop_signal: SIGINT
+    working_dir: /var/www/html
+    command: php artisan pulse:work -n --ansi
+    extra_hosts:
+        - 'host.docker.internal:host-gateway'
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    env_file:
+      - /etc/website/config
+    environment:
+      LARAVEL_SAIL: 0
+      XDEBUG_MODE: 'off'
+      SERVER_NAME: www.dusanmalusev.dev
+    networks:
+      - website
+    depends_on:
+      - valkey
+      - umami
+      - soketi
+  sqs:
+    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    container_name: sqs
+    entrypoint: /usr/local/bin/start-container
+    working_dir: /var/www/html
+    command: php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600
+    extra_hosts:
+        - 'host.docker.internal:host-gateway'
+    stop_signal: SIGINT
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    env_file:
+      - /etc/website/config
+    environment:
+      LARAVEL_SAIL: 0
+      XDEBUG_MODE: 'off'
+      SERVER_NAME: www.dusanmalusev.dev
+    networks:
+      - website
+    depends_on:
+      - valkey
+      - umami
+      - soketi
+  website:
+    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    build:
+      context: ../
+      dockerfile: docker/php/Dockerfile
+      target: production
+    container_name: website
+    entrypoint: /usr/local/bin/start-container
+    working_dir: /var/www/html
+    command: php artisan horizon -n --ansi
+    stop_signal: SIGINT
+    extra_hosts:
+        - 'host.docker.internal:host-gateway'
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: vip
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - '8000:8080'
+    env_file:
+      - /etc/website/config
+    environment:
+      LARAVEL_SAIL: 0
+      XDEBUG_MODE: 'off'
+      SERVER_NAME: www.dusanmalusev.dev
+    networks:
+      - website
+    depends_on:
+      - valkey
+      - umami
+      - soketi
+      - horizon
+
+volumes:
+  valkey:
+    driver: local
+
+networks:
+  website:
+    external: true

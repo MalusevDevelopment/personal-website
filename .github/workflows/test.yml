@@ -35,7 +35,7 @@ env:
 
 jobs:
   testing:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container:
       image: ${{ vars.IMAGE }}:dev
       options: --user root
@@ -44,14 +44,14 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
     services:
       pgsql:
-        image: "postgres:15-alpine"
+        image: "postgres:17"
         env:
           PGPASSWORD: "dusan_malusev"
           POSTGRES_DB: "testing"
           POSTGRES_USER: "dusan_malusev"
           POSTGRES_PASSWORD: "dusan_malusev"
       redis:
-        image: "redis:alpine"
+        image: "valkey:8"
 #       meilisearch:
 #         image: "getmeili/meilisearch:latest"
 #       mailpit:
