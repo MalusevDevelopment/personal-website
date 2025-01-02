@@ -4,4 +4,4 @@ docker buildx build \
   -f ./docker/php/Dockerfile \
   --target production \
   --load \
-  -t ghcr.io/codelieutenant/website:latest . || exit 1
+  -t ghcr.io/malusevdevelopment/website:latest . || exit 1

@@ -7,7 +7,7 @@ services:
       args:
         WWWGROUP: "${WWWGROUP}"
         WWWUSER: "${WWWUSER}"
-    image: "ghcr.io/codelieutenant/website:dev"
+    image: "ghcr.io/malusevdevelopment/website:dev"
     develop:
       watch:
         - action: sync

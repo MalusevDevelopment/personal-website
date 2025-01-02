@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: 'ghcr.io/codelieutenant/nginx:${VERSION:-latest}'
+    image: 'ghcr.io/malusevdevelopment/nginx:${VERSION:-latest}'
     build:
       context: ../
       dockerfile: deploy/nginx/Dockerfile
@@ -56,7 +56,7 @@ services:
         delay: 10s
         order: stop-first
   valkey:
-    image: 'ghcr.io/codelieutenant/valkey:${VERSION:-latest}'
+    image: 'ghcr.io/malusevdevelopment/valkey:${VERSION:-latest}'
     restart: unless-stopped
     deploy:
       mode: global
@@ -94,7 +94,7 @@ services:
     env_file:
       - umami.env
   scheduler:
-    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: scheduler
     stop_signal: SIGINT
     deploy:
@@ -123,7 +123,7 @@ services:
       - umami
       - soketi
   horizon:
-    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: horizon
     entrypoint: /usr/local/bin/start-container
     working_dir: /var/www/html
@@ -152,7 +152,7 @@ services:
       - umami
       - soketi
   pulse-check:
-    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: pulse-check
     entrypoint: /usr/local/bin/start-container
     working_dir: /var/www/html
@@ -180,7 +180,7 @@ services:
       - umami
       - soketi
   pulse-work:
-    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: pulse-work
     entrypoint: /usr/local/bin/start-container
     stop_signal: SIGINT
@@ -209,7 +209,7 @@ services:
       - umami
       - soketi
   sqs:
-    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: sqs
     entrypoint: /usr/local/bin/start-container
     working_dir: /var/www/html
@@ -237,7 +237,7 @@ services:
       - umami
       - soketi
   website:
-    image: 'ghcr.io/codelieutenant/website:${VERSION:-latest}'
+    image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     build:
       context: ../
       dockerfile: docker/php/Dockerfile

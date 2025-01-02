@@ -20,15 +20,15 @@ on:
         required: false
         type: boolean
       image:
-        default: 'ghcr.io/codelieutenant/website'
+        default: 'ghcr.io/malusevdevelopment/website'
         required: false
         type: string
       nginx-image:
-        default: 'ghcr.io/codelieutenant/nginx'
+        default: 'ghcr.io/malusevdevelopment/nginx'
         required: false
         type: string
       valkey-image:
-        default: 'ghcr.io/codelieutenant/valkey'
+        default: 'ghcr.io/malusevdevelopment/valkey'
         required: false
         type: string
   workflow_call:
@@ -50,15 +50,15 @@ on:
         required: false
         type: boolean
       image:
-        default: 'ghcr.io/codelieutenant/website'
+        default: 'ghcr.io/malusevdevelopment/website'
         required: false
         type: string
       nginx-image:
-        default: 'ghcr.io/codelieutenant/nginx'
+        default: 'ghcr.io/malusevdevelopment/nginx'
         required: false
         type: string
       valkey-image:
-        default: 'ghcr.io/codelieutenant/valkey'
+        default: 'ghcr.io/malusevdevelopment/valkey'
         required: false
         type: string
     secrets:

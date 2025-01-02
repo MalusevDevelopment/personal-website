@@ -18,7 +18,7 @@ run_artisan_command() {
     done
 }
 
-IMAGE="ghcr.io/codelieutenant/website"
+IMAGE="ghcr.io/malusevdevelopment/website"
 VERSION="latest"
 REGISTRY="ghcr.io"
 

@@ -6,7 +6,7 @@ docker run -it -d \
   --env-file ./.env \
   -p 80:80 \
   -p 2019:2019 \
-  ghcr.io/codelieutenant/website:latest \
+  ghcr.io/malusevdevelopment/website:latest \
     /bin/start-container php artisan octane:start \
       --host=0.0.0.0 \
       --port=80 \

@@ -34,9 +34,9 @@ jobs:
     needs: ["tag", "image"]
     steps:
       - name: Run Nginx container
-        run: docker run --name server --rm -d ghcr.io/codelieutenant/nginx:${{ needs.tag.outputs.version }} tail -f /dev/null
+        run: docker run --name server --rm -d ghcr.io/malusevdevelopment/nginx:${{ needs.tag.outputs.version }} tail -f /dev/null
       - name: Run Website container
-        run: docker run --name website --rm -d ghcr.io/codelieutenant/website:${{ needs.tag.outputs.version }} tail -f /dev/null
+        run: docker run --name website --rm -d ghcr.io/malusevdevelopment/website:${{ needs.tag.outputs.version }} tail -f /dev/null
       - name: Extract the files from the containers
         run: |
           mkdir -p website
