@@ -34,7 +34,6 @@ return [
         // Max duration (in minutes) before an upload is invalidated...
     ],
 
-
     'inject_assets' => false,
 
 ];

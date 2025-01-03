@@ -13,9 +13,7 @@ class RolesAndPermissionsSeeder extends Seeder
 {
     public const string DEFAULT_GUARD = 'web';
 
-    public function __construct(private readonly PermissionRegistrar $registrar)
-    {
-    }
+    public function __construct(private readonly PermissionRegistrar $registrar) {}
 
     public function run(): void
     {

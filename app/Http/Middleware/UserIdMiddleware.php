@@ -12,9 +12,7 @@ class UserIdMiddleware
 {
     public const string COOKIE_NAME = 'analytics';
 
-    public function __construct(private readonly CookieJar $cookie)
-    {
-    }
+    public function __construct(private readonly CookieJar $cookie) {}
 
     /**
      * Handle an incoming request.

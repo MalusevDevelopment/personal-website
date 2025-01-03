@@ -11,6 +11,7 @@ use Symfony\Component\Process\Process;
 class WatchCommand extends Command implements SignalableCommandInterface
 {
     public const string WATCHER = 'vendor/laravel/octane/bin/file-watcher.cjs';
+
     /**
      * The name and signature of the console command.
      *
@@ -26,6 +27,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
     protected $description = 'Watch Command';
 
     private ?Process $process = null;
+
     private ?Process $watcher = null;
 
     /**
@@ -36,9 +38,9 @@ class WatchCommand extends Command implements SignalableCommandInterface
         $command = $this->argument('exec');
         $watcher = $this->watcher();
 
-        $output = function($stdout, $stderr) {
-            echo $stdout . PHP_EOL;
-            echo $stderr . PHP_EOL;
+        $output = function ($stdout, $stderr) {
+            echo $stdout.PHP_EOL;
+            echo $stderr.PHP_EOL;
         };
 
         $this->process = new Process(explode(' ', $command), base_path(), timeout: null);
@@ -47,7 +49,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
 
         $this->info("Process '$command' started");
 
-        while($watcher->isRunning()) {
+        while ($watcher->isRunning()) {
             if ($watcher->getIncrementalOutput()) {
                 $this->info("Restarting command '$command'");
                 $this->process->stop();
@@ -59,8 +61,9 @@ class WatchCommand extends Command implements SignalableCommandInterface
         }
     }
 
-    private function watcher(): Process {
-        if($this->watcher !== null) {
+    private function watcher(): Process
+    {
+        if ($this->watcher !== null) {
             return $this->watcher;
         }
 
@@ -79,7 +82,8 @@ class WatchCommand extends Command implements SignalableCommandInterface
 
     private function watchFiles(): string
     {
-        $paths = collect(config('octane.watch'))->map(fn($path) => base_path($path));
+        $paths = collect(config('octane.watch'))->map(fn ($path) => base_path($path));
+
         return json_encode($paths, JSON_THROW_ON_ERROR);
     }
 
@@ -91,7 +95,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
     #[NoReturn]
     public function handleSignal(int $signal, false|int $previousExitCode = 0): int|false
     {
-        $this->info('Exiting with signal: ' . $signal);
+        $this->info('Exiting with signal: '.$signal);
         $this->watcher?->stop(1, $signal);
         $this->process?->stop(1, $signal);
         exit(0);

@@ -11,8 +11,7 @@ class ArticlesByYear extends Component
     public function __construct(
         public readonly int $year,
         public readonly Collection $posts,
-    ) {
-    }
+    ) {}
 
     public function render(): View
     {

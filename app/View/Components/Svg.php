@@ -11,8 +11,7 @@ class Svg extends Component
 {
     public function __construct(
         public readonly string $name,
-    ) {
-    }
+    ) {}
 
     public function render(): View
     {

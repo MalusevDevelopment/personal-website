@@ -58,7 +58,7 @@ return [
 
     'sort' => [
         'role_navigation' => true,
-        'permission_navigation' => true
+        'permission_navigation' => true,
     ],
 
     'generator' => [
@@ -133,7 +133,7 @@ return [
          * Define any other permission that should be synced with the DB
          */
         'custom_permissions' => [
-            ...Permissions::custom()
+            ...Permissions::custom(),
         ],
 
         'user_model' => User::class,

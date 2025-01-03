@@ -1,13 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use App\Enums\Queue;
 use App\Helpers\Permissions;
 use App\Helpers\Roles;
+use App\Notifications\ResetPassword as ResetPasswordNotification;
 use Database\Factories\UserFactory;
 use Eloquent;
+use Exception;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
+use Filament\Notifications\Auth\VerifyEmail;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,6 +29,7 @@ use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 use Override;
+use SensitiveParameter;
 use Spatie\Permission\Traits\HasRoles;
 use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\AutomaticDateFormatWithMilliseconds;
 use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\RefreshDataOnSave;
@@ -94,6 +101,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         return $this->hasMany(Post::class);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Override]
     public function canAccessPanel(Panel $panel): bool
     {
@@ -112,5 +122,19 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     public function isOwner(): bool
     {
         return $this->hasRole(Roles::OWNER);
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $notification = (new VerifyEmail)->onQueue(Queue::Notifications)->delay(now()->addSeconds(10));
+
+        $this->notify($notification);
+    }
+
+    public function sendPasswordResetNotification(#[SensitiveParameter] $token): void
+    {
+        $this->notify(
+            new ResetPasswordNotification($token)->onQueue(Queue::Notifications)->delay(now()->addSeconds(10)),
+        );
     }
 }

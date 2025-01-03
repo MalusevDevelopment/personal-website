@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Enums\Queue;
+
 return [
     'use' => 'horizon',
 
-    'waits' => collect(explode(',', env('HORIZON_QUEUES', 'default,emails,notifications')))
+    'waits' => collect(Queue::values())
         ->mapToDictionary(static fn (string $queue) => ['redis:'.$queue => 60])
         ->map(static fn (array $val) => $val[0])
         ->toArray(),
@@ -20,7 +24,7 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => explode(',', env('HORIZON_QUEUES', 'default,emails,notifications')),
+            'queue' => Queue::values(),
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
             'maxProcesses' => 10,

@@ -11,8 +11,7 @@ class Article extends Component
 {
     public function __construct(
         public readonly Post $post
-    ) {
-    }
+    ) {}
 
     public function render(): View|Closure|string
     {
