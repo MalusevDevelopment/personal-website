@@ -109,7 +109,7 @@ jobs:
           context: .
           push: true
           pull: true
-          platforms: ${{ inputs.platforms }}
+          platforms: linux/amd64,linux/arm64/v8
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ inputs.image }}:dev

@@ -44,14 +44,14 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
     services:
       pgsql:
-        image: "postgres:17"
+        image: "postgres:17-bookworm"
         env:
           PGPASSWORD: "dusan_malusev"
           POSTGRES_DB: "testing"
           POSTGRES_USER: "dusan_malusev"
           POSTGRES_PASSWORD: "dusan_malusev"
       redis:
-        image: "valkey:8"
+        image: "valkey/valkey:8-bookworm"
 #       meilisearch:
 #         image: "getmeili/meilisearch:latest"
 #       mailpit:

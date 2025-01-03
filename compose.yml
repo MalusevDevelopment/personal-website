@@ -45,7 +45,7 @@ services:
       - soketi
 
   pgsql:
-    image: "postgres:17"
+    image: "postgres:17-bookworm"
     ports:
       - "5432:5432"
     environment:
