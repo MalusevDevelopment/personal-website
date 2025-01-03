@@ -12,13 +12,7 @@
             </button>
         </header>
         <section>
-            <ul id="search-results">
-                <x-search.item/>
-                <x-search.item/>
-                <x-search.item/>
-                <x-search.item/>
-                <x-search.item/>
-            </ul>
+            <ul id="search-results"></ul>
         </section>
     </div>
 </div>

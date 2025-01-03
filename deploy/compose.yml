@@ -57,6 +57,9 @@ services:
         order: stop-first
   valkey:
     image: 'ghcr.io/malusevdevelopment/valkey:${VERSION:-latest}'
+    build:
+      context: ../
+      dockerfile: deploy/valkey/Dockerfile
     restart: unless-stopped
     deploy:
       mode: global
@@ -69,7 +72,7 @@ services:
     networks:
       - website
   umami:
-    image: ghcr.io/umami-software/umami:postgresql-latest
+    image: ghcr.io/umami-software/umami:postgresql-v2.15
     container_name: umami
     restart: unless-stopped
     stop_signal: SIGINT
@@ -105,9 +108,8 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-    entrypoint: /usr/local/bin/start-container
     working_dir: /var/www/html
-    command: php artisan schedule:work -n --ansi
+    command: start-container php artisan schedule:work -n --ansi
     extra_hosts:
         - 'host.docker.internal:host-gateway'
     env_file:
@@ -125,9 +127,8 @@ services:
   horizon:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: horizon
-    entrypoint: /usr/local/bin/start-container
     working_dir: /var/www/html
-    command: php artisan pulse:check -n --ansi
+    command: start-container php artisan pulse:check -n --ansi
     stop_signal: SIGINT
     extra_hosts:
         - 'host.docker.internal:host-gateway'
@@ -154,10 +155,9 @@ services:
   pulse-check:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: pulse-check
-    entrypoint: /usr/local/bin/start-container
     working_dir: /var/www/html
     stop_signal: SIGINT
-    command: php artisan pulse:check -n --ansi
+    command: start-container php artisan pulse:check -n --ansi
     extra_hosts:
         - 'host.docker.internal:host-gateway'
     deploy:
@@ -182,10 +182,9 @@ services:
   pulse-work:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: pulse-work
-    entrypoint: /usr/local/bin/start-container
     stop_signal: SIGINT
     working_dir: /var/www/html
-    command: php artisan pulse:work -n --ansi
+    command: start-container php artisan pulse:work -n --ansi
     extra_hosts:
         - 'host.docker.internal:host-gateway'
     deploy:
@@ -211,9 +210,8 @@ services:
   sqs:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     container_name: sqs
-    entrypoint: /usr/local/bin/start-container
     working_dir: /var/www/html
-    command: php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600
+    command: start-container php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600
     extra_hosts:
         - 'host.docker.internal:host-gateway'
     stop_signal: SIGINT
@@ -243,9 +241,8 @@ services:
       dockerfile: docker/php/Dockerfile
       target: production
     container_name: website
-    entrypoint: /usr/local/bin/start-container
     working_dir: /var/www/html
-    command: php artisan horizon -n --ansi
+    command: start-container php artisan octane:frankenphp --host=0.0.0.0 --port=8080 --admin-host=0.0.0.0 --admin-port=2019 --watch --log-level=debug --max-requests=1000
     stop_signal: SIGINT
     extra_hosts:
         - 'host.docker.internal:host-gateway'
@@ -260,12 +257,15 @@ services:
         window: 120s
     ports:
       - '8000:8080'
+      - '2019:2019'
     env_file:
       - website.env
     environment:
       LARAVEL_SAIL: 0
       XDEBUG_MODE: 'off'
       SERVER_NAME: www.dusanmalusev.dev
+      XDG_CONFIG_HOME: /config
+      XDG_DATA_HOME: /data
     networks:
       - website
     depends_on:

@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Factory;
 use Illuminate\Validation\Rules\Password;
 
@@ -15,7 +16,7 @@ use function Laravel\Prompts\text;
 
 class CreateUser extends Command implements PromptsForMissingInput
 {
-    protected $signature = 'app:create-user {name} {email} {role}';
+    protected $signature = 'app:create-user {name} {email} {role} {--generate-password}';
 
     protected $description = 'Create new Application User';
 
@@ -27,12 +28,15 @@ class CreateUser extends Command implements PromptsForMissingInput
 
     public function handle(): int
     {
-        $password = password(
-            label: 'What will be user\'s password?',
-            placeholder: 'password',
-            required: true,
-            hint: 'Minimum 10 characters.',
-        );
+        $password = match (true) {
+            $this->option('generate-password') => Str::password(26),
+            default => password(
+                label: 'What will be user\'s password?',
+                placeholder: 'password',
+                required: true,
+                hint: 'Minimum 10 characters.',
+            ),
+        };
 
         $validator = $this->validator->make(
             [
@@ -45,7 +49,8 @@ class CreateUser extends Command implements PromptsForMissingInput
                 'name' => 'required|string|min:2|max:150',
                 'email' => 'required|string|email|max:255|min:5|unique:users',
                 'role' => 'required|string|exists:roles,name',
-                'password' => (new Password(10))
+                'password' => new Password(10)
+                    ->max(150)
                     ->uncompromised()
                     ->letters()
                     ->symbols()
@@ -68,6 +73,7 @@ class CreateUser extends Command implements PromptsForMissingInput
         ] = $validator->validated();
 
         try {
+            /** @var User $user */
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
@@ -78,6 +84,10 @@ class CreateUser extends Command implements PromptsForMissingInput
             $user->assignRole($role);
 
             $this->info('User create with ID '.$user->id);
+
+            if ($this->option('generate-password')) {
+                $this->info('Generated password: '.$password);
+            }
 
             return self::SUCCESS;
         } catch (Exception $e) {

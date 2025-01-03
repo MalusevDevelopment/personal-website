@@ -4,9 +4,9 @@ FROM dunglas/frankenphp:1.3-php8.4 AS base
 
 WORKDIR /var/www/html
 
-ENV SERVER_NAME="dusanmalusev.test"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
+ENV PATH="$PATH:/usr/local/bin"
 
 COPY ./docker/php/php.ini $PHP_INI_DIR/10-php.ini
 
@@ -28,21 +28,23 @@ RUN apt-get update && apt-get install -y \
       --enable-redis-zstd \
     && pie install apcu/apcu --disable-valgrind-checks
 
-RUN git clone --depth=1 https://github.com/axboe/liburing.git /liburing \
-    && cd /liburing && ./configure && make install -j$(nproc) \
-    && cd / && rm -rf /liburing \
-    && pie install swoole/swoole \
-      --enable-swoole-curl \
-      --enable-cares \
-      --enable-brotli \
-      --enable-swoole-pgsql \
-      --enable-swoole-sqlite \
-      --enable-swoole-thread \
-      --enable-iouring \
-      --enable-sockets
+#RUN git clone --depth=1 https://github.com/axboe/liburing.git /liburing \
+#    && cd /liburing && ./configure && make install -j$(nproc) \
+#    && cd / && rm -rf /liburing \
+#    && pie install swoole/swoole \
+#      --enable-swoole-curl \
+#      --enable-cares \
+#      --enable-brotli \
+#      --enable-swoole-pgsql \
+#      --enable-swoole-sqlite \
+#      --enable-swoole-thread \
+#      --enable-iouring \
+#      --enable-sockets
 
 RUN apt-get purge -y git libzstd-dev libcurl4-openssl-dev libc-ares-dev libsqlite3-dev libbrotli-dev libpq-dev \
     && apt-get install -y libzstd1 libcurl4 libc-ares2 libsqlite3-0 liburing2 libbrotli1 libpq5
+
+COPY ./docker/php/sockets.ini $PHP_INI_DIR/10-sockets.ini
 
 EXPOSE 80
 EXPOSE 8080
@@ -114,7 +116,7 @@ RUN apt-get update \
     && apt-get install -y \
     supervisor \
     gosu dnsutils gnupg \
-    git build-essential unzip gcc \
+    git build-essential unzip gcc libnss3-tools \
     librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
     && pie install xdebug/xdebug \
     && groupadd --force -g "$WWWGROUP" sail \
@@ -144,3 +146,5 @@ COPY ./docker/php/xdebug.ini $PHP_INI_DIR/99-xdebug.ini
 RUN chmod +x /bin/start-container
 
 USER sail
+
+CMD ["start-container"]

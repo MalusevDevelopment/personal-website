@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 readonly class AddContentSecurityPolicyHeaders
 {
     private string $domain;
+
     private string $umamiDomain;
 
     public function __construct(private Repository $config)
@@ -29,7 +30,7 @@ readonly class AddContentSecurityPolicyHeaders
         Vite::useCspNonce();
 
         return $next($request)->withHeaders([
-            'Content-Security-Policy' => $this->value(),
+            'Content-Security-Policy' => $this->value($request),
         ]);
     }
 
@@ -38,26 +39,45 @@ readonly class AddContentSecurityPolicyHeaders
         return "base-uri $this->domain";
     }
 
-    protected function frameSrc(): string
+    protected function frameSrc(Request $request): string
     {
-        return "frame-src 'self' https://github.com";
+        if ($request->decodedPath() === '/') {
+            return 'frame-src https://github.com';
+        }
+
+        return 'frame-src none';
     }
 
-    protected function frameAncestors(): string
+    protected function frameAncestors(Request $request): string
     {
-        return "frame-ancestors 'self' https://github.com";
+        if ($request->decodedPath() === '/') {
+            return 'frame-ancestors https://github.com';
+        }
+
+        return "frame-ancestors 'none'";
     }
 
-    protected function scriptSrc(): string
+    protected function scriptSrc(Request $request): string
     {
         $nonce = Vite::cspNonce();
 
-        return "script-src 'nonce-$nonce' 'sha256-abS8bXelr2wTMtWfwv4Q2SgF9jc3EmpFalJLyucKH4o=' 'self' 'unsafe-inline' https://$this->umamiDomain";
+        return match (true) {
+            str_starts_with($request->decodedPath(), $this->config->get('pulse.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            str_starts_with($request->decodedPath(), $this->config->get('telescope.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            str_starts_with($request->decodedPath(), $this->config->get('horizon.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            str_starts_with($request->decodedPath(), 'admin') => "script-src 'self' 'nonce-$nonce'",
+            default => "script-src 'self' 'nonce-$nonce' 'unsafe-inline' https://$this->umamiDomain",
+        };
     }
 
-    protected function imgSrc(): string
+    protected function imgSrc(Request $request): string
     {
-        return "img-src 'self'";
+        return match (true) {
+            str_starts_with($request->decodedPath(), $this->config->get('pulse.path')) => "img-src 'self' data:",
+            str_starts_with($request->decodedPath(), $this->config->get('horizon.path')) => "img-src 'self' data:",
+            str_starts_with($request->decodedPath(), 'admin') => "img-src 'self'",
+            default => "img-src 'self'",
+        };
     }
 
     protected function objectSrc(): string
@@ -75,17 +95,17 @@ readonly class AddContentSecurityPolicyHeaders
         return "child-src 'none'";
     }
 
-    private function value(): string
+    private function value(Request $request): string
     {
         return implode('; ', [
             $this->baseDomain(),
-            $this->scriptSrc(),
-            $this->imgSrc(),
+            $this->scriptSrc($request),
+            $this->imgSrc($request),
             $this->objectSrc(),
             $this->fontSrc(),
             $this->childSrc(),
-            $this->frameSrc(),
-            $this->frameAncestors(),
+            $this->frameSrc($request),
+            $this->frameAncestors($request),
         ]);
     }
 }

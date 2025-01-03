@@ -4,8 +4,8 @@ return [
     'use' => 'horizon',
 
     'waits' => collect(explode(',', env('HORIZON_QUEUES', 'default,emails,notifications')))
-        ->mapToDictionary(static fn(string $queue) => ['redis:' . $queue => 60])
-        ->map(static fn(array $val) => $val[0])
+        ->mapToDictionary(static fn (string $queue) => ['redis:'.$queue => 60])
+        ->map(static fn (array $val) => $val[0])
         ->toArray(),
 
     'metrics' => [
@@ -23,7 +23,8 @@ return [
             'queue' => explode(',', env('HORIZON_QUEUES', 'default,emails,notifications')),
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
+            'maxProcesses' => 10,
+            'minProcesses' => 2,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
@@ -36,7 +37,7 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'maxProcesses' => 10,
+                'maxProcesses' => 25,
                 'tries' => 3,
                 'timeout' => 60,
                 'balanceMaxShift' => 1,

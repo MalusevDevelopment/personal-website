@@ -1,17 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\PolicesController;
-use App\Http\Middleware\AddContentSecurityPolicyHeaders;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
-$middleware = [];
-
-if (config('app.env', 'production') === 'production') {
-    $middleware[] = AddContentSecurityPolicyHeaders::class;
-}
-
-Route::middleware($middleware)->group(function () {
+Route::middleware([])->group(function () {
     Route::get('/', [IndexController::class, 'index'])
         ->name('index');
     Route::get('/privacy-policy', [PolicesController::class, 'privacy'])
@@ -29,4 +25,7 @@ Route::middleware($middleware)->group(function () {
         ->name('contact');
     Route::get('/about', [IndexController::class, 'about'])
         ->name('about');
+
+    Route::post('/search', [SearchController::class, 'search'])
+        ->name('search-results');
 });

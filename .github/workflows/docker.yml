@@ -122,7 +122,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: deploy/nginx/Dockerfile
-          context: .
+          context: ./deploy/nginx
           push: true
           pull: true
           platforms: ${{ inputs.platforms }}
@@ -136,7 +136,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: deploy/valkey/Dockerfile
-          context: .
+          context: deploy/valkey
           push: true
           pull: true
           platforms: ${{ inputs.platforms }}

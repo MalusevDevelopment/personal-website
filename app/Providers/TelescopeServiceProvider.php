@@ -16,13 +16,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         Telescope::night();
         Telescope::filter(static fn (IncomingEntry $entry) => true);
-        Telescope::filterBatch(static function (Collection $entries) {
-            return true;
-        });
+        Telescope::filterBatch(static fn (Collection $entries) => true);
 
-        Telescope::avatar(static function (string $id) {
-            return '/avatars/' . User::find($id)->avatar_url;
-        });
+        Telescope::avatar(static fn (string $id) => '/avatars/'.User::query()->find($id)->avatar_url);
 
         $this->hideSensitiveRequestDetails();
     }
@@ -44,8 +40,6 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
     protected function gate(): void
     {
-        Gate::define('viewTelescope', static function (User $user) {
-            return $user->can(Permissions::VIEW_TELESCOPE);
-        });
+        Gate::define('viewTelescope', static fn (User $user) => $user->can(Permissions::VIEW_TELESCOPE));
     }
 }

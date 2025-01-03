@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest';
-import {getIdent, fetchIdent} from '../js/helpers.js';
+import {describe, expect, it} from 'vitest';
+import {fetchIdent, getIdent} from '@/helpers.js';
 
 describe('test fetchIdent', () => {
   it('fetches from localstorage and cookie is the same', () => {

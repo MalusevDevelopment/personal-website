@@ -28,6 +28,17 @@ it('creates user with command line arguments', function () {
     expect(User::findOrFail(1)->roles()->first()->name)->toBe(Roles::OWNER);
 });
 
+it('creates user with generated password', function () {
+    artisan('app:create-user',
+        ['name' => 'Dusan Malusev', 'email' => 'dusan@dusanmalusev.dev', 'role' => Roles::OWNER, '--generate-password' => true])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('User create with ID 2')
+        ->expectsOutputToContain('Generated password: ');
+
+    assertDatabaseHas('users', ['id' => 2]);
+    expect(User::findOrFail(2)->roles()->first()->name)->toBe(Roles::OWNER);
+});
+
 it('creates user with prompts', function () {
     artisan('app:create-user')
         ->expectsQuestion('User\'s name?', 'Dusan Malusev')
@@ -35,10 +46,10 @@ it('creates user with prompts', function () {
         ->expectsQuestion('User\'s role?', Roles::OWNER)
         ->expectsQuestion('What will be user\'s password?', 'really-Complicated-password-$678')
         ->assertSuccessful()
-        ->expectsOutput('User create with ID 2');
+        ->expectsOutputToContain('User create with ID 3');
 
-    assertDatabaseHas('users', ['id' => 2]);
-    expect(User::findOrFail(2)->roles()->first()->name)->toBe(Roles::OWNER);
+    assertDatabaseHas('users', ['id' => 3]);
+    expect(User::findOrFail(3)->roles()->first()->name)->toBe(Roles::OWNER);
 });
 
 it('failed with email already exists', function () {

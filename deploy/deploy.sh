@@ -44,7 +44,7 @@ docker logout "$REGISTRY"
 
 run_artisan_command horizon horizon:terminate || exit 1
 
-VERSION="$VERSION" docker stack deploy --prune --detach --compose-file "$WORKDIR/compose.yml"
+VERSION="$VERSION" docker stack deploy --prune --detach --compose-file "$WORKDIR/compose.yml" || exit 1
 
 run_artisan_command scheduler schedule-monitor:sync
 run_artisan_command scheduler pulse:clear

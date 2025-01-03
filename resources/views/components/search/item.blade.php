@@ -1,9 +1,11 @@
-<li>
-    <a href="#" tabindex="0">
-        <div class="grow">
-            <div>${value.item.title}</div>
-            <div>${value.item.summary}</div>
-        </div>
-        <div>&rarr;</div>
-    </a>
-</li>
+@foreach($items as $item)
+    <li>
+        <a href="{{ $item->url }}" tabindex="0">
+            <div class="grow">
+                <div>{{ $item->title }}</div>
+                <div>{{ $item->summary }}</div>
+            </div>
+            <div>&rarr;</div>
+        </a>
+    </li>
+@endforeach

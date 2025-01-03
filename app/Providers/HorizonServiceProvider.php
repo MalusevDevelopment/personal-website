@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Helpers\Permissions;
@@ -23,8 +25,6 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
 
     protected function gate(): void
     {
-        Gate::define('viewHorizon', static function (User $user) {
-            return $user->can(Permissions::VIEW_HORIZON);
-        });
+        Gate::define('viewHorizon', static fn (User $user) => $user->can(Permissions::VIEW_HORIZON));
     }
 }

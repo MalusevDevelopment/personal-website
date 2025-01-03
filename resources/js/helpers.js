@@ -57,3 +57,29 @@ export function fetchIdent(storage, document) {
 
   return cookieIdent;
 }
+
+/**
+ * @param {string | URL} input
+ * @param {RequestInit | undefined } init
+ * @returns {Promise<Response>}
+ */
+export function sendRequest(input, init) {
+  const headers = (init && 'headers' in init) ? init.headers : {};
+
+  delete init?.headers;
+
+  const reqInit = {
+    cache: 'no-cache',
+    credentials: 'include',
+    keepalive: true,
+    redirect: 'error',
+    mode: 'same-origin',
+    referrerPolicy: 'no-referrer',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').
+          getAttribute('content'), ...headers,
+    }, ...init,
+  };
+
+  return fetch(input, reqInit);
+}

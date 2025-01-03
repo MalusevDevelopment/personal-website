@@ -9,26 +9,31 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@awcodes/alpine-floating-ui": "^3.6.3",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
     "@types/umami": "^0.1.5",
     "@vitest/coverage-v8": "^1.5",
-    "alpinejs": "^3.13.0",
+    "alpinejs": "^3.14.8",
     "autoprefixer": "^10.4",
     "chokidar": "^3.6",
     "cssnano": "^7",
     "jsdom": "^23.2.0",
-    "laravel-echo": "^1.15.2",
+    "laravel-echo": "^1.17.1",
     "laravel-precognition-alpine": "^0.5.4",
     "laravel-vite-plugin": "^1.0.2",
-    "postcss": "^8.4.32",
+    "postcss": "^8.4.49",
     "postcss-nesting": "^12.1",
-    "pusher-js": "^8.3",
-    "tailwindcss": "^3.4",
+    "pusher-js": "^8.3.0",
+    "tailwindcss": "^3.4.17",
     "vite": "^5.4",
     "vite-plugin-manifest-sri": "^0.2.0",
     "vitest": "^1.5",
     "vitest-github-actions-reporter": "^0.11.1"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "dependencies": {
+    "@types/lodash": "^4.17.13",
+    "lodash": "^4.17.21"
+  }
 }

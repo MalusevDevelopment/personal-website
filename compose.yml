@@ -8,6 +8,7 @@ services:
         WWWGROUP: "${WWWGROUP}"
         WWWUSER: "${WWWUSER}"
     image: "ghcr.io/malusevdevelopment/website:dev"
+    command: 'start-container'
     develop:
       watch:
         - action: sync
@@ -23,11 +24,12 @@ services:
       - "2019:2019"
     environment:
       WWWUSER: "${WWWUSER}"
+      SERVER_NAME: 'dusanmalusev.test'
       LARAVEL_SAIL: 1
       XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
-      XDG_CONFIG_HOME: /var/www/html/config
-      XDG_DATA_HOME: /var/www/html/data
       XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal idekey=PHPSTORM}"
+      XDG_CONFIG_HOME: /home/sail/config
+      XDG_DATA_HOME: /home/sail/data
     volumes:
       - ".:/var/www/html"
       - "caddy_data:/data"
@@ -36,8 +38,14 @@ services:
       - dusan_malusev
     depends_on:
       - typesense
+      - pgsql
+      - redis
+      - minio
+      - mailpit
+      - soketi
+
   pgsql:
-    image: "postgres:15-alpine"
+    image: "postgres:17"
     ports:
       - "5432:5432"
     environment:
@@ -49,7 +57,7 @@ services:
       - "dusan_malusev-pgsql:/var/lib/postgresql/data"
       - "./docker/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql"
       - "./docker/pgsql/create-umami-database.sql:/docker-entrypoint-initdb.d/10-create-umami-database.sql"
-    #             - './docker/pgsql/create-grafana-database.sql:/docker-entrypoint-initdb.d/10-create-grafana-database.sql'
+      - './docker/pgsql/create-grafana-database.sql:/docker-entrypoint-initdb.d/10-create-grafana-database.sql'
     networks:
       - dusan_malusev
     healthcheck:
@@ -64,18 +72,12 @@ services:
       retries: 3
       timeout: 5s
   redis:
-    image: "valkey:8"
+    image: 'valkey/valkey:8-bookworm'
+    restart: unless-stopped
     ports:
       - "${FORWARD_REDIS_PORT:-6379}:6379"
     networks:
       - dusan_malusev
-    healthcheck:
-      test:
-        - CMD
-        - redis-cli
-        - ping
-      retries: 3
-      timeout: 5s
   minio:
     image: "minio/minio:latest"
     ports:
@@ -104,7 +106,7 @@ services:
     networks:
       - dusan_malusev
   soketi:
-    image: "quay.io/soketi/soketi:latest-16"
+    image: "quay.io/soketi/soketi:1.6-16-debian"
     depends_on:
       - pgsql
       - redis
@@ -116,7 +118,7 @@ services:
       SOKETI_APP_MANAGER_CACHE_TTL: 3600
       SOKETI_DB_REDIS_HOST: "${REDIS_HOST:-redis}"
       SOKETI_DB_REDIS_PORT: "${REDIS_PORT:-6379}"
-      SOKETI_DB_REDIS_DB: "${REDIS_SOKETI_DB:-3}"
+      SOKETI_DB_REDIS_DB: "${REDIS_SOKETI_DB:-1}"
       SOKETI_DB_POSTGRES_HOST: "${DB_HOST:-pgsql}"
       SOKETI_DB_POSTGRES_PORT: "${DB_PORT:-5432}"
       SOKETI_CACHE_DRIVER: redis
@@ -145,7 +147,7 @@ services:
     ports:
       - "8000:8080"
   typesense:
-    image: "typesense/typesense:0.25.2"
+    image: "typesense/typesense:28.0.rc31"
     ports:
       - "${FORWARD_TYPESENSE_PORT:-8108}:8108"
     environment:

@@ -1,3 +1,6 @@
+import {debounce} from 'lodash';
+import {performSearch} from '@/data.js';
+
 export function search() {
   const wrapper = document.getElementById('search-wrapper');
 
@@ -6,7 +9,35 @@ export function search() {
     return;
   }
 
+  /** @var {HTMLInputElement} input */
   const input = document.getElementById('search-query');
+  /** @var {HTMLElement} searchResults */
+  const searchResults = document.getElementById('search-results');
+
+  if (input) {
+    let prevController = null;
+
+    input.addEventListener('input', debounce(/** @param {Event} e */
+    async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (prevController) {
+        prevController.abort();
+      }
+
+      const controller = new AbortController();
+      prevController = controller;
+
+      const term = e.target.value;
+      if (term.length < 3) {
+        return;
+      }
+
+      searchResults.innerHTML = await performSearch(term, controller.signal);
+    }, 350, {
+      trailing: true,
+    }));
+  }
 
   document.querySelectorAll('.search-button').forEach((button) => {
     button.addEventListener('click', displaySearch(wrapper, input, true));
@@ -55,7 +86,6 @@ function displaySearch(wrapper, input, searchVisible) {
     document.body.style.overflow = 'visible';
     wrapper.style.visibility = 'hidden';
     input.value = '';
-    // output.innerHTML = '';
     document.activeElement.blur();
   };
 }

@@ -154,12 +154,12 @@ ALTER TABLE public.contacts ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 CREATE TABLE public.failed_jobs (
     id bigint NOT NULL,
-    uuid character varying(255) NOT NULL,
+    uuid text NOT NULL,
     connection text NOT NULL,
     queue text NOT NULL,
-    payload text NOT NULL,
+    payload jsonb NOT NULL,
     exception text NOT NULL,
-    failed_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    failed_at timestamp(0) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -189,9 +189,38 @@ CREATE TABLE public.job_batches (
     failed_jobs integer NOT NULL,
     failed_job_ids text NOT NULL,
     options text,
-    cancelled_at integer,
-    created_at integer NOT NULL,
-    finished_at integer
+    cancelled_at timestamp(0) with time zone,
+    created_at timestamp(0) with time zone NOT NULL,
+    finished_at timestamp(0) with time zone
+);
+
+
+--
+-- Name: jobs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jobs (
+    id bigint NOT NULL,
+    queue character varying(255) NOT NULL,
+    payload jsonb NOT NULL,
+    attempts smallint NOT NULL,
+    reserved_at timestamp(0) with time zone,
+    available_at timestamp(0) with time zone NOT NULL,
+    created_at timestamp(0) with time zone NOT NULL
+);
+
+
+--
+-- Name: jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.jobs ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.jobs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
 
@@ -705,19 +734,19 @@ ALTER TABLE ONLY public.failed_jobs
 
 
 --
--- Name: failed_jobs failed_jobs_uuid_unique; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.failed_jobs
-    ADD CONSTRAINT failed_jobs_uuid_unique UNIQUE (uuid);
-
-
---
 -- Name: job_batches job_batches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.job_batches
     ADD CONSTRAINT job_batches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jobs jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jobs
+    ADD CONSTRAINT jobs_pkey PRIMARY KEY (id);
 
 
 --
@@ -896,6 +925,13 @@ CREATE INDEX breezy_sessions_authenticatable_type_authenticatable_id_index ON pu
 
 
 --
+-- Name: failed_jobs_uuid_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX failed_jobs_uuid_unique ON public.failed_jobs USING btree (uuid);
+
+
+--
 -- Name: fast_password_reset_tokens_email_lookup_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -917,6 +953,13 @@ CREATE INDEX fast_users_email_lookup_index ON public.users USING hash (email);
 
 
 --
+-- Name: jobs_queue_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX jobs_queue_index ON public.jobs USING btree (queue);
+
+
+--
 -- Name: model_has_permissions_model_id_model_type_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -935,6 +978,13 @@ CREATE INDEX model_has_roles_model_id_model_type_index ON public.model_has_roles
 --
 
 CREATE INDEX notifications_notifiable_type_notifiable_id_index ON public.notifications USING btree (notifiable_type, notifiable_id);
+
+
+--
+-- Name: notifications_read_at_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX notifications_read_at_index ON public.notifications USING btree (read_at);
 
 
 --
@@ -1178,12 +1228,9 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 2	2014_10_12_000000_create_users_table	1
 3	2014_10_12_100000_create_password_reset_tokens_table	1
 4	2018_08_08_100000_create_telescope_entries_table	1
-5	2019_08_19_000000_create_failed_jobs_table	1
 6	2019_12_14_000001_create_personal_access_tokens_table	1
 7	2023_08_27_151915_create_socketi_apps_table	1
-8	2023_12_21_172146_create_job_batches_table	1
 9	2024_01_09_125244_create_permission_tables	1
-10	2024_01_15_000045_create_notifications_table	1
 11	2024_01_21_201619_create_contacts_table	1
 12	2024_03_04_213058_create_breezy_sessions_table	2
 13	2024_03_04_214500_add_avatar_url_column_to_users_table	3
@@ -1191,6 +1238,10 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 15	2024_03_08_234622_create_posts_table	4
 16	2023_06_07_000001_create_pulse_tables	5
 17	2024_06_27_183034_create_breezy_sessions_table	5
+18	2025_01_02_231227_create_failed_jobs_table	6
+19	2025_01_02_231339_create_job_batches_table	6
+20	2025_01_02_231347_create_jobs_table	6
+22	2025_01_02_231352_create_notifications_table	7
 \.
 
 
@@ -1198,7 +1249,7 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 -- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.migrations_id_seq', 17, true);
+SELECT pg_catalog.setval('public.migrations_id_seq', 22, true);
 
 
 --

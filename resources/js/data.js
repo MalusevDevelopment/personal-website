@@ -1,3 +1,5 @@
+import {sendRequest} from '@/helpers.js';
+
 /**
  * @param {Navigator} navigator
  * @returns {Promise<{}>}
@@ -17,8 +19,7 @@ export async function getUserAgentData(navigator) {
       'platform',
       'formFactor',
       'fullVersionList',
-      'wow64',
-    ]);
+      'wow64']);
 
     payload.platform = ua.platform;
     payload.platformVersion = ua.platformVersion;
@@ -50,7 +51,25 @@ export async function getPayload(ident, navigator) {
         navigator.hardwareConcurrency :
         undefined,
     doNotTrack: 'doNotTrack' in navigator ? navigator.doNotTrack : undefined,
-    maxTouchPoints: navigator.maxTouchPoints,
-    ...await getUserAgentData(navigator),
+    maxTouchPoints: navigator.maxTouchPoints, ...await getUserAgentData(
+        navigator),
   };
+}
+
+/**
+ * @param {string} term
+ * @param {AbortSignal} signal
+ * @returns {Promise<string>}
+ */
+export async function performSearch(term, signal) {
+  const response = await sendRequest('/search', {
+    method: 'POST',
+    body: JSON.stringify({term}),
+    headers: {
+      'Content-Type': 'application/json', 'Accept': 'text/html',
+    },
+    signal: signal,
+  });
+
+  return await response.text();
 }

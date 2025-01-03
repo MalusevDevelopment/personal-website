@@ -59,7 +59,6 @@
 </head>
 
 <body class="body">
-
 <div class="inner">
     <x-header/>
     <div class="inner">
@@ -72,6 +71,17 @@
     <x-search.modal/>
 </div>
 
+@if(app()->environment('production'))
+    <script defer
+            src="{{ config('services.umami.script') }}"
+            data-cache="true"
+            data-domains="{{ config('app.domain') }}"
+            data-website-id="{{ config('services.umami.id') }}"
+            data-host-url="{{ config('services.umami.host') }}"
+            data-auto-track="false"
+    />
+@endif
+
 @if(($useLivewire ?? false))
     @livewireScriptConfig
     @vite('resources/js/with-livewire.js')
@@ -79,17 +89,10 @@
     @vite('resources/js/app.js')
 @endif
 
-@if(app()->environment('production'))
-    <script defer
-            src="{{ config('services.umami.script') }}"
-            data-cache="true"
-            data-domains="{{ config('app.domain') }}"
-            data-website-id="{{ config('services.umami.id') }}"
-            data-auto-track="false"
-            nonce="{{ Vite::cspNonce() }}"
-    />
-@endif
-
-
+@auth()
+    <script defer>
+      umami.identify({id: '{{ auth()->user()->id }}', email: '{{ auth()->user()->email }}'});
+    </script>
+@endauth
 </body>
 </html>
