@@ -15,8 +15,17 @@ services:
       - '443:443'
     networks:
       - website
-    volumes:
-      - '/etc/letsencrypt:/etc/letsencrypt'
+    secrets:
+     - dusanmalusev.dev.fullchain.pem
+     - dusanmalusev.dev.privkey.pem
+     - dusanmalusev.dev.chain.pem
+     - statistics.dusanmalusev.dev.fullchain.pem
+     - statistics.dusanmalusev.dev.privkey.pem
+     - statistics.dusanmalusev.dev.chain.pem
+     - live.dusanmalusev.dev.fullchain.pem
+     - live.dusanmalusev.dev.privkey.pem
+     - live.dusanmalusev.dev.chain.pem
+
     deploy:
       mode: global
       restart_policy:
@@ -68,9 +77,10 @@ services:
           - node.valkey == true
     volumes:
       - 'valkey:/data'
-      - '/usr/local/etc/valkey/users.acl:/usr/local/etc/valkey/users.acl'
     networks:
       - website
+    secrets:
+      - valkey.users
   umami:
     image: ghcr.io/umami-software/umami:postgresql-v2.15
     container_name: umami
@@ -280,4 +290,29 @@ volumes:
 
 networks:
   website:
+    external: true
+
+secrets:
+  dusanmalusev.dev.fullchain.pem:
+    external: true
+  dusanmalusev.dev.privkey.pem:
+    external: true
+  dusanmalusev.dev.chain.pem:
+    external: true
+
+  statistics.dusanmalusev.dev.fullchain.pem:
+    external: true
+  statistics.dusanmalusev.dev.privkey.pem:
+    external: true
+  statistics.dusanmalusev.dev.chain.pem:
+    external: true
+
+  live.dusanmalusev.dev.fullchain.pem:
+    external: true
+  live.dusanmalusev.dev.privkey.pem:
+    external: true
+  live.dusanmalusev.dev.chain.pem:
+    external: true
+
+  valkey.users:
     external: true

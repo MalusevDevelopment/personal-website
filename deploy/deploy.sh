@@ -18,7 +18,6 @@ run_artisan_command() {
     done
 }
 
-IMAGE="ghcr.io/malusevdevelopment/website"
 VERSION="latest"
 REGISTRY="ghcr.io"
 
@@ -44,7 +43,12 @@ docker logout "$REGISTRY"
 
 run_artisan_command horizon horizon:terminate || exit 1
 
-VERSION="$VERSION" docker stack deploy --prune --detach --compose-file "$WORKDIR/compose.yml" || exit 1
+truncate --size=0 .env
+
+printf "export VERSION=%s\n" "$VERSION" >> .env
+
+source .env
+docker stack deploy --prune --detach --compose-file "$WORKDIR/compose.yml" website || exit 1
 
 run_artisan_command scheduler schedule-monitor:sync
 run_artisan_command scheduler pulse:clear
