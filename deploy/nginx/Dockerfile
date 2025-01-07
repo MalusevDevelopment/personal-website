@@ -8,7 +8,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY . .
 
-RUN composer install \
+RUN cp .env.build .env  \
+    && composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction \

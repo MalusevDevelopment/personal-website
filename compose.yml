@@ -1,4 +1,12 @@
 services:
+  nginx:
+    image: 'ghcr.io/malusevdevelopment/nginx:dev'
+    build:
+      context: .
+      dockerfile: deploy/nginx/Dockerfile
+    networks:
+      - dusan_malusev
+
   laravel.test:
     build:
       context: .

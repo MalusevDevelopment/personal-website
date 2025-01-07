@@ -9,8 +9,8 @@ return [
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('REDIS_PREFIX', 'website:'),
-            'serializer' => Redis::SERIALIZER_IGBINARY,
-            'compression' => Redis::COMPRESSION_ZSTD,
+            'serializer' => class_exists(Redis::class) ? Redis::SERIALIZER_IGBINARY : 2,
+            'compression' => class_exists(Redis::class) ? Redis::COMPRESSION_ZSTD : 2,
         ],
 
         'default' => [

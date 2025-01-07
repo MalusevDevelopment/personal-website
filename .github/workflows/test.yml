@@ -88,7 +88,7 @@ jobs:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
       - name: Composer install
         run: |
-          cp .env.example .env
+          cp .env.build .env
           composer install -q --no-ansi --prefer-dist --no-interaction --no-progress
           php artisan key:generate
       - name: Install Node Modules

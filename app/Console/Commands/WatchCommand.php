@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Collection;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 use Symfony\Component\Process\ExecutableFinder;
@@ -31,8 +33,10 @@ class WatchCommand extends Command implements SignalableCommandInterface
     private ?Process $process = null;
 
     private ?Process $watcher = null;
-    public function __construct(private readonly \Illuminate\Contracts\Config\Repository $configRepository)
+
+    public function __construct(private readonly Repository $configRepository)
     {
+        parent::__construct();
     }
 
     /**
@@ -44,8 +48,8 @@ class WatchCommand extends Command implements SignalableCommandInterface
         $watcher = $this->watcher();
 
         $output = function (string $stdout, string $stderr): void {
-            echo $stdout.PHP_EOL;
-            echo $stderr.PHP_EOL;
+            echo $stdout . PHP_EOL;
+            echo $stderr . PHP_EOL;
         };
 
         $this->process = new Process(explode(' ', $command), base_path(), timeout: null);
@@ -68,7 +72,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
 
     private function watcher(): Process
     {
-        if ($this->watcher instanceof \Symfony\Component\Process\Process) {
+        if ($this->watcher instanceof Process) {
             return $this->watcher;
         }
 
@@ -87,7 +91,9 @@ class WatchCommand extends Command implements SignalableCommandInterface
 
     private function watchFiles(): string
     {
-        $paths = (new \Illuminate\Support\Collection($this->configRepository->get('octane.watch')))->map(fn ($path) => base_path($path));
+        $paths = (new Collection($this->configRepository->get('octane.watch')))->map(
+            fn($path) => base_path($path)
+        );
 
         return json_encode($paths, JSON_THROW_ON_ERROR);
     }
@@ -100,7 +106,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
     #[NoReturn]
     public function handleSignal(int $signal, false|int $previousExitCode = 0): int|false
     {
-        $this->info('Exiting with signal: '.$signal);
+        $this->info('Exiting with signal: ' . $signal);
         $this->watcher?->stop(1, $signal);
         $this->process?->stop(1, $signal);
         exit(0);
