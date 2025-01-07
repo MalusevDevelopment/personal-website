@@ -11,5 +11,4 @@ setup.sh
 data/
 .vscode/
 .idea/
-.env
 vendor/

@@ -18,8 +18,8 @@
     "ext-pcntl": "*",
     "ext-pdo": "*",
     "ext-redis": "*",
-    "ext-sodium": "*",
     "ext-sockets": "*",
+    "ext-sodium": "*",
     "althinect/filament-spatie-roles-permissions": "^2.2",
     "aws/aws-sdk-php": "^3.336",
     "codelieutenant/laravel-crypto": "^v1.0.0",
@@ -69,7 +69,8 @@
     "rector/rector": "^2.0",
     "roave/security-advisories": "dev-latest",
     "spatie/laravel-ignition": "^2.0",
-    "spatie/laravel-ray": "^1.35"
+    "spatie/laravel-ray": "^1.35",
+    "friendsofphp/php-cs-fixer": "^3.66"
   },
   "autoload": {
     "psr-4": {

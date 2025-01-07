@@ -11,7 +11,7 @@ use Illuminate\View\Component;
 
 class Header extends Component
 {
-    public private(set) readonly array $links;
+    public readonly array $links;
 
     public function __construct(UrlGenerator $urlGenerator)
     {

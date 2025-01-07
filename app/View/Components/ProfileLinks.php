@@ -10,7 +10,7 @@ use Illuminate\View\Component;
 
 class ProfileLinks extends Component
 {
-    public private(set) readonly array $links;
+    public readonly array $links;
 
     public function __construct(Repository $config)
     {

@@ -17,5 +17,11 @@ return [
             'connection' => 'pulse',
             'lock_connection' => 'locks',
         ],
+
+        'sessions' => [
+            'driver' => 'redis',
+            'connection' => 'sessions',
+            'lock_connection' => 'locks',
+        ],
     ],
 ];
