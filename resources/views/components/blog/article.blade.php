@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <article class="article">
     <div>
         <h3><a href="/blog">{{ $post->title }}</a></h3>
@@ -14,3 +19,4 @@
         </div>
     </div>
 </article>
+<?php 

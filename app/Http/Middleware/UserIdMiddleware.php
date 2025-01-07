@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -12,7 +14,7 @@ class UserIdMiddleware
 {
     public const string COOKIE_NAME = 'analytics';
 
-    public function __construct(private readonly CookieJar $cookie) {}
+    public function __construct(private readonly CookieJar $cookieJar) {}
 
     /**
      * Handle an incoming request.
@@ -24,7 +26,7 @@ class UserIdMiddleware
         $analytics = $request->cookie(self::COOKIE_NAME);
 
         if ($analytics === null) {
-            $this->cookie->queue(
+            $this->cookieJar->queue(
                 new Cookie(
                     self::COOKIE_NAME,
                     uuid_create(UUID_TYPE_RANDOM),

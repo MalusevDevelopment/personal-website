@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Helpers\Permissions;
 use App\Models\User;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
@@ -15,10 +17,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     public function register(): void
     {
         Telescope::night();
-        Telescope::filter(static fn (IncomingEntry $entry) => true);
-        Telescope::filterBatch(static fn (Collection $entries) => true);
+        Telescope::filter(static fn (IncomingEntry $incomingEntry): true => true);
+        Telescope::filterBatch(static fn (Collection $entries): true => true);
 
-        Telescope::avatar(static fn (string $id) => '/avatars/'.User::query()->find($id)->avatar_url);
+        Telescope::avatar(static fn (string $id): string => '/avatars/'.User::query()->find($id)->avatar_url);
 
         $this->hideSensitiveRequestDetails();
     }
@@ -40,6 +42,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
     protected function gate(): void
     {
-        Gate::define('viewTelescope', static fn (User $user) => $user->can(Permissions::VIEW_TELESCOPE));
+        $this->app->make(Gate::class)
+            ->define('viewTelescope', static fn (User $user) => $user->can(Permissions::VIEW_TELESCOPE));
     }
 }

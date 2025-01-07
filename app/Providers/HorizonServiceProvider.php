@@ -6,8 +6,8 @@ namespace App\Providers;
 
 use App\Helpers\Permissions;
 use App\Models\User;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\Horizon;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
 
@@ -25,6 +25,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
 
     protected function gate(): void
     {
-        Gate::define('viewHorizon', static fn (User $user) => $user->can(Permissions::VIEW_HORIZON));
+        $this->app->make(Gate::class)
+            ->define('viewHorizon', static fn (User $user) => $user->can(Permissions::VIEW_HORIZON));
     }
 }

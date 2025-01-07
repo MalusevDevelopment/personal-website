@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components\Blog;
 
 use Illuminate\Contracts\View\View;
@@ -15,6 +17,6 @@ class ArticlesByYear extends Component
 
     public function render(): View
     {
-        return view('components.blog.articles-by-year');
+        return $this->factory()->make('components.blog.articles-by-year');
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components;
 
 use Closure;
@@ -12,6 +14,6 @@ class TableOfContent extends Component
 
     public function render(): View|Closure|string
     {
-        return view('components.table-of-content');
+        return $this->factory()->make('components.table-of-content');
     }
 }

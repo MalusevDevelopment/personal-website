@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <header class="header">
     <nav class="nav">
         <div class="home">
@@ -31,3 +36,4 @@
         </ul>
     </nav>
 </header>
+<?php 

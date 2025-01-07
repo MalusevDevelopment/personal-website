@@ -22,7 +22,7 @@ class PostService
             ->where('posts.status', PostStatus::PUBLISHED)
             ->when(
                 $year !== null,
-                static fn (Builder $query) => $query->whereBetween('created_at', [
+                static fn (Builder $builder) => $builder->whereBetween('created_at', [
                     CarbonImmutable::create($year),
                     CarbonImmutable::create($year, 12, 31),
                 ])

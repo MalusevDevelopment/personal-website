@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components\Blog;
 
 use App\Models\Post;
@@ -15,6 +17,6 @@ class Article extends Component
 
     public function render(): View|Closure|string
     {
-        return view('components.blog.article');
+        return $this->factory()->make('components.blog.article');
     }
 }

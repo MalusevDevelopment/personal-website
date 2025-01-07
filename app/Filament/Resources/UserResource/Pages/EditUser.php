@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
@@ -25,10 +27,10 @@ class EditUser extends EditRecord
         ];
     }
 
-    protected function handleRecordUpdate(Model $record, array $data): Model
+    protected function handleRecordUpdate(Model $model, array $data): Model
     {
-        $record->updateOrFail(UserResource\UserActions::mutateBeforeSave($data));
+        $model->updateOrFail(UserResource\UserActions::mutateBeforeSave($data));
 
-        return $record->fresh();
+        return $model->fresh();
     }
 }

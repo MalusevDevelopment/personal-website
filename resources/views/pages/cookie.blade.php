@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <h1>Cookie Policy</h1>
 
 <p>
@@ -50,3 +55,4 @@ We use cookies for several reasons:
 <p>This Cookie Policy may be updated from time to time to reflect any changes in technology or legislation which may
     affect the way in which cookies are used by us and how you as a user, can manage them.</p>
 <p>By using our website, you consent to our use of cookies in accordance with this Cookie Policy.</p>
+<?php 

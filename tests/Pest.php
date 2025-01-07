@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -30,5 +32,5 @@ uses(
 
 function permissions(): PermissionRegistrar
 {
-    return app(PermissionRegistrar::class);
+    return \Illuminate\Support\Facades\App::get(PermissionRegistrar::class);
 }

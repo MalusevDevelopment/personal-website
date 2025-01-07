@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <x-layouts.website>
     @section('css')
         @vite('resources/css/pages/home.css')
@@ -45,4 +50,4 @@
             </div>
         </section>
     </article>
-</x-layouts.website>
+</x-layouts.website><?php 

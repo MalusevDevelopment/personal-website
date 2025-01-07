@@ -22,7 +22,7 @@ Schedule::daily()
     ->runInBackground()
     ->onOneServer()
     ->timezone('Europe/Belgrade')
-    ->group(function () {
+    ->group(function (): void {
         Schedule::command('telescope:prune');
         Schedule::command('sanctum:prune-expired');
         Schedule::command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class]);

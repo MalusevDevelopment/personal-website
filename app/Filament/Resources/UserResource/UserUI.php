@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\UserResource;
 
 use App\Models\User;
@@ -26,7 +28,7 @@ final readonly class UserUI
                 ->sortable(),
             ImageColumn::make('avatar_url')
                 ->disk('profile-photos')
-                ->default(fn (User $record, UiAvatarsProvider $avatars) => $avatars->get($record))
+                ->default(fn (User $user, UiAvatarsProvider $uiAvatarsProvider): string => $uiAvatarsProvider->get($user))
                 ->size(40)
                 ->checkFileExistence(false)
                 ->circular(),
@@ -41,8 +43,8 @@ final readonly class UserUI
                 ->formatStateUsing(fn (string $state) => Str::title($state)),
             IconColumn::make('email_verified_at')
                 ->sortable()
-                ->color(fn (User $record) => $record->hasVerifiedEmail() ? 'success' : 'danger')
-                ->icon(fn (User $record) => $record->hasVerifiedEmail() ? 'heroicon-s-check' : 'heroicon-o-x-circle')
+                ->color(fn (User $user): string => $user->hasVerifiedEmail() ? 'success' : 'danger')
+                ->icon(fn (User $user): string => $user->hasVerifiedEmail() ? 'heroicon-s-check' : 'heroicon-o-x-circle')
                 ->default('heroicon-o-x-circle')
                 ->toggleable(),
             TextColumn::make('created_at')
@@ -90,8 +92,8 @@ final readonly class UserUI
                 ->maxLength(72),
             Select::make('roles')
                 ->relationship(name: 'roles', titleAttribute: 'name')
-                ->saveRelationshipsUsing(function (Model $record, $state) {
-                    $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
+                ->saveRelationshipsUsing(function (Model $model, $state): void {
+                    $model->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
                 })
                 ->multiple()
                 ->preload()
@@ -138,8 +140,8 @@ final readonly class UserUI
                 ->maxLength(72),
             Select::make('roles')
                 ->relationship(name: 'roles', titleAttribute: 'name')
-                ->saveRelationshipsUsing(function (Model $record, $state) {
-                    $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
+                ->saveRelationshipsUsing(function (Model $model, $state): void {
+                    $model->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
                 })
                 ->multiple()
                 ->preload()
@@ -148,7 +150,7 @@ final readonly class UserUI
                 ->label('Role'),
             Toggle::make('email_verified_at')
                 ->inline()
-                ->formatStateUsing(fn (User $record) => $record->hasVerifiedEmail())
+                ->formatStateUsing(fn (User $user) => $user->hasVerifiedEmail())
                 ->default(false)
                 ->label('Email Verified'),
         ];

@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}">
     <ul>
         @if ($paginator->hasPages())
@@ -23,4 +28,4 @@
                                :page="1"/>
         @endif
     </ul>
-</nav>
+</nav><?php 

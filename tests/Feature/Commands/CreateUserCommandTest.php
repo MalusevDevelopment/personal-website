@@ -14,21 +14,21 @@ use function Pest\Laravel\seed;
 
 uses(LazilyRefreshDatabase::class, InteractsWithConsole::class);
 
-beforeEach(function () {
+beforeEach(function (): void {
     seed(RolesAndPermissionsSeeder::class);
 });
 
-it('creates user with command line arguments', function () {
+it('creates user with command line arguments', function (): void {
     artisan('app:create-user', ['name' => 'Dusan Malusev', 'email' => 'dusan@dusanmalusev.dev', 'role' => Roles::OWNER])
         ->expectsQuestion('What will be user\'s password?', 'really-Complicated-password-$678')
         ->assertExitCode(0)
         ->expectsOutput('User create with ID 1');
 
     assertDatabaseHas('users', ['id' => 1]);
-    expect(User::findOrFail(1)->roles()->first()->name)->toBe(Roles::OWNER);
+    expect(\App\Models\User::query()->findOrFail(1)->roles()->first()->name)->toBe(Roles::OWNER);
 });
 
-it('creates user with generated password', function () {
+it('creates user with generated password', function (): void {
     artisan('app:create-user',
         ['name' => 'Dusan Malusev', 'email' => 'dusan@dusanmalusev.dev', 'role' => Roles::OWNER, '--generate-password' => true])
         ->assertExitCode(0)
@@ -36,10 +36,10 @@ it('creates user with generated password', function () {
         ->expectsOutputToContain('Generated password: ');
 
     assertDatabaseHas('users', ['id' => 2]);
-    expect(User::findOrFail(2)->roles()->first()->name)->toBe(Roles::OWNER);
+    expect(\App\Models\User::query()->findOrFail(2)->roles()->first()->name)->toBe(Roles::OWNER);
 });
 
-it('creates user with prompts', function () {
+it('creates user with prompts', function (): void {
     artisan('app:create-user')
         ->expectsQuestion('User\'s name?', 'Dusan Malusev')
         ->expectsQuestion('User\'s email?', 'test@testexample.com')
@@ -49,10 +49,10 @@ it('creates user with prompts', function () {
         ->expectsOutputToContain('User create with ID 3');
 
     assertDatabaseHas('users', ['id' => 3]);
-    expect(User::findOrFail(3)->roles()->first()->name)->toBe(Roles::OWNER);
+    expect(\App\Models\User::query()->findOrFail(3)->roles()->first()->name)->toBe(Roles::OWNER);
 });
 
-it('failed with email already exists', function () {
+it('failed with email already exists', function (): void {
     $user = User::factory()->create();
 
     artisan('app:create-user', ['name' => 'Dusan Malusev', 'email' => $user->email, 'role' => Roles::OWNER])

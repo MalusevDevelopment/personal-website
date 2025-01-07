@@ -9,16 +9,19 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
 class SearchController extends Controller
 {
-    public function search(SearchRequest $request)
+    public function __construct(private readonly \Illuminate\Contracts\Routing\ResponseFactory $responseFactory, private readonly \Illuminate\Contracts\View\Factory $viewFactory)
     {
-        $term = $request->validated('term');
+    }
+    public function search(SearchRequest $searchRequest)
+    {
+        $term = $searchRequest->validated('term');
 
-        return match ($request->header('Accept', 'application/json')) {
-            'application/json' => response()->json([
+        return match ($searchRequest->header('Accept', 'application/json')) {
+            'application/json' => $this->responseFactory->json([
                 'term' => $term,
                 'items' => [],
             ]),
-            'text/html' => view('components.search.item', [
+            'text/html' => $this->viewFactory->make('components.search.item', [
                 'term' => $term,
                 'items' => [],
             ]),

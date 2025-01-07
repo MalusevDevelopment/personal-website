@@ -7,7 +7,7 @@ use App\Http\Controllers\PolicesController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware([])->group(function () {
+Route::middleware([])->group(function (): void {
     Route::get('/', [IndexController::class, 'index'])
         ->name('index');
     Route::get('/privacy-policy', [PolicesController::class, 'privacy'])

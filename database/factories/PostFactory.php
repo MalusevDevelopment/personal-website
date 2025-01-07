@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Enums\PostStatus;
@@ -34,7 +36,7 @@ class PostFactory extends Factory
 
     public function withRandomMonth(int $year)
     {
-        return $this->state(fn () => [
+        return $this->state(fn (): array => [
             'created_at' => now()
                 ->setYear($year)
                 ->setMonth(
@@ -45,21 +47,21 @@ class PostFactory extends Factory
 
     public function published(): static
     {
-        return $this->state(fn () => [
+        return $this->state(fn (): array => [
             'status' => PostStatus::PUBLISHED,
         ]);
     }
 
     public function draft(): static
     {
-        return $this->state(fn () => [
+        return $this->state(fn (): array => [
             'status' => PostStatus::DRAFT,
         ]);
     }
 
     public function archived(): static
     {
-        return $this->state(fn () => [
+        return $this->state(fn (): array => [
             'status' => PostStatus::ARCHIVED,
         ]);
     }

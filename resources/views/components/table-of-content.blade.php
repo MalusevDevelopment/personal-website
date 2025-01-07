@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <div class="order-first px-0 lg:order-last lg:max-w-xs">
     <div class="toc print:hidden lg:sticky lg:top-10">
         <details open="" class="mt-0 overflow-hidden rounded-lg">
@@ -15,4 +20,4 @@
             </div>
         </details>
     </div>
-</div>
+</div><?php 

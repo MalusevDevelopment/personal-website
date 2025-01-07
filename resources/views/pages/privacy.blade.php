@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <h1>Privacy Policy</h1>
 
 <p>
@@ -91,3 +96,4 @@ We will not sell, distribute or lease your personal information to third parties
 You may request details of personal information which we hold about you under the General Data Protection Regulation (GDPR). If you would like a copy of the information held on you please write to dusan@dusanmalusev.dev.
 If you believe that any information we are holding on you is incorrect or incomplete, please write to or email us as soon as possible, at the above address. We will promptly correct any information found to be incorrect.
 </p>
+<?php 

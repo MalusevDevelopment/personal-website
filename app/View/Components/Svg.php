@@ -15,6 +15,6 @@ class Svg extends Component
 
     public function render(): View
     {
-        return view('svgs.'.$this->name);
+        return $this->factory()->make('svgs.'.$this->name);
     }
 }

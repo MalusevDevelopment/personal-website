@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components;
 
 use Illuminate\Contracts\View\View;
@@ -52,6 +54,6 @@ class ProfileLinks extends Component
 
     public function render(): View
     {
-        return view('components.profile-links.links');
+        return $this->factory()->make('components.profile-links.links');
     }
 }

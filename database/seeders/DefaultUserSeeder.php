@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Helpers\Roles;
@@ -10,13 +12,13 @@ class DefaultUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::create([
+        $model = \App\Models\User::query()->create([
             'name' => 'Dusan Malusev',
             'email' => 'dusan@dusanmalusev.dev',
             'password' => 'password',
             'email_verified_at' => now(),
         ]);
 
-        $user->assignRole(Roles::OWNER);
+        $model->assignRole(Roles::OWNER);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers\Filament;
 
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
@@ -16,14 +18,16 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Mvenghaus\FilamentScheduleMonitor\FilamentPlugin as ScheduleMonitorFilamentPlugin;
@@ -36,16 +40,18 @@ class AdminPanelProvider extends PanelProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::STYLES_BEFORE,
-            static fn (): string => Blade::render('@livewireStyles'),
+            fn (): string => $this->app->make(BladeCompiler::class)->render('@livewireStyles'),
         );
         FilamentView::registerRenderHook(
             PanelsRenderHook::STYLES_AFTER,
-            static fn (): string => Blade::render('@livewireScripts'),
+            fn (): string => $this->app->make(BladeCompiler::class)->render('@livewireScripts'),
         );
     }
 
     public function panel(Panel $panel): Panel
     {
+        $configRepository = $this->app->make(Repository::class);
+
         return $panel
             ->default()
             ->darkMode()
@@ -62,20 +68,20 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->navigationItems([
                 NavigationItem::make('Telescope')
-                    ->visible(fn () => auth()->user()->can(Permissions::VIEW_TELESCOPE))
+                    ->visible(fn () => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_TELESCOPE))
                     ->group('Monitoring')
                     ->icon('heroicon-o-eye')
-                    ->url('/'.rtrim(config('telescope.path'))),
+                    ->url('/'.rtrim($configRepository->get('telescope.path'))),
                 NavigationItem::make('Horizon')
-                    ->visible(fn () => auth()->user()->can(Permissions::VIEW_HORIZON))
+                    ->visible(fn () => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_HORIZON))
                     ->group('Monitoring')
                     ->icon('heroicon-o-queue-list')
-                    ->url('/'.rtrim(config('horizon.path'))),
+                    ->url('/'.rtrim($configRepository->get('horizon.path'))),
                 NavigationItem::make('Pulse')
-                    ->visible(fn () => auth()->user()->can(Permissions::VIEW_PULSE))
+                    ->visible(fn () => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_PULSE))
                     ->group('Monitoring')
                     ->icon('heroicon-o-heart')
-                    ->url('/'.rtrim(config('pulse.path'))),
+                    ->url('/'.rtrim($configRepository->get('pulse.path'))),
             ])
             ->colors([
                 'primary' => Color::Blue,
@@ -120,7 +126,7 @@ class AdminPanelProvider extends PanelProvider
                         force: app()->environment('production')
                     )
                     ->enableSanctumTokens()
-                    ->avatarUploadComponent(fn () => FileUpload::make('avatar_url')->disk('profile-photos'))
+                    ->avatarUploadComponent(fn (): FileUpload => FileUpload::make('avatar_url')->disk('profile-photos'))
                     ->passwordUpdateRules(
                         rules: [
                             Password::default()

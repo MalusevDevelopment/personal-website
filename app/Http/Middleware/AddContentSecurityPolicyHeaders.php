@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -14,10 +16,10 @@ readonly class AddContentSecurityPolicyHeaders
 
     private string $umamiDomain;
 
-    public function __construct(private Repository $config)
+    public function __construct(private Repository $configRepository)
     {
-        $this->domain = $this->config->get('app.domain');
-        $this->umamiDomain = parse_url($this->config->get('services.umami.script'), PHP_URL_HOST);
+        $this->domain = $this->configRepository->get('app.domain');
+        $this->umamiDomain = parse_url($this->configRepository->get('services.umami.script'), PHP_URL_HOST);
     }
 
     /**
@@ -62,9 +64,9 @@ readonly class AddContentSecurityPolicyHeaders
         $nonce = Vite::cspNonce();
 
         return match (true) {
-            str_starts_with($request->decodedPath(), $this->config->get('pulse.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-            str_starts_with($request->decodedPath(), $this->config->get('telescope.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-            str_starts_with($request->decodedPath(), $this->config->get('horizon.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            str_starts_with($request->decodedPath(), $this->configRepository->get('pulse.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            str_starts_with($request->decodedPath(), $this->configRepository->get('telescope.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            str_starts_with($request->decodedPath(), $this->configRepository->get('horizon.path')) => "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
             str_starts_with($request->decodedPath(), 'admin') => "script-src 'self' 'nonce-$nonce'",
             default => "script-src 'self' 'nonce-$nonce' 'unsafe-inline' https://$this->umamiDomain",
         };
@@ -73,8 +75,8 @@ readonly class AddContentSecurityPolicyHeaders
     protected function imgSrc(Request $request): string
     {
         return match (true) {
-            str_starts_with($request->decodedPath(), $this->config->get('pulse.path')) => "img-src 'self' data:",
-            str_starts_with($request->decodedPath(), $this->config->get('horizon.path')) => "img-src 'self' data:",
+            str_starts_with($request->decodedPath(), $this->configRepository->get('pulse.path')) => "img-src 'self' data:",
+            str_starts_with($request->decodedPath(), $this->configRepository->get('horizon.path')) => "img-src 'self' data:",
             str_starts_with($request->decodedPath(), 'admin') => "img-src 'self'",
             default => "img-src 'self'",
         };

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'redis' => [
         'client' => env('REDIS_CLIENT', 'phpredis'),

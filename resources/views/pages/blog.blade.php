@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <x-layouts.website>
     @section('css')
         @vite('resources/css/pages/blog.css')
@@ -13,3 +18,4 @@
 
     {{ $paginator->onEachSide(1)->links() }}
 </x-layouts.website>
+<?php 

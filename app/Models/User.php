@@ -48,7 +48,7 @@ use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\RefreshDataOnSave;
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
  *
- * @mixin Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
@@ -84,17 +84,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'email_verified_at',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'immutable_datetime',
-        'created_at' => 'immutable_datetime',
-        'updated_at' => 'immutable_datetime',
-        'password' => 'hashed',
-    ];
+    public function __construct(private readonly \Illuminate\Filesystem\FilesystemManager $filesystemManager)
+    {
+    }
 
     public function posts(): HasMany
     {
@@ -116,7 +108,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     #[Override]
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url ? Storage::drive('profile-photos')->url($this->avatar_url) : null;
+        return $this->avatar_url ? $this->filesystemManager->drive('profile-photos')->url($this->avatar_url) : null;
     }
 
     public function isOwner(): bool
@@ -126,9 +118,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
 
     public function sendEmailVerificationNotification(): void
     {
-        $notification = (new VerifyEmail)->onQueue(Queue::Notifications)->delay(now()->addSeconds(10));
+        $verifyEmail = (new VerifyEmail)->onQueue(Queue::Notifications)->delay(now()->addSeconds(10));
 
-        $this->notify($notification);
+        $this->notify($verifyEmail);
     }
 
     public function sendPasswordResetNotification(#[SensitiveParameter] $token): void
@@ -136,5 +128,19 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         $this->notify(
             new ResetPasswordNotification($token)->onQueue(Queue::Notifications)->delay(now()->addSeconds(10)),
         );
+    }
+    /**
+     * The attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'immutable_datetime',
+            'created_at' => 'immutable_datetime',
+            'updated_at' => 'immutable_datetime',
+            'password' => 'hashed',
+        ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\PostStatus;
@@ -39,18 +41,18 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopePublished(Builder $query): void
+    public function scopePublished(Builder $builder): void
     {
-        $query->where('status', PostStatus::PUBLISHED);
+        $builder->where('status', PostStatus::PUBLISHED);
     }
 
-    public function scopeDraft(Builder $query): void
+    public function scopeDraft(Builder $builder): void
     {
-        $query->where('status', PostStatus::DRAFT);
+        $builder->where('status', PostStatus::DRAFT);
     }
 
-    public function scopeArchived(Builder $query): void
+    public function scopeArchived(Builder $builder): void
     {
-        $query->where('status', PostStatus::ARCHIVED);
+        $builder->where('status', PostStatus::ARCHIVED);
     }
 }

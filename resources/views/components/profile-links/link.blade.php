@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <a class="profile-link"
    href="{{ $link }}"
    data-type="{{ $dataType }}"
@@ -6,4 +11,4 @@
    rel="me noopener noreferrer"
 >
     <x-svg :name="$icon"/>
-</a>
+</a><?php 

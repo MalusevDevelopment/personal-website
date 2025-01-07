@@ -9,31 +9,34 @@ use App\Services\PostService;
 
 class IndexController extends Controller
 {
+    public function __construct(private readonly \Illuminate\Contracts\View\Factory $viewFactory)
+    {
+    }
     public function index()
     {
-        return view('pages.index');
+        return $this->viewFactory->make('pages.index');
     }
 
-    public function blog(GetBlogPostsRequest $request, PostService $service)
+    public function blog(GetBlogPostsRequest $getBlogPostsRequest, PostService $postService)
     {
-        $year = $request->validated()['year'] ?? null;
+        $year = $getBlogPostsRequest->validated()['year'] ?? null;
 
-        $data = $service->getPostsGroupByYear($year !== null ? (int) $year : null);
+        $data = $postService->getPostsGroupByYear($year !== null ? (int) $year : null);
 
-        return view('pages.blog', $data);
+        return $this->viewFactory->make('pages.blog', $data);
     }
 
-    public function projects()
+    public function projects(): string
     {
         return 'Projects';
     }
 
-    public function contact()
+    public function contact(): string
     {
         return 'Contact';
     }
 
-    public function about()
+    public function about(): string
     {
         return 'About';
     }

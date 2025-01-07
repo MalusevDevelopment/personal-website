@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <h1>Terms of Service for Dusan Malusev</h1>
 
 <h4>Last updated: August 30, 2023</h4>
@@ -100,3 +105,4 @@ Service (the "Terms"). If you do not agree to these Terms, please do not use the
     If you have any questions about these Terms or the Website, please contact Dusan Malusev at
     https://www.dusanmalusev.dev/contact or by email at dusan@dusanmalusev.dev.
 </p>
+<?php 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Helpers\Roles;
@@ -21,7 +23,7 @@ class CreateUser extends Command implements PromptsForMissingInput
     protected $description = 'Create new Application User';
 
     public function __construct(
-        private readonly Factory $validator,
+        private readonly Factory $validationFactory,
     ) {
         parent::__construct();
     }
@@ -38,7 +40,7 @@ class CreateUser extends Command implements PromptsForMissingInput
             ),
         };
 
-        $validator = $this->validator->make(
+        $validator = $this->validationFactory->make(
             [
                 'name' => $this->argument('name'),
                 'email' => $this->argument('email'),
@@ -46,9 +48,9 @@ class CreateUser extends Command implements PromptsForMissingInput
                 'role' => $this->argument('role'),
             ],
             [
-                'name' => 'required|string|min:2|max:150',
-                'email' => 'required|string|email|max:255|min:5|unique:users',
-                'role' => 'required|string|exists:roles,name',
+                'name' => ['required', 'string', 'min:2', 'max:150'],
+                'email' => ['required', 'string', 'email', 'max:255', 'min:5', 'unique:users'],
+                'role' => ['required', 'string', 'exists:roles,name'],
                 'password' => new Password(10)
                     ->max(150)
                     ->uncompromised()
@@ -74,7 +76,7 @@ class CreateUser extends Command implements PromptsForMissingInput
 
         try {
             /** @var User $user */
-            $user = User::create([
+            $user = \App\Models\User::query()->create([
                 'name' => $name,
                 'email' => $email,
                 'password' => $password,
@@ -100,17 +102,17 @@ class CreateUser extends Command implements PromptsForMissingInput
     protected function promptForMissingArgumentsUsing(): array
     {
         return [
-            'name' => fn () => text(
+            'name' => fn (): string => text(
                 label: 'User\'s name?',
                 placeholder: 'User Name',
                 required: true,
             ),
-            'email' => fn () => text(
+            'email' => fn (): string => text(
                 'User\'s email?',
                 placeholder: 'example@example.com',
                 required: true,
             ),
-            'role' => fn () => text(
+            'role' => fn (): string => text(
                 'User\'s role?',
                 placeholder: Roles::OWNER,
                 required: true,

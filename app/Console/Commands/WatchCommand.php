@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -29,6 +31,9 @@ class WatchCommand extends Command implements SignalableCommandInterface
     private ?Process $process = null;
 
     private ?Process $watcher = null;
+    public function __construct(private readonly \Illuminate\Contracts\Config\Repository $configRepository)
+    {
+    }
 
     /**
      * Execute the console command.
@@ -38,7 +43,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
         $command = $this->argument('exec');
         $watcher = $this->watcher();
 
-        $output = function ($stdout, $stderr) {
+        $output = function (string $stdout, string $stderr): void {
             echo $stdout.PHP_EOL;
             echo $stderr.PHP_EOL;
         };
@@ -50,7 +55,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
         $this->info("Process '$command' started");
 
         while ($watcher->isRunning()) {
-            if ($watcher->getIncrementalOutput()) {
+            if ($watcher->getIncrementalOutput() !== '' && $watcher->getIncrementalOutput() !== '0') {
                 $this->info("Restarting command '$command'");
                 $this->process->stop();
                 $this->process = $this->process->restart($output);
@@ -63,7 +68,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
 
     private function watcher(): Process
     {
-        if ($this->watcher !== null) {
+        if ($this->watcher instanceof \Symfony\Component\Process\Process) {
             return $this->watcher;
         }
 
@@ -82,7 +87,7 @@ class WatchCommand extends Command implements SignalableCommandInterface
 
     private function watchFiles(): string
     {
-        $paths = collect(config('octane.watch'))->map(fn ($path) => base_path($path));
+        $paths = (new \Illuminate\Support\Collection($this->configRepository->get('octane.watch')))->map(fn ($path) => base_path($path));
 
         return json_encode($paths, JSON_THROW_ON_ERROR);
     }

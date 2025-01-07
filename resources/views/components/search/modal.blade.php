@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <div id="search-wrapper">
     <div id="search-modal">
         <header>
@@ -16,3 +21,4 @@
         </section>
     </div>
 </div>
+<?php 
