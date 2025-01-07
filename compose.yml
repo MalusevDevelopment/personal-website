@@ -39,7 +39,7 @@ services:
     depends_on:
       - typesense
       - pgsql
-      - redis
+      - valkey
       - minio
       - mailpit
       - soketi
@@ -71,9 +71,13 @@ services:
         - "${DB_USERNAME}"
       retries: 3
       timeout: 5s
-  redis:
-    image: 'valkey/valkey:8-bookworm'
+  valkey:
+    image: 'ghcr.io/malusevdevelopment/valkey:dev'
     restart: unless-stopped
+    build:
+      context: .
+      dockerfile: deploy/valkey/Dockerfile
+      target: development
     ports:
       - "${FORWARD_REDIS_PORT:-6379}:6379"
     networks:
@@ -109,14 +113,14 @@ services:
     image: "quay.io/soketi/soketi:1.6-16-debian"
     depends_on:
       - pgsql
-      - redis
+      - valkey
     environment:
       SOKETI_DEBUG: "${SOKETI_DEBUG:-1}"
       SOKETI_METRICS_SERVER_PORT: "9601"
       SOKETI_APP_MANAGER_DRIVER: postgres
       SOKETI_APP_MANAGER_CACHE_ENABLED: true
       SOKETI_APP_MANAGER_CACHE_TTL: 3600
-      SOKETI_DB_REDIS_HOST: "${REDIS_HOST:-redis}"
+      SOKETI_DB_REDIS_HOST: "${REDIS_HOST:-valkey}"
       SOKETI_DB_REDIS_PORT: "${REDIS_PORT:-6379}"
       SOKETI_DB_REDIS_DB: "${REDIS_SOKETI_DB:-1}"
       SOKETI_DB_POSTGRES_HOST: "${DB_HOST:-pgsql}"
@@ -174,7 +178,7 @@ networks:
 volumes:
   dusan_malusev-pgsql:
     driver: local
-  dusan_malusev-redis:
+  dusan_malusev-valkey:
     driver: local
   dusan_malusev-minio:
     driver: local

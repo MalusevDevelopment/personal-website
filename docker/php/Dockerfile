@@ -110,24 +110,24 @@ FROM ${BASE} AS development
 ARG WWWGROUP=1000
 ARG WWWUSER=1000
 ARG NODE_VERSION=22
-ARG POSTGRES_VERSION=15
+ARG POSTGRES_VERSION=17
 
-RUN apt-get update \
+RUN groupadd --force -g "$WWWGROUP" sail \
+    && useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail \
     && apt-get install -y \
     supervisor \
     gosu dnsutils gnupg \
     git build-essential unzip gcc libnss3-tools \
-    librsvg2-bin fswatch "postgresql-client-$POSTGRES_VERSION" \
+    librsvg2-bin fswatch lsb-release \
     && pie install xdebug/xdebug \
-    && groupadd --force -g "$WWWGROUP" sail \
-    && useradd -ms /bin/bash --no-user-group -g "$WWWGROUP" -u "$WWWUSER" sail \
-    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-
-RUN apt-get update && apt-get install -y nodejs \
     && mkdir -p /var/log/xdebug && chown sail:sail -R /var/log/xdebug \
-    && mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord
-
+    && mkdir -p /home/sail/supervisord && chown -R sail:sail /home/sail/supervisord \
+    && install -d /usr/share/postgresql-common/pgdg \
+    && curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+    && sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update && apt-get install -y "postgresql-client-$POSTGRES_VERSION" nodejs
 
 EXPOSE 5173
 EXPOSE 80

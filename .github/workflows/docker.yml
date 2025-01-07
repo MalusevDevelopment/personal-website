@@ -122,7 +122,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: deploy/nginx/Dockerfile
-          context: ./deploy/nginx
+          context: .
           push: true
           pull: true
           platforms: ${{ inputs.platforms }}
@@ -136,10 +136,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: deploy/valkey/Dockerfile
-          context: deploy/valkey
+          context: .
           push: true
           pull: true
           platforms: ${{ inputs.platforms }}
+          target: production
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |

@@ -8,7 +8,6 @@ tests/
 .devcontainer/
 setup.sh
 .github/
-deploy/
 data/
 .vscode/
 .idea/

@@ -20,13 +20,19 @@ run_artisan_command() {
 
 VERSION="latest"
 REGISTRY="ghcr.io"
+USERNAME="codelieutenant"
+IMAGES=(
+  "nginx"
+  "valkey"
+  "website"
+)
 
-while getopts "r:u:i:v:" option; do
+
+while getopts "r:u:v:" option; do
 	case "$option" in
 	r) REGISTRY=$OPTARG ;;
-    u) USERNAME=$OPTARG ;;
-    i) IMAGE=$OPTARG ;;
-    v) VERSION=$OPTARG ;;
+  u) USERNAME=$OPTARG ;;
+  v) VERSION=$OPTARG ;;
 	*) print_usage ;;
 	esac
 done
@@ -38,7 +44,10 @@ fi
 
 docker login "$REGISTRY" --username "$USERNAME" --password-stdin < /dev/stdin || exit 1
 
-docker pull "$IMAGE:$VERSION" || exit 1
+for image in "${IMAGES[@]}"; do
+  docker pull "$REGISTRY/malusevdevelopment/$image:$VERSION" || exit 1
+done
+
 docker logout "$REGISTRY"
 
 run_artisan_command horizon horizon:terminate || exit 1
