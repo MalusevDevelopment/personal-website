@@ -4,7 +4,6 @@ services:
     build:
       context: ../
       dockerfile: deploy/nginx/Dockerfile
-    container_name: nginx
     restart: unless-stopped
     depends_on:
       - soketi
@@ -38,7 +37,6 @@ services:
           - node.loadbalancer == true
   soketi:
     image: 'quay.io/soketi/soketi:latest-16'
-    container_name: soketi
     stop_signal: SIGINT
     restart: unless-stopped
     extra_hosts:
@@ -83,7 +81,6 @@ services:
       - valkey.users
   umami:
     image: ghcr.io/umami-software/umami:postgresql-v2.15
-    container_name: umami
     restart: unless-stopped
     stop_signal: SIGINT
     deploy:
@@ -108,7 +105,6 @@ services:
       - umami.env
   scheduler:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
-    container_name: scheduler
     stop_signal: SIGINT
     deploy:
       mode: replicated
@@ -136,7 +132,6 @@ services:
       - soketi
   horizon:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
-    container_name: horizon
     working_dir: /var/www/html
     command: start-container php artisan pulse:check -n --ansi
     stop_signal: SIGINT
@@ -164,7 +159,6 @@ services:
       - soketi
   pulse-check:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
-    container_name: pulse-check
     working_dir: /var/www/html
     stop_signal: SIGINT
     command: start-container php artisan pulse:check -n --ansi
@@ -191,7 +185,6 @@ services:
       - soketi
   pulse-work:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
-    container_name: pulse-work
     stop_signal: SIGINT
     working_dir: /var/www/html
     command: start-container php artisan pulse:work -n --ansi
@@ -219,7 +212,6 @@ services:
       - soketi
   sqs:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
-    container_name: sqs
     working_dir: /var/www/html
     command: start-container php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600
     extra_hosts:
@@ -250,7 +242,6 @@ services:
       context: ../
       dockerfile: docker/php/Dockerfile
       target: production
-    container_name: website
     working_dir: /var/www/html
     command: start-container php artisan octane:frankenphp --host=0.0.0.0 --port=8080 --admin-host=0.0.0.0 --admin-port=2019 --watch --log-level=debug --max-requests=1000
     stop_signal: SIGINT
@@ -295,24 +286,42 @@ networks:
 secrets:
   dusanmalusev.dev.fullchain.pem:
     external: true
+    uid: "101"
+    gid: "101"
   dusanmalusev.dev.privkey.pem:
     external: true
+    uid: "101"
+    gid: "101"
   dusanmalusev.dev.chain.pem:
     external: true
+    uid: "101"
+    gid: "101"
 
   statistics.dusanmalusev.dev.fullchain.pem:
     external: true
+    uid: "101"
+    gid: "101"
   statistics.dusanmalusev.dev.privkey.pem:
     external: true
+    uid: "101"
+    gid: "101"
   statistics.dusanmalusev.dev.chain.pem:
     external: true
+    uid: "101"
+    gid: "101"
 
   live.dusanmalusev.dev.fullchain.pem:
     external: true
+    uid: "101"
+    gid: "101"
   live.dusanmalusev.dev.privkey.pem:
     external: true
+    uid: "101"
+    gid: "101"
   live.dusanmalusev.dev.chain.pem:
     external: true
+    uid: "101"
+    gid: "101"
 
   valkey.users:
     external: true
