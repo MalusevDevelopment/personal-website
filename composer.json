@@ -9,7 +9,7 @@
   ],
   "license": "MIT",
   "require": {
-    "php": "^8.4",
+    "php": ">=8.4",
     "ext-apcu": "*",
     "ext-ctype": "*",
     "ext-curl": "*",
@@ -19,6 +19,7 @@
     "ext-pdo": "*",
     "ext-redis": "*",
     "ext-sodium": "*",
+    "ext-sockets": "*",
     "althinect/filament-spatie-roles-permissions": "^2.2",
     "aws/aws-sdk-php": "^3.336",
     "codelieutenant/laravel-crypto": "^v1.0.0",

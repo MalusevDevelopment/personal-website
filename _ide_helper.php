@@ -13482,6 +13482,9 @@ namespace Illuminate\Support\Facades {
     /**
      * 
      *
+     * @method static array validate(array $rules, ...$params)
+     * @method static array validateWithBag(string $errorBag, array $rules, ...$params)
+     * @method static bool hasValidSignature(bool $absolute = true)
      * @see \Illuminate\Http\Request
      */
     class Request {
@@ -15979,81 +15982,6 @@ namespace Illuminate\Support\Facades {
         public static function flushMacros()
         {
             \Illuminate\Http\Request::flushMacros();
-        }
-
-        /**
-         * 
-         *
-         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestValidation()
-         * @param array $rules
-         * @param mixed $params
-         * @static 
-         */
-        public static function validate($rules, ...$params)
-        {
-            return \Illuminate\Http\Request::validate($rules, ...$params);
-        }
-
-        /**
-         * 
-         *
-         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestValidation()
-         * @param string $errorBag
-         * @param array $rules
-         * @param mixed $params
-         * @static 
-         */
-        public static function validateWithBag($errorBag, $rules, ...$params)
-        {
-            return \Illuminate\Http\Request::validateWithBag($errorBag, $rules, ...$params);
-        }
-
-        /**
-         * 
-         *
-         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestSignatureValidation()
-         * @param mixed $absolute
-         * @static 
-         */
-        public static function hasValidSignature($absolute = true)
-        {
-            return \Illuminate\Http\Request::hasValidSignature($absolute);
-        }
-
-        /**
-         * 
-         *
-         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestSignatureValidation()
-         * @static 
-         */
-        public static function hasValidRelativeSignature()
-        {
-            return \Illuminate\Http\Request::hasValidRelativeSignature();
-        }
-
-        /**
-         * 
-         *
-         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestSignatureValidation()
-         * @param mixed $ignoreQuery
-         * @param mixed $absolute
-         * @static 
-         */
-        public static function hasValidSignatureWhileIgnoring($ignoreQuery = [], $absolute = true)
-        {
-            return \Illuminate\Http\Request::hasValidSignatureWhileIgnoring($ignoreQuery, $absolute);
-        }
-
-        /**
-         * 
-         *
-         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestSignatureValidation()
-         * @param mixed $ignoreQuery
-         * @static 
-         */
-        public static function hasValidRelativeSignatureWhileIgnoring($ignoreQuery = [])
-        {
-            return \Illuminate\Http\Request::hasValidRelativeSignatureWhileIgnoring($ignoreQuery);
         }
 
             }
@@ -25355,6 +25283,18 @@ namespace Tpetry\PostgresqlEnhanced\Query {
      *
      */
     class Grammar {
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\GrammarExtensions::typeEnumeration()
+         * @param \Illuminate\Database\Schema\ColumnDefinition $columnDefinition
+         * @static 
+         */
+        public static function typeEnumeration($columnDefinition)
+        {
+            return \Tpetry\PostgresqlEnhanced\Query\Grammar::typeEnumeration($columnDefinition);
+        }
+
             }
     }
 
@@ -25364,12 +25304,36 @@ namespace Illuminate\Database\Query\Grammars {
      *
      */
     class PostgresGrammar {
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\GrammarExtensions::typeEnumeration()
+         * @param \Illuminate\Database\Schema\ColumnDefinition $columnDefinition
+         * @static 
+         */
+        public static function typeEnumeration($columnDefinition)
+        {
+            return \Illuminate\Database\Query\Grammars\PostgresGrammar::typeEnumeration($columnDefinition);
+        }
+
             }
     /**
      * 
      *
      */
     class Grammar {
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\GrammarExtensions::typeEnumeration()
+         * @param \Illuminate\Database\Schema\ColumnDefinition $columnDefinition
+         * @static 
+         */
+        public static function typeEnumeration($columnDefinition)
+        {
+            return \Illuminate\Database\Query\Grammars\Grammar::typeEnumeration($columnDefinition);
+        }
+
             }
     }
 
@@ -25400,6 +25364,18 @@ namespace Tpetry\PostgresqlEnhanced\Schema\Grammars {
      *
      */
     class Grammar {
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\GrammarExtensions::typeEnumeration()
+         * @param \Illuminate\Database\Schema\ColumnDefinition $columnDefinition
+         * @static 
+         */
+        public static function typeEnumeration($columnDefinition)
+        {
+            return \Tpetry\PostgresqlEnhanced\Schema\Grammars\Grammar::typeEnumeration($columnDefinition);
+        }
+
             }
     }
 
@@ -25409,12 +25385,36 @@ namespace Illuminate\Database\Schema\Grammars {
      *
      */
     class PostgresGrammar {
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\GrammarExtensions::typeEnumeration()
+         * @param \Illuminate\Database\Schema\ColumnDefinition $columnDefinition
+         * @static 
+         */
+        public static function typeEnumeration($columnDefinition)
+        {
+            return \Illuminate\Database\Schema\Grammars\PostgresGrammar::typeEnumeration($columnDefinition);
+        }
+
             }
     /**
      * 
      *
      */
     class Grammar {
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\GrammarExtensions::typeEnumeration()
+         * @param \Illuminate\Database\Schema\ColumnDefinition $columnDefinition
+         * @static 
+         */
+        public static function typeEnumeration($columnDefinition)
+        {
+            return \Illuminate\Database\Schema\Grammars\Grammar::typeEnumeration($columnDefinition);
+        }
+
             }
     }
 
@@ -25424,6 +25424,91 @@ namespace Tpetry\PostgresqlEnhanced\Schema {
      *
      */
     class Builder {
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::createEnum()
+         * @param string $name
+         * @param array|null $values
+         * @return void 
+         * @static 
+         */
+        public static function createEnum($name, $values = null)
+        {
+            \Tpetry\PostgresqlEnhanced\Schema\Builder::createEnum($name, $values);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::createEnumIfNotExists()
+         * @param string $name
+         * @param array|null $values
+         * @return void 
+         * @static 
+         */
+        public static function createEnumIfNotExists($name, $values = null)
+        {
+            \Tpetry\PostgresqlEnhanced\Schema\Builder::createEnumIfNotExists($name, $values);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::dropEnum()
+         * @param string $name
+         * @return void 
+         * @static 
+         */
+        public static function dropEnum($name)
+        {
+            \Tpetry\PostgresqlEnhanced\Schema\Builder::dropEnum($name);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::dropEnumIfExists()
+         * @param string $name
+         * @return void 
+         * @static 
+         */
+        public static function dropEnumIfExists($name)
+        {
+            \Tpetry\PostgresqlEnhanced\Schema\Builder::dropEnumIfExists($name);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::renameEnumValue()
+         * @param string $type
+         * @param string $oldName
+         * @param string $newName
+         * @return void 
+         * @static 
+         */
+        public static function renameEnumValue($type, $oldName, $newName)
+        {
+            \Tpetry\PostgresqlEnhanced\Schema\Builder::renameEnumValue($type, $oldName, $newName);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::addEnumValue()
+         * @param string $type
+         * @param string $value
+         * @param \CodeLieutenant\LaravelPgEnum\Enums\Direction|null $direction
+         * @param string|null $otherValue
+         * @param bool $ifNotExists
+         * @static 
+         */
+        public static function addEnumValue($type, $value, $direction = null, $otherValue = null, $ifNotExists = true)
+        {
+            return \Tpetry\PostgresqlEnhanced\Schema\Builder::addEnumValue($type, $value, $direction, $otherValue, $ifNotExists);
+        }
+
             }
     }
 
@@ -25433,6 +25518,91 @@ namespace Illuminate\Database\Schema {
      *
      */
     class PostgresBuilder {
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::createEnum()
+         * @param string $name
+         * @param array|null $values
+         * @return void 
+         * @static 
+         */
+        public static function createEnum($name, $values = null)
+        {
+            \Illuminate\Database\Schema\PostgresBuilder::createEnum($name, $values);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::createEnumIfNotExists()
+         * @param string $name
+         * @param array|null $values
+         * @return void 
+         * @static 
+         */
+        public static function createEnumIfNotExists($name, $values = null)
+        {
+            \Illuminate\Database\Schema\PostgresBuilder::createEnumIfNotExists($name, $values);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::dropEnum()
+         * @param string $name
+         * @return void 
+         * @static 
+         */
+        public static function dropEnum($name)
+        {
+            \Illuminate\Database\Schema\PostgresBuilder::dropEnum($name);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::dropEnumIfExists()
+         * @param string $name
+         * @return void 
+         * @static 
+         */
+        public static function dropEnumIfExists($name)
+        {
+            \Illuminate\Database\Schema\PostgresBuilder::dropEnumIfExists($name);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::renameEnumValue()
+         * @param string $type
+         * @param string $oldName
+         * @param string $newName
+         * @return void 
+         * @static 
+         */
+        public static function renameEnumValue($type, $oldName, $newName)
+        {
+            \Illuminate\Database\Schema\PostgresBuilder::renameEnumValue($type, $oldName, $newName);
+        }
+
+        /**
+         * 
+         *
+         * @see \CodeLieutenant\LaravelPgEnum\Mixins\SchemaExtensions::addEnumValue()
+         * @param string $type
+         * @param string $value
+         * @param \CodeLieutenant\LaravelPgEnum\Enums\Direction|null $direction
+         * @param string|null $otherValue
+         * @param bool $ifNotExists
+         * @static 
+         */
+        public static function addEnumValue($type, $value, $direction = null, $otherValue = null, $ifNotExists = true)
+        {
+            return \Illuminate\Database\Schema\PostgresBuilder::addEnumValue($type, $value, $direction, $otherValue, $ifNotExists);
+        }
+
             }
     /**
      * 
@@ -28513,6 +28683,7 @@ namespace Illuminate\Console\Scheduling {
         /**
          * 
          *
+         * @var MonitoredScheduledTasks $monitoredScheduledTasks
          * @see \Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider::registerSchedulerEventMacros()
          * @param string $monitorName
          * @static 
@@ -28562,11 +28733,12 @@ namespace Illuminate\Console\Scheduling {
          * 
          *
          * @see \Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider::registerSchedulerEventMacros()
+         * @param bool $bool
          * @static 
          */
-        public static function storeOutputInDb()
+        public static function storeOutputInDb($bool = true)
         {
-            return \Illuminate\Console\Scheduling\Event::storeOutputInDb();
+            return \Illuminate\Console\Scheduling\Event::storeOutputInDb($bool);
         }
 
             }
@@ -28594,6 +28766,7 @@ namespace  {
      * 
      *
      * @template TCollection of static
+     * @template TModel of static
      * @template TValue of static
      * @template TValue of static
      */
@@ -28601,7 +28774,7 @@ namespace  {
          * Create and return an un-saved model instance.
          *
          * @param array $attributes
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function make($attributes = [])
@@ -28711,7 +28884,7 @@ namespace  {
          * @param mixed $operator
          * @param mixed $value
          * @param string $boolean
-         * @return \Illuminate\Database\Eloquent\TModel|null 
+         * @return TModel|null 
          * @static 
          */
         public static function firstWhere($column, $operator = null, $value = null, $boolean = 'and')
@@ -28900,7 +29073,7 @@ namespace  {
          *
          * @param array $attributes
          * @param array $values
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function firstOrNew($attributes = [], $values = [])
@@ -28914,7 +29087,7 @@ namespace  {
          *
          * @param array $attributes
          * @param array $values
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function firstOrCreate($attributes = [], $values = [])
@@ -28928,7 +29101,7 @@ namespace  {
          *
          * @param array $attributes
          * @param array $values
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function createOrFirst($attributes = [], $values = [])
@@ -28942,7 +29115,7 @@ namespace  {
          *
          * @param array $attributes
          * @param array $values
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function updateOrCreate($attributes, $values = [])
@@ -28955,7 +29128,7 @@ namespace  {
          * Execute the query and get the first result or throw an exception.
          *
          * @param array|string $columns
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<TModel>
          * @static 
          */
@@ -28971,7 +29144,7 @@ namespace  {
          * @template TValue
          * @param (\Closure(): TValue)|list<string> $columns
          * @param (\Closure(): TValue)|null $callback
-         * @return \Illuminate\Database\Eloquent\TModel|TValue 
+         * @return TModel|TValue 
          * @static 
          */
         public static function firstOr($columns = [], $callback = null)
@@ -28984,7 +29157,7 @@ namespace  {
          * Execute the query and get the first result if it's the sole matching record.
          *
          * @param array|string $columns
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<TModel>
          * @throws \Illuminate\Database\MultipleRecordsFoundException
          * @static 
@@ -29182,7 +29355,7 @@ namespace  {
          * Save a new model and return the instance.
          *
          * @param array $attributes
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function create($attributes = [])
@@ -29195,7 +29368,7 @@ namespace  {
          * Save a new model and return the instance without raising model events.
          *
          * @param array $attributes
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function createQuietly($attributes = [])
@@ -29208,7 +29381,7 @@ namespace  {
          * Save a new model and return the instance. Allow mass-assignment.
          *
          * @param array $attributes
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function forceCreate($attributes)
@@ -29221,7 +29394,7 @@ namespace  {
          * Save a new model instance with mass assignment without raising model events.
          *
          * @param array $attributes
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function forceCreateQuietly($attributes = [])
@@ -29313,7 +29486,7 @@ namespace  {
          * Create a new instance of the model being queried.
          *
          * @param array $attributes
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function newModelInstance($attributes = [])
@@ -29439,7 +29612,7 @@ namespace  {
         /**
          * Get the model instance being queried.
          *
-         * @return \Illuminate\Database\Eloquent\TModel 
+         * @return TModel 
          * @static 
          */
         public static function getModel()
@@ -29684,7 +29857,7 @@ namespace  {
          * Execute the query and get the first result.
          *
          * @param array|string $columns
-         * @return \Illuminate\Database\Eloquent\TValue|null 
+         * @return TValue|null 
          * @static 
          */
         public static function first($columns = [])
@@ -29697,7 +29870,7 @@ namespace  {
          * Execute the query and get the first result if it's the sole matching record.
          *
          * @param array|string $columns
-         * @return \Illuminate\Database\Eloquent\TValue 
+         * @return TValue 
          * @throws \Illuminate\Database\RecordsNotFoundException
          * @throws \Illuminate\Database\MultipleRecordsFoundException
          * @static 
@@ -33533,17 +33706,6 @@ namespace  {
             return $instance->macroCall($method, $parameters);
         }
 
-        /**
-         * 
-         *
-         * @see \Spatie\LaravelRay\RayServiceProvider::registerMacros()
-         * @static 
-         */
-        public static function ray()
-        {
-            return \Illuminate\Database\Query\Builder::ray();
-        }
-
 }
     class Event extends \Illuminate\Support\Facades\Event {}
     class File extends \Illuminate\Support\Facades\File {}
@@ -33586,11 +33748,6 @@ namespace  {
 }
 
 
-namespace Facades\Livewire\Features\SupportFileUploads {
-    /**
-     * @mixin \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl     */
-    class GenerateSignedUploadUrl extends \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl {}
-}
 
 
 

@@ -76,7 +76,7 @@ namespace App\Models{
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
- * @mixin Eloquent
+ * @mixin Model
  * @property int $id
  * @property string $name
  * @property string $email

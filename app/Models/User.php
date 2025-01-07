@@ -9,7 +9,6 @@ use App\Helpers\Permissions;
 use App\Helpers\Roles;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use Database\Factories\UserFactory;
-use Eloquent;
 use Exception;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -19,6 +18,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
@@ -48,7 +48,7 @@ use Tpetry\PostgresqlEnhanced\Eloquent\Concerns\RefreshDataOnSave;
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
@@ -84,10 +84,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'email_verified_at',
     ];
 
-    public function __construct(private readonly \Illuminate\Filesystem\FilesystemManager $filesystemManager)
-    {
-    }
-
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
@@ -108,7 +104,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     #[Override]
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url ? $this->filesystemManager->drive('profile-photos')->url($this->avatar_url) : null;
+        return $this->avatar_url ? Storage::drive('profile-photos')->url($this->avatar_url) : null;
     }
 
     public function isOwner(): bool
@@ -129,6 +125,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             new ResetPasswordNotification($token)->onQueue(Queue::Notifications)->delay(now()->addSeconds(10)),
         );
     }
+
     /**
      * The attributes that should be cast.
      *
