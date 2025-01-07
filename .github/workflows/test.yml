@@ -89,7 +89,7 @@ jobs:
       - name: Composer install
         run: |
           cp .env.build .env
-          composer install -q --no-ansi --prefer-dist --no-interaction --no-progress
+          composer install --no-ansi --no-interaction --no-progress
           php artisan key:generate
       - name: Install Node Modules
         run: |
