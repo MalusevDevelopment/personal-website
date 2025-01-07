@@ -9,9 +9,8 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
 class SearchController extends Controller
 {
-    public function __construct(private readonly \Illuminate\Contracts\Routing\ResponseFactory $responseFactory, private readonly \Illuminate\Contracts\View\Factory $viewFactory)
-    {
-    }
+    public function __construct(private readonly \Illuminate\Contracts\Routing\ResponseFactory $responseFactory, private readonly \Illuminate\Contracts\View\Factory $viewFactory) {}
+
     public function search(SearchRequest $searchRequest)
     {
         $term = $searchRequest->validated('term');

@@ -11,11 +11,10 @@ class Svg extends Component
 {
     public function __construct(
         public private(set) readonly string $name,
-    ) {
-    }
+    ) {}
 
     public function render(): View
     {
-        return $this->factory()->make('svgs.' . $this->name);
+        return $this->factory()->make('svgs.'.$this->name);
     }
 }

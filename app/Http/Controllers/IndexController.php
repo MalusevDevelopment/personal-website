@@ -6,12 +6,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GetBlogPostsRequest;
 use App\Services\PostService;
+use Illuminate\Contracts\View\Factory;
 
 class IndexController extends Controller
 {
-    public function __construct(private readonly \Illuminate\Contracts\View\Factory $viewFactory)
-    {
-    }
+    public function __construct(private readonly Factory $viewFactory) {}
+
     public function index()
     {
         return $this->viewFactory->make('pages.index');

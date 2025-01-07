@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Helpers\Roles;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DefaultUserSeeder extends Seeder

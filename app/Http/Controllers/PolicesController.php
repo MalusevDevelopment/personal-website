@@ -8,9 +8,8 @@ use Illuminate\Contracts\View\View;
 
 class PolicesController extends Controller
 {
-    public function __construct(private readonly \Illuminate\Contracts\View\Factory $viewFactory)
-    {
-    }
+    public function __construct(private readonly \Illuminate\Contracts\View\Factory $viewFactory) {}
+
     public function privacy(): View
     {
         return $this->viewFactory->make('pages.privacy');
