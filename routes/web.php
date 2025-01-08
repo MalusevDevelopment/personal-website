@@ -6,7 +6,10 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\PolicesController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Health\Http\Controllers\SimpleHealthCheckController;
 
+Route::get('healthz', SimpleHealthCheckController::class);
+    
 Route::middleware([])->group(function (): void {
     Route::get('/', [IndexController::class, 'index'])
         ->name('index');

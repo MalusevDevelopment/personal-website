@@ -103,6 +103,8 @@ RUN apt-get update \
     && chmod -R 755 storage/framework/views \
     && chmod -R 755 storage/framework/sessions
 
+HEALTHCHECK --interval=30s --timeout=30s --retries=3 --start-period=60s CMD curl -f http://localhost/healthz || exit 1
+
 ENTRYPOINT ["/bin/bash"]
 
 FROM ${BASE} AS development

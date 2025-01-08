@@ -31,6 +31,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Mvenghaus\FilamentScheduleMonitor\FilamentPlugin as ScheduleMonitorFilamentPlugin;
+use ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -40,11 +41,11 @@ class AdminPanelProvider extends PanelProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::STYLES_BEFORE,
-            fn (): string => $this->app->make(BladeCompiler::class)->render('@livewireStyles'),
+            fn(): string => $this->app->make(BladeCompiler::class)->render('@livewireStyles'),
         );
         FilamentView::registerRenderHook(
             PanelsRenderHook::STYLES_AFTER,
-            fn (): string => $this->app->make(BladeCompiler::class)->render('@livewireScripts'),
+            fn(): string => $this->app->make(BladeCompiler::class)->render('@livewireScripts'),
         );
     }
 
@@ -68,20 +69,20 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->navigationItems([
                 NavigationItem::make('Telescope')
-                    ->visible(fn () => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_TELESCOPE))
+                    ->visible(fn() => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_TELESCOPE))
                     ->group('Monitoring')
                     ->icon('heroicon-o-eye')
-                    ->url('/'.rtrim($configRepository->get('telescope.path'))),
+                    ->url('/' . rtrim($configRepository->get('telescope.path'))),
                 NavigationItem::make('Horizon')
-                    ->visible(fn () => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_HORIZON))
+                    ->visible(fn() => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_HORIZON))
                     ->group('Monitoring')
                     ->icon('heroicon-o-queue-list')
-                    ->url('/'.rtrim($configRepository->get('horizon.path'))),
+                    ->url('/' . rtrim($configRepository->get('horizon.path'))),
                 NavigationItem::make('Pulse')
-                    ->visible(fn () => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_PULSE))
+                    ->visible(fn() => $this->app->make(Guard::class)->user()?->can(Permissions::VIEW_PULSE))
                     ->group('Monitoring')
                     ->icon('heroicon-o-heart')
-                    ->url('/'.rtrim($configRepository->get('pulse.path'))),
+                    ->url('/' . rtrim($configRepository->get('pulse.path'))),
             ])
             ->colors([
                 'primary' => Color::Blue,
@@ -115,6 +116,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 ScheduleMonitorFilamentPlugin::make(),
+                FilamentSpatieLaravelHealthPlugin::make()
+                    ->navigationLabel('Health')
+                    ->navigationGroup('Monitoring'),
                 FilamentSpatieRolesPermissionsPlugin::make(),
                 BreezyCore::make()
                     ->myProfile(
@@ -126,7 +130,7 @@ class AdminPanelProvider extends PanelProvider
                         force: app()->environment('production')
                     )
                     ->enableSanctumTokens()
-                    ->avatarUploadComponent(fn (): FileUpload => FileUpload::make('avatar_url')->disk('profile-photos'))
+                    ->avatarUploadComponent(fn(): FileUpload => FileUpload::make('avatar_url')->disk('profile-photos'))
                     ->passwordUpdateRules(
                         rules: [
                             Password::default()

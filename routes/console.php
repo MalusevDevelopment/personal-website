@@ -3,7 +3,20 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Schedule;
+use Spatie\Health\Commands\DispatchQueueCheckJobsCommand;
+use Spatie\Health\Commands\RunHealthChecksCommand;
+use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
+
+Schedule::everyMinute()
+    ->runInBackground()
+    ->timezone('Europe/Belgrade')
+    ->group(function (): void {
+        Schedule::command(RunHealthChecksCommand::class);
+        Schedule::command(DispatchQueueCheckJobsCommand::class);
+        Schedule::command(ScheduleCheckHeartbeatCommand::class);
+    });
+
 
 Schedule::command('horizon:snapshot')
     ->everyFiveMinutes()

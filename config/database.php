@@ -67,6 +67,13 @@ return [
             'prefix' => 'broadcasting:',
             'persistent' => true,
         ],
+
+        'healthchecks' => [
+            'name' => 'website-healthchecks',
+            'url' => env('REDIS_HEALTHCHECK_URL', 'tcp://127.0.0.1:6379?database=8'),
+            'prefix' => 'broadcasting:',
+            'persistent' => true,
+        ],
     ],
 
 ];

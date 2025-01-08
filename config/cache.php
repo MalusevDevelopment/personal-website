@@ -23,5 +23,11 @@ return [
             'connection' => 'sessions',
             'lock_connection' => 'locks',
         ],
+
+        'healthchecks' => [
+            'driver' => 'redis',
+            'connection' => 'healthchecks',
+            'lock_connection' => 'locks',
+        ],
     ],
 ];
