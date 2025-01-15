@@ -24,6 +24,9 @@ services:
      - live.dusanmalusev.dev.fullchain.pem
      - live.dusanmalusev.dev.privkey.pem
      - live.dusanmalusev.dev.chain.pem
+     - dusanmalusev.dev.dhparams.pem
+     - statistics.dusanmalusev.dev.dhparams.pem
+     - live.dusanmalusev.dev.dhparams.pem
 
     deploy:
       mode: global
