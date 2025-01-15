@@ -1,0 +1,123 @@
+#cloud-config
+
+timezone: UTC
+
+ntp:
+  enabled: true
+  ntp_client: chrony
+manage_etc_hosts: true
+
+hostname: swarmworker
+create_hostname_file: true
+fqdn: worker.dusanmalusev.dev
+prefer_fqdn_over_hostname: false
+
+allow_public_ssh_keys: true
+disable_root: true
+disable_root_opts: no-port-forwarding,no-agent-forwarding,no-X11-forwarding
+ssh_pwauth: false
+ssh_genkeytypes: [ed25519]
+ssh_quiet_keygen: true
+
+groups:
+  - sshusers
+
+chpasswd:
+  list: |
+    dmalusev:password123
+  expire: true
+
+users:
+  - name: dmalusev
+    gecos: Dusan Malusev
+    groups: sshusers, sudo
+    shell: /bin/bash
+    password: password123
+    lock_passwd: false
+    type: text
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIfzJsVgnTmIycSjdUSQJtoyl/fcEoLU5RKQT8SLFlur dusan@dusanmalusev.dev
+  - name: github
+    gecos: GitHub Actions
+    groups: sshusers
+    shell: /bin/bash
+    sudo:
+      - 'ALL=(ALL) NOPASSWD: /bin/ls /opt/projects/*, /bin/cat /opt/projects/*, /bin/mkdir /opt/projects/*'
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINpjiI5jWA+Wlqckr42yt3KyDaL/KoT5OQDIyOsOqTVj servers@dusanmalusev.dev
+
+apt:
+  conf: |
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+  sources:
+    docker.list:
+      source: deb [signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $RELEASE stable
+
+packages:
+  - apt:
+      - fail2ban
+      - curl
+      - wget
+      - vim
+      - htop
+      - certbot
+      - net-tools
+      - ca-certificates
+      - gnupg
+      - lsb-release
+      - libpam-google-authenticator
+      - openssl
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+runcmd:
+  - systemctl enable --now fail2ban
+  - sed -i -e '/^\(#\|\)PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)PubkeyAuthentication/s/^.*$/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)KbdInteractiveAuthentication/s/^.*$/KbdInteractiveAuthentication yes/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)ChallengeResponseAuthentication/s/^.*$/ChallengeResponseAuthentication no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)MaxAuthTries/s/^.*$/MaxAuthTries 3/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)AllowTcpForwarding/s/^.*$/AllowTcpForwarding no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)X11Forwarding/s/^.*$/X11Forwarding no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)AllowAgentForwarding/s/^.*$/AllowAgentForwarding no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)AuthorizedKeysFile/s/^.*$/AuthorizedKeysFile .ssh\/authorized_keys/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)Protocol/s/^.*$/Protocol 2/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)AllowGroups/s/^.*$/AllowGroups sshusers/' /etc/ssh/sshd_config
+  - echo "AuthenticationMethods publickey" >> /etc/ssh/sshd_config
+  - echo "ClientAliveInterval 300" >> /etc/ssh/sshd_config
+  - echo "ClientAliveCountMax 1" >> /etc/ssh/sshd_config
+  - sshd -t
+  - systemctl restart sshd
+  - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  - systemctl enable --now docker
+  - usermod -aG docker dmalusev
+  - usermod -aG docker github
+  - docker swarm join --token TOKEN --advertise-addr $(ip addr show enp7s0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1) IP
+  - docker node update --label-add node.worker=true swarmworker
+
+swap:
+  filename: /swap.img
+  size: 2G
+  maxsize: 8G
+
+mount_default_fields: [None, None, auto, 'defaults,nofail', '0', '2']
+
+write_files:
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      enabled = true
+      banaction = iptables-multiport
+    permissions: '0640'
+    owner: 'root:root'
+    defer: false

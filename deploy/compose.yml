@@ -39,8 +39,6 @@ services:
     image: 'quay.io/soketi/soketi:latest-16'
     stop_signal: SIGINT
     restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on:
       - pgsql
       - valkey
@@ -95,8 +93,6 @@ services:
         parallelism: 2
         delay: 10s
         order: stop-first
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     networks:
       - website
     ports:
@@ -116,8 +112,6 @@ services:
         window: 120s
     working_dir: /var/www/html
     command: start-container php artisan schedule:work -n --ansi
-    extra_hosts:
-        - 'host.docker.internal:host-gateway'
     env_file:
       - website.env
     environment:
@@ -135,8 +129,6 @@ services:
     working_dir: /var/www/html
     command: start-container php artisan pulse:check -n --ansi
     stop_signal: SIGINT
-    extra_hosts:
-        - 'host.docker.internal:host-gateway'
     deploy:
       restart_policy:
         condition: on-failure
@@ -162,8 +154,6 @@ services:
     working_dir: /var/www/html
     stop_signal: SIGINT
     command: start-container php artisan pulse:check -n --ansi
-    extra_hosts:
-        - 'host.docker.internal:host-gateway'
     deploy:
       mode: global
       restart_policy:
@@ -188,8 +178,6 @@ services:
     stop_signal: SIGINT
     working_dir: /var/www/html
     command: start-container php artisan pulse:work -n --ansi
-    extra_hosts:
-        - 'host.docker.internal:host-gateway'
     deploy:
       mode: replicated
       replicas: 1
@@ -214,8 +202,6 @@ services:
     image: 'ghcr.io/malusevdevelopment/website:${VERSION:-latest}'
     working_dir: /var/www/html
     command: start-container php artisan queue:work sqs --max-jobs=1000 --sleep=3 --tries=3 --max-time=3600
-    extra_hosts:
-        - 'host.docker.internal:host-gateway'
     stop_signal: SIGINT
     deploy:
       mode: global
@@ -245,8 +231,6 @@ services:
     working_dir: /var/www/html
     command: start-container php artisan octane:frankenphp --host=0.0.0.0 --port=8080 --admin-host=0.0.0.0 --admin-port=2019 --watch --log-level=debug --max-requests=1000
     stop_signal: SIGINT
-    extra_hosts:
-        - 'host.docker.internal:host-gateway'
     deploy:
       mode: replicated
       replicas: 2
@@ -296,6 +280,10 @@ secrets:
     external: true
     uid: "101"
     gid: "101"
+  dusanmalusev.dev.dhparams.pem:
+    external: true
+    uid: "101"
+    gid: "101"
 
   statistics.dusanmalusev.dev.fullchain.pem:
     external: true
@@ -309,6 +297,10 @@ secrets:
     external: true
     uid: "101"
     gid: "101"
+  statistics.dusanmalusev.dev.dhparams.pem:
+    external: true
+    uid: "101"
+    gid: "101"
 
   live.dusanmalusev.dev.fullchain.pem:
     external: true
@@ -319,6 +311,10 @@ secrets:
     uid: "101"
     gid: "101"
   live.dusanmalusev.dev.chain.pem:
+    external: true
+    uid: "101"
+    gid: "101"
+  live.dusanmalusev.dev.dhparams.pem:
     external: true
     uid: "101"
     gid: "101"
