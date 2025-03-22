@@ -7,9 +7,9 @@ use App\Enums\Queue;
 return [
     'use' => 'horizon',
 
-    'waits' => (new \Illuminate\Support\Collection(Queue::values()))
-        ->mapToDictionary(static fn (string $queue) => ['redis:'.$queue => 60])
-        ->map(static fn (array $val): int => $val[0])
+    'waits' => collect(Queue::values())
+        ->mapToDictionary(static fn(string $queue) => ['redis:' . $queue => 60])
+        ->map(static fn(array $val): int => $val[0])
         ->toArray(),
 
     'metrics' => [
