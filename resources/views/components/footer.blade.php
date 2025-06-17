@@ -5,9 +5,7 @@ declare(strict_types=1);
 ?>
 <footer class="footer">
     <div>
-        <p>
-            &copy; Copyright 2023 - {{ now()->year }}
-        </p>
+        <p>&copy; Copyright 2023 - @year</p>
         <p>
             Powered by <a
                     href="https://www.laravel.com/" target="_blank" rel="noopener noreferrer">Laravel</a> &amp;

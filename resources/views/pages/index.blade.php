@@ -1,10 +1,31 @@
 <x-layouts.website>
-    @section('css')
+    <x-slot:title>Home | {{ config('app.name', 'Dusan\'s Website') }}</x-slot:title>
+
+    <x-slot:meta>
+        <meta name="description"
+              content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
+        <meta property="og:title" content="Dusan's Website"/>
+        <meta property="og:description"
+              content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content="{{ config('app.url') }}"/>
+        <meta name="twitter:card" content="Dusan's Website"/>
+        <meta name="twitter:title" content="Dusan's Website"/>
+        <meta name="twitter:description"
+              content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
+    </x-slot:meta>
+
+    <x-slot:css>
         @vite('resources/css/pages/home.css')
-    @endsection
+    </x-slot:css>
+
+    <x-slot:ld>
+        @ld('home')
+    </x-slot:ld>
+
     <article class="profile">
         <header>
-            <img width="36" height="36" decoding="async" alt="Dusan Malusev"
+            <img width="48" height="48" decoding="async" alt="Dusan Malusev"
                  src="{{ asset('images/me.jpeg') }}"
                  loading="lazy"
             />

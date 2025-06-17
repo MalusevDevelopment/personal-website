@@ -1,8 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
-?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-default-appearance="dark" class="dark">
 <head>
@@ -10,42 +5,13 @@ declare(strict_types=1);
     <meta name="application-name" content="{{ config('app.name', 'Dusan\'s Website') }}"/>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description"
-          content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e293b"/>
-    <meta property="og:title" content="Dusan's Website"/>
-    <meta property="og:description"
-          content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content="{{ config('app.url') }}"/>
-    <meta name="twitter:card" content="Dusan's Website"/>
-    <meta name="twitter:title" content="Dusan's Website"/>
-    <meta name="twitter:description"
-          content="I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions"/>
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "ProfilePage",
-            "dateCreated": "2023-12-23T12:34:00+01:00",
-            "dateModified": "2024-01-21T15:11:00+01:00",
-            "mainEntity": {
-                "@type": "Person",
-                "name": "Dusan Malusev",
-                "alternateName": "{{ config('app.owner.github') }}",
-                "identifier": "123475623",
-                "description": "I'm an experienced remote software developer deeply passionate about creating efficient and elegant solutions. My journey involves honing skills through diverse projects, all crafted within the confines of my remote workspace.",
-                "image": "https://avatars.githubusercontent.com/u/33778979",
-                "sameAs": [
-                  "https://github.com/{{ config('app.owner.github') }}",
-                  "https://dev.to/malusev998",
-                  "https://www.linkedin.com/in/malusevd998",
-                  "https://www.reddit.com/user/Back_Professional",
-                  "https://stackoverflow.com/users/8411483/dusan-malusev"
-                ]
-            }
-        }
-    </script>
     <meta name="author" content="Dusan Malusev"/>
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e293b"/>
+    {{ $meta ?? '' }}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <link href="mailto:dusan@dusanmalusev.dev" rel="me"/>
     <link href="https://dev.to/malusev998" rel="me"/>
     <link href="https://github.com/{{ config('app.owner.github') }}" rel="me"/>
@@ -53,14 +19,16 @@ declare(strict_types=1);
     <link href="https://www.reddit.com/user/Back_Professional" rel="me"/>
     <link href="https://stackoverflow.com/users/8411483/dusan-malusev" rel="me"/>
 
-    <title>@yield('title', config('app.name', 'Dusan\'s Website'))</title>
+    <title>{{ $title ?? config('app.name', 'Dusan\'s Website') }}</title>
+
+    {{ $ld ?? '' }}
 
     @if(($useLivewire ?? false))
         @livewireStyles
     @endif
     @vite('resources/css/website.css')
 
-    @yield('css')
+    {{ $css ?? '' }}
 </head>
 
 <body class="body">
@@ -99,6 +67,8 @@ declare(strict_types=1);
       umami.identify({id: '{{ auth()->user()->id }}', email: '{{ auth()->user()->email }}'});
     </script>
 @endauth
+
+{{ $scripts ?? '' }}
 </body>
 </html>
 <?php 

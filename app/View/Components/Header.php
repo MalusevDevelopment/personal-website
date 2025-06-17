@@ -19,7 +19,6 @@ class Header extends Component
             'Blog' => $urlGenerator->route('blog'),
             'Projects' => $urlGenerator->route('projects'),
             'Contact' => $urlGenerator->route('contact'),
-            'About' => $urlGenerator->route('about'),
         ];
     }
 
